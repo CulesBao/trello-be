@@ -1,9 +1,9 @@
 import ApiError from "../utils/ApiError.js"
 import authService from '../service/auth.service.js'
 
-const callService = async (req, res, next, func) => {
+const register = async(req, res, next) => {
     try{
-        const {status, ...data} = await func(req.body, next)
+        const {status, ...data} = await authService.register(req.body, next)
         if (status >= 400)
             throw ApiError(status, data)
         res.status(status).json(data)
@@ -12,12 +12,16 @@ const callService = async (req, res, next, func) => {
         next(err)
     }
 }
-
-const register = async(req, res, next) => {
-    callService(req, res, next, authService.register)
-}
 const login = async(req, res, next) => {
-    callService(req, res, next, authService.login)
+    try{
+        const {status, ...data} = await authService.login(req.body, next)
+        if (status >= 400)
+            throw ApiError(status, data)
+        res.status(status).json(data)
+    }
+    catch(err){
+        next(err)
+    }
 }
 
 export default {register, login}
