@@ -1,32 +1,46 @@
 import ApiError from "../utils/ApiError.js";
+import { usersSchema } from "../schema/users.schema.js";
+import { StatusCodes } from "http-status-codes";
 
-const greaterThan6 = (str) => {
-    return str.length >= 6
+class authMiddleware {
+    loginValidation = async(req, res, next) => {
+        try{
+            const {username, password} = req.body;
+            const {err} = await usersSchema.validateAsync({username, password})
+            if (err)
+                throw new ApiError(StatusCodes.NOT_ACCEPTABLE, err)
+            next()
+        }
+        catch(err) {
+            next(err)
+        }
+    }
+    registerValidation = async(req, res, next) => {
+        try{
+            const {username, password, email, roleName} = req.body;
+            const {err} = await usersSchema.validateAsync({username, password, email, roleName})
+            if (err)
+                throw new ApiError(StatusCodes.NOT_ACCEPTABLE, err)
+            next()
+        }
+        catch(err) {
+            next(err)
+        }
+    }
+    updateUser = async(req, res, next) => {
+        try{
+            const {username, password, email, roleName} = req.body
+            const {err} = await usersSchema.validateAsync({username, password, email, roleName})
+            if (err)
+                throw new ApiError(StatusCodes.NOT_ACCEPTABLE, err)
+            next()
+        }
+        catch(err){
+            next(err)
+        }
+    }
 }
 
-const loginValidation = async(req, res, next) => {
-    try{
-        const {username, password} = req.body;
-        if (!greaterThan6(username) || !greaterThan6(password))
-            throw new ApiError(400, 'Username or password at least 6 characters')
-        next()
-    }
-    catch(err) {
-        next(err)
-    }
-}
-
-const registerValidation = async(req, res, next) => {
-    try{
-        const {username, password, email, roleId} = req.body;
-        if (email.indexOf('@gmail.com') == -1)
-            throw new ApiError(400, 'Email must be example@gmail.com')
-        if (!greaterThan6(username) || !greaterThan6(password))
-            throw new ApiError(400, 'Username or password at least 6 characters')
-        next()
-    }
-    catch(err) {
-        next(err)
-    }
-}
-export default {loginValidation, registerValidation}
+export default new authMiddleware()
+// const 
+// export default {loginValidation, registerValidation, updateUser}

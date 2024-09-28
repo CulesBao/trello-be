@@ -5,7 +5,7 @@ export const errorHandlingMiddleware = (err, req, res, next) => {
   const responseError = {
     statusCode: err.statusCode,
     message: err.message || StatusCodes[err.statusCode],
-    stack: err.stack
+    // stack: err.stack
   }
   console.error(responseError)
 
