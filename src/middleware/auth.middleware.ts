@@ -1,9 +1,11 @@
 import ApiError from "../utils/ApiError.js";
+import { Request, Response, NextFunction } from "express";
 import { usersSchema } from "../schema/users.schema.js";
 import { StatusCodes } from "http-status-codes";
+import { errorHandlingMiddleware } from "./errorHandler.middleware.js";
 
 class authMiddleware {
-    loginValidation = async(req, res, next) => {
+    loginValidation = async(req: Request, res: Response, next: NextFunction) => {
         try{
             const {username, password} = req.body;
             const {err} = await usersSchema.validateAsync({username, password})
@@ -12,10 +14,10 @@ class authMiddleware {
             next()
         }
         catch(err) {
-            next(err)
+            errorHandlingMiddleware(err, res)
         }
     }
-    registerValidation = async(req, res, next) => {
+    registerValidation = async(req: Request, res: Response, next: NextFunction) => {
         try{
             const {username, password, email, roleName} = req.body;
             const {err} = await usersSchema.validateAsync({username, password, email, roleName})
@@ -24,10 +26,10 @@ class authMiddleware {
             next()
         }
         catch(err) {
-            next(err)
+            errorHandlingMiddleware(err, res)
         }
     }
-    updateUser = async(req, res, next) => {
+    updateUser = async(req: Request, res: Response, next: NextFunction) => {
         try{
             const {username, password, email, roleName} = req.body
             const {err} = await usersSchema.validateAsync({username, password, email, roleName})
@@ -36,11 +38,9 @@ class authMiddleware {
             next()
         }
         catch(err){
-            next(err)
+            errorHandlingMiddleware(err, res)
         }
     }
 }
 
 export default new authMiddleware()
-// const 
-// export default {loginValidation, registerValidation, updateUser}

@@ -2,10 +2,12 @@
   "name": "be-advanced",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
-  "type": "module",
+  "main": "dist/app.js",
+  "type": "commonjs",
   "scripts": {
-    "start": "nodemon app.js",
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "start": "nodemon --exec ts-node dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -19,5 +21,12 @@
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.11.3",
     "nodemon": "^3.1.7"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2"
   }
 }
