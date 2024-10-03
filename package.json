@@ -5,9 +5,7 @@
   "main": "dist/app.js",
   "type": "commonjs",
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc --watch",
-    "start": "nodemon --exec ts-node dist/app.js",
+    "start": "nodemon --exec ts-node src/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

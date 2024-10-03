@@ -1,9 +1,9 @@
-import ApiError from "../utils/ApiError.js"
-import authService from '../service/auth.service.js'
+import ApiError from "../utils/ApiError"
+import authService from '../service/auth.service'
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { errorHandlingMiddleware } from "../middleware/errorHandler.middleware.js";
-import { responseOK } from "../interface/io.interface.js";
+import { errorHandlingMiddleware } from "../middleware/errorHandler.middleware";
+import { responseOK } from "../interface/io.interface";
 
 class authController{
     register = async(req: Request, res: Response) => {

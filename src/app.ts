@@ -1,5 +1,5 @@
 import express, { urlencoded } from 'express';
-import routes from './routes/index.routes.js'
+import routes from './routes/index.routes'
 const app = express();
 
 app.use(urlencoded({ extended: true }))

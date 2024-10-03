@@ -1,5 +1,5 @@
 import express from 'express'
-import rolesController from '../../controller/roles.controller.js'
+import rolesController from '../../controller/roles.controller'
 const router = express.Router()
 
 router.post('/create-role', rolesController.createRole)

@@ -1,8 +1,8 @@
-import db from '../config/db.config.js'
-import ApiError from '../utils/ApiError.js'
-import tokenUitls from '../utils/token.uitls.js'
-import { User, Role } from '../interface/db.interface.js'
-import { responseOK } from '../interface/io.interface.js'
+import db from '../config/db.config'
+import ApiError from '../utils/ApiError'
+import tokenUitls from '../utils/token.uitls'
+import { User, Role } from '../interface/db.interface'
+import { responseOK } from '../interface/io.interface'
 import { StatusCodes } from 'http-status-codes'
 class rolesService{
     role = async(token: string , compareRole: string) : Promise<boolean> => {

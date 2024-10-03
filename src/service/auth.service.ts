@@ -1,10 +1,10 @@
-import {User, Role} from '../interface/db.interface.js'
-import db from '../config/db.config.js'
-import ApiError from '../utils/ApiError.js'
-import hashUtils from '../utils/hash.utils.js'
-import tokenUtils from '../utils/token.uitls.js'
+import {User, Role} from '../interface/db.interface'
+import db from '../config/db.config'
+import ApiError from '../utils/ApiError'
+import hashUtils from '../utils/hash.utils'
+import tokenUtils from '../utils/token.uitls'
 import { StatusCodes } from 'http-status-codes'
-import { responseOK } from '../interface/io.interface.js'
+import { responseOK } from '../interface/io.interface'
 class authService{
     role = async(token: string, compareRole: string): Promise<boolean> => {
         try {

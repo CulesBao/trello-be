@@ -1,6 +1,6 @@
 import express from 'express'
-import apisAuth from './apis/auth.routes.js'
-import apisRoles from './apis/roles.routes.js'
+import apisAuth from './apis/auth.routes'
+import apisRoles from './apis/roles.routes'
 
 const router : express.Router = express.Router()
 

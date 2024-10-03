@@ -1,8 +1,8 @@
-import ApiError from "../utils/ApiError.js"
-import rolesService from '../service/roles.service.js'
+import ApiError from "../utils/ApiError"
+import rolesService from '../service/roles.service'
 import { NextFunction, Request, Response } from "express"
-import { responseOK } from "../interface/io.interface.js"
-import { errorHandlingMiddleware } from "../middleware/errorHandler.middleware.js"
+import { responseOK } from "../interface/io.interface"
+import { errorHandlingMiddleware } from "../middleware/errorHandler.middleware"
 
 class rolesController{
     createRole = async(req: Request, res: Response) => {

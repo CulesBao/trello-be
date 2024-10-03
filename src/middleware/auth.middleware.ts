@@ -1,8 +1,8 @@
-import ApiError from "../utils/ApiError.js";
+import ApiError from "../utils/ApiError";
 import { Request, Response, NextFunction } from "express";
-import { usersSchema } from "../schema/users.schema.js";
+import { usersSchema } from "../schema/users.schema";
 import { StatusCodes } from "http-status-codes";
-import { errorHandlingMiddleware } from "./errorHandler.middleware.js";
+import { errorHandlingMiddleware } from "./errorHandler.middleware";
 
 class authMiddleware {
     loginValidation = async(req: Request, res: Response, next: NextFunction) => {

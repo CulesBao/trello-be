@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
-import ApiError from './ApiError.js';
+import ApiError from './ApiError';
 import { StatusCodes } from 'http-status-codes';
 dotenv.config()
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
