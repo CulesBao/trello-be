@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "experimentalDecorators": true, // Bật cú pháp Decorator
+    "emitDecoratorMetadata": true,  // Bật metadata cho Decorator
     "outDir": "./dist",       // Thư mục đầu ra cho các file biên dịch
     "rootDir": "./src",       // Thư mục gốc cho các file nguồn
     "target": "ES6",          // Phiên bản ECMAScript mục tiêu

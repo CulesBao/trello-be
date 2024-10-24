@@ -1,6 +1,4 @@
 import bcrypt, {genSalt} from 'bcrypt'
-import dotenv from 'dotenv'
-dotenv.config()
 
 const hashPassword = async(password: string): Promise<string> => {
     const saltRound = 10

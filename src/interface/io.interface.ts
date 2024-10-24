@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-class responseOK{
+class CustomeSuccessfulResponse{
     status: number;
     message: string;
     data?: any;
@@ -9,12 +9,4 @@ class responseOK{
         this.data = data;
     }
 }
-class error{
-    status: number
-    message: string
-    constructor(status:number = StatusCodes.INTERNAL_SERVER_ERROR, message: string = StatusCodes[status]){
-        this.status = status
-        this.message = message
-    }
-}
-export { responseOK, error }
+export { CustomeSuccessfulResponse }
