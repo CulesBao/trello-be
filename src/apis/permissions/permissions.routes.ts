@@ -1,7 +1,7 @@
 import express from 'express';
 import permissionController from './permissions.controller';
 import authentication from '../../middleware/authentication.middleware';
-import { Permissions } from '../../constants/permissions.constants';
+import { Permissions } from '../../types/permissions';
 const router = express.Router();
 
 router.post('/create', authentication.authenticateToken, authentication.authorizePermission(Permissions.CREATE_PERMISSION), permissionController.createPermission);

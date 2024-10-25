@@ -2,7 +2,7 @@ import express from 'express'
 import authMiddleware from './auth.middleware'
 import authController from './auth.controller'
 import authenticationMiddleware from '../../middleware/authentication.middleware'
-import { Permissions } from '../../constants/permissions.constants'
+import { Permissions } from '../../types/permissions'
 
 const router: express.Router = express.Router()
 

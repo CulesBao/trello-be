@@ -25,10 +25,10 @@ class authController {
             next(err);
         }
     }
-    async get(req: any, res: Response, next: NextFunction) {
+    async get(req: Request, res: Response, next: NextFunction) {
         try {
             const info = (req.params.id) ? req.params.id : 'all'
-            const id = req.id
+            const id = Number(req.id)
             const response: CustomeSuccessfulResponse = await authService.get(info, id)
             res.status(response.status).json({
                 message: response.message,
@@ -39,7 +39,7 @@ class authController {
             next(err)
         }
     }
-    async getMe(req: any, res: Response, next: NextFunction) {
+    async getMe(req: Request, res: Response, next: NextFunction) {
         try {
             const response: CustomeSuccessfulResponse = await authService.get('me', req.id)
             res.status(response.status).json({
@@ -51,7 +51,7 @@ class authController {
             next(err)
         }
     }
-    async getAll(req: any, res: Response, next: NextFunction) {
+    async getAll(req: Request, res: Response, next: NextFunction) {
         try {
             const response: CustomeSuccessfulResponse = await authService.get('all', req.id)
             res.status(response.status).json({
@@ -74,7 +74,7 @@ class authController {
             next(err)
         }
     }
-    async updateUser(req: any, res: Response, next: NextFunction) {
+    async updateUser(req: Request, res: Response, next: NextFunction) {
         try {
             const response: CustomeSuccessfulResponse = await authService.updateUser(req.body, req.id)
             res.status(response.status).json({

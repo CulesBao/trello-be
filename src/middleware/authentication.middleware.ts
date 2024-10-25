@@ -1,14 +1,16 @@
 import { StatusCodes } from 'http-status-codes';
 import tokenUtils from '../utils/token.uitls';
 import rolesService from '../service/roles.service';
-import { NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import CustomError from '../utils/CustomError';
 
 class authentication {
-    authenticateToken(req: any, _: any, next: any) {
+    authenticateToken(req: Request, _: Response, next: NextFunction) {
         try {
-            const authHeader: string = req.headers['authorization']
-            const token: string = authHeader && authHeader.split(' ')[1]
+            const authHeader: string | undefined = req.headers['authorization']
+            if (!authHeader)
+                throw new CustomError(StatusCodes.UNAUTHORIZED, "Cannot found token")
+            const token: string = authHeader.split(' ')[1]
             if (token == null)
                 throw new CustomError(StatusCodes.UNAUTHORIZED, 'Unauthorized')
             const id: number = tokenUtils.verifyToken(token)
@@ -39,7 +41,7 @@ class authentication {
         };
     }
     authorizePermission = (requiredPermission: string) => {
-        return async (req: any, _: any, next: any) => {
+        return async (req: Request, _: Response, next: NextFunction) => {
             try {
                 const id: number = req.id;
                 if (!id) {

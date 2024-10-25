@@ -1,4 +1,7 @@
 {
+  "ts-node": {
+    "files": true
+  },
   "compilerOptions": {
     "experimentalDecorators": true, // Bật cú pháp Decorator
     "emitDecoratorMetadata": true,  // Bật metadata cho Decorator
@@ -10,6 +13,6 @@
     "skipLibCheck": true,     // Bỏ qua kiểm tra thư viện
     "strict": true            // Bật chế độ kiểm tra nghiêm ngặt
   },
-  "include": ["src/**/*.ts"], // Bao gồm tất cả các file TypeScript trong thư mục src
+  // "include": ["src/**/*.ts", "src/types/**/*.d.ts"], // Bao gồm tất cả các file TypeScript trong thư mục src
   "exclude": ["node_modules", "dist"] // Loại trừ các thư mục không cần thiết
 }
