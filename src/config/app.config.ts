@@ -3,6 +3,8 @@ import routes from '../routes/index.routes'
 import 'reflect-metadata'
 import { errorMiddleware } from '../middleware/error.middleware';
 import { AppDataSource } from './data-source';
+import { logger, loggerHttp } from './pino.config';
+import client from './redis.config';
 
 export default class App {
     public app: express.Application
@@ -20,13 +22,15 @@ export default class App {
 
     public listen() {
         this.app.listen(this.port, () => {
-            console.log(`Server is running on port http://localhost:${this.port}`)
+            logger.info(`Server is running on port http://localhost:${this.port}`)
         })
     }
 
     private initializeMiddlewares() {
         this.app.use(urlencoded({ extended: true }))
         this.app.use(express.json())
+        this.app.use(loggerHttp)
+        client.set('expamle', 'example')
     }
 
     private initializeRoutes() {
@@ -35,9 +39,9 @@ export default class App {
     private initializeDatabase() {
         AppDataSource.initialize()
             .then(async () => {
-                console.log("Data source initialized")
+                logger.info("Data source initialized")
             })
-            .catch(error => console.log(error))
+            .catch((error: any) => logger.error(error))
     }
 
     private initializeErrorHandling() {

@@ -43,7 +43,7 @@ class authentication {
     authorizePermission = (requiredPermission: string) => {
         return async (req: Request, _: Response, next: NextFunction) => {
             try {
-                const id: number = req.id;
+                const id: number = Number(req.id);
                 if (!id) {
                     throw new CustomError(StatusCodes.UNAUTHORIZED, 'Unauthorized');
                 }

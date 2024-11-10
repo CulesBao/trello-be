@@ -1,14 +1,14 @@
 import { StatusCodes } from 'http-status-codes'
 import CustomError from '../utils/CustomError'
-import { UserService } from '../apis/auth/user.repository'
-import { User } from '../entity/User'
-import { Role } from '../entity/Role'
-import { Permission } from '../entity/Permission'
+import { UserService } from '../modules/user/user.repository'
+import { User } from '../modules/user/entity/User'
+import { Role } from '../modules/roles/entity/Role'
+import { Permission } from '../modules/permissions/entity/Permission'
 import { AppDataSource } from '../config/data-source'
 
 const userRepository = AppDataSource.getRepository(User)
 class roles {
-    private userService = new UserService()
+    private userService = new UserService(User)
     async userRoles(id: number): Promise<string[]> {
         try {
             const user = await this.userService.findById(id)

@@ -4,14 +4,15 @@
   },
   "compilerOptions": {
     "experimentalDecorators": true, // Bật cú pháp Decorator
-    "emitDecoratorMetadata": true,  // Bật metadata cho Decorator
-    "outDir": "./dist",       // Thư mục đầu ra cho các file biên dịch
-    "rootDir": "./src",       // Thư mục gốc cho các file nguồn
-    "target": "ES6",          // Phiên bản ECMAScript mục tiêu
-    "module": "commonjs",     // Hệ thống module
-    "esModuleInterop": true,  // Hỗ trợ tương tác với các module ES
-    "skipLibCheck": true,     // Bỏ qua kiểm tra thư viện
-    "strict": true            // Bật chế độ kiểm tra nghiêm ngặt
+    "emitDecoratorMetadata": true, // Bật metadata cho Decorator
+    "outDir": "./dist", // Thư mục đầu ra cho các file biên dịch
+    "rootDir": "./src", // Thư mục gốc cho các file nguồn
+    "target": "ES6", // Phiên bản ECMAScript mục tiêu
+    "module": "CommonJS", // Hệ thống module
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true, // Bỏ qua kiểm tra thư viện
+    "strict": true // Bật chế độ kiểm tra nghiêm ngặt
   },
   // "include": ["src/**/*.ts", "src/types/**/*.d.ts"], // Bao gồm tất cả các file TypeScript trong thư mục src
   "exclude": ["node_modules", "dist"] // Loại trừ các thư mục không cần thiết
