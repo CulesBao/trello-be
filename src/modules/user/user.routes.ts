@@ -21,10 +21,14 @@ router.delete('/delete/:id',
     userController.deleteUser
 );
 router.put('/updated', authenticationMiddleware.authenticateToken,
-
     userController.updateUser)
 router.post('/assign-role',
     authenticationMiddleware.authenticateToken,
     authenticationMiddleware.authorizePermission(Permissions.ASSIGN_ROLE),
     userController.assignRole)
+router.delete('/remove-role',
+    authenticationMiddleware.authenticateToken,
+    authenticationMiddleware.authorizePermission(Permissions.REMOVE_ROLE),
+    userController.removeRole
+)
 export default router;

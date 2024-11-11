@@ -1,11 +1,10 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from "typeorm";
 import { User } from "../../user/entity/User";
 import { Permission } from "../../permissions/entity/Permission";
+import { baseEntity } from "../../../template/baseEntity";
 
 @Entity()
-export class Role {
-    @PrimaryGeneratedColumn()
-    id!: number
+export class Role extends baseEntity {
     @Column({ length: 100 })
     name!: string
     @Column({ length: 100, nullable: true })

@@ -1,4 +1,4 @@
-import { Repository, Entity } from "typeorm";
+import { Repository } from "typeorm";
 import { AppDataSource } from "../config/data-source";
 import CustomError from "../utils/CustomError";
 import { StatusCodes } from "http-status-codes";

@@ -48,6 +48,17 @@ class roles {
             next(err)
         }
     }
+    async removePermission(req: Request, res: Response, next: NextFunction) {
+        try {
+            const response: CustomSuccessfulResponse = await rolesService.removePermission(req.body);
+            res.status(response.status).json({
+                message: response.message
+            });
+        }
+        catch (err) {
+            next(err)
+        }
+    }
 }
 
 export default new roles();

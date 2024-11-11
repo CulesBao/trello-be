@@ -74,6 +74,17 @@ class userController {
             next(err)
         }
     }
+    async removeRole(req: Request, res: Response, next: NextFunction) {
+        try {
+            const response: CustomSuccessfulResponse = await userService.removeRole(req.body)
+            res.status(response.status).json({
+                message: response.message
+            })
+        }
+        catch (err: any) {
+            next(err)
+        }
+    }
 }
 
 export default new userController()

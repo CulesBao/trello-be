@@ -1,31 +1,62 @@
-import { IsAlphanumeric, IsDate, IsEmail, IsNumberString, IsStrongPassword, Length } from 'class-validator'
-interface UserRolesInput {
-    userId: number,
-    roleId: number
-}
+import Joi from "joi"
+import { joiCustomMessage } from "../../../types/joi"
 
-class LoginDTO{
-    @Length(6, 50)
-    @IsAlphanumeric()
-    public username!: string
+const customMessage = new joiCustomMessage()
+const LoginDTO = Joi.object({
+    username: Joi.string().trim().alphanum().min(6).max(50).messages({
+        'string.base': customMessage.string('Username'),
+        'string.trim': customMessage.trim('Username'),
+        'string.alphanum': customMessage.alphanum('Username'),
+        'string.min': customMessage.min('Username', 6),
+        'string.max': customMessage.min('Username', 50),
+    }),
+    password: Joi.string().trim().min(6).max(50).required().messages(
+        {
+            'string.base': customMessage.string('Password'),
+            'string.trim': customMessage.trim('Password'),
+            'string.min': customMessage.min('Password', 6),
+            'string.max': customMessage.min('Password', 50),
+            'any.required': customMessage.required('Password')
+        }
+    )
+})
 
-    @Length(6, 50)
-    @IsStrongPassword()
-    public password!: string
-}
-
-class RegisterDTO extends LoginDTO {
-    @Length(6, 70)
-    name!: string
-
-    @IsEmail()
-    email!: string
-
-    @Length(10,11)
-    @IsNumberString()
-    phoneNumber?: string
-
-    @IsDate()
-    birthDate?: Date
-}
-export { UserRolesInput, LoginDTO, RegisterDTO }
+const RegisterDTO = Joi.object({
+    username: Joi.string().trim().alphanum().min(6).max(50).messages({
+        'string.base': customMessage.string('Username'),
+        'string.trim': customMessage.trim('Username'),
+        'string.alphanum': customMessage.alphanum('Username'),
+        'string.min': customMessage.min('Username', 6),
+        'string.max': customMessage.min('Username', 50),
+    }),
+    password: Joi.string().trim().min(6).max(50).required().messages({
+        'string.base': customMessage.string('Password'),
+        'string.trim': customMessage.trim('Password'),
+        'string.min': customMessage.min('Password', 6),
+        'string.max': customMessage.min('Password', 50),
+        'string.required': customMessage.required('Password')
+    }),
+    name: Joi.string().trim().min(6).max(70).required().messages({
+        'string.base': customMessage.string('Name'),
+        'any.required': customMessage.required('Name'),
+        'string.trim': customMessage.trim('Name'),
+        'string.min': customMessage.min('Name', 6),
+        'string.max': customMessage.min('Name', 70),
+    }),
+    email: Joi.string().email().trim().required().messages({
+        'string.base': customMessage.string('Email'),
+        'string.trim': customMessage.trim('Email'),
+        'string.email': customMessage.email('Email'),
+        'any.required': customMessage.required('Email')
+    }),
+    phoneNumber: Joi.string().trim().min(10).max(11).messages({
+        'string.base': customMessage.string('Phone number'),
+        'string.trim': customMessage.trim('Phone number'),
+        'string.min': customMessage.min('Phone number', 10),
+        'string.max': customMessage.min('Phone number', 11),
+    }),
+    birthDate: Joi.date().messages({
+        'date.base': customMessage.date('Birth date')
+    })
+})
+export { LoginDTO, RegisterDTO }

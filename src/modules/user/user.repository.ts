@@ -20,7 +20,8 @@ export class UserService extends baseRepository<User> {
         const user = await this.repository.findOne({
             where: {
                 [field]: value
-            } as any
+            } as any,
+            relations: ['roles']
         });
         return user;
     }

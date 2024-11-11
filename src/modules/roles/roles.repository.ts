@@ -1,42 +1,34 @@
-import { AppDataSource } from '../../config/data-source';
+import { baseRepository } from '../../template/base.repository';
 import { Permission } from '../permissions/entity/Permission';
 import { Role } from './entity/Role';
 
-export class RoleSerivce {
-    private roleRepository = AppDataSource.getRepository(Role);
-    public async createRole(roleData: Role): Promise<void> {
-        const newRole = this.roleRepository.create(roleData)
-        await this.roleRepository.save(newRole)
-    }
-    public async findById(id: number): Promise<Role | null> {
-        return await this.roleRepository.findOne({
+export class RoleSerivce extends baseRepository<Role> {
+    public async findById(id: number): Promise<Role> {
+        const entity = await this.repository.findOne({
             where: {
                 id: Number(id),
             },
             relations: ['permissions']
         })
+        if (!entity)
+            throw new Error('Role not found')
+        return entity
     }
     public async findByName(name: string): Promise<Role | null> {
-        return await this.roleRepository.findOne({
+        return await this.repository.findOne({
             where: {
                 name: String(name)
             },
             relations: ['permissions']
         })
     }
-    public async findAll(): Promise<Role[] | null> {
-        return await this.roleRepository.find({
+    public override async findAll(): Promise<Role[]> {
+        return await this.repository.find({
             relations: ['permissions']
         })
     }
-    public async delete(id: number): Promise<void> {
-        await this.roleRepository.delete({ id: Number(id) })
-    }
-    public async update(id: number, role: Partial<Role>): Promise<void> {
-        await this.roleRepository.update({ id: Number(id) }, role)
-    }
     public async assignPermission(role: Role, permission: Permission): Promise<void> {
         role.permissions.push(permission)
-        await this.roleRepository.save(role)
+        await this.repository.save(role)
     }
 }
