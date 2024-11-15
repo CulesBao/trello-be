@@ -1,6 +1,8 @@
+import { StatusCodes } from 'http-status-codes';
 import { baseRepository } from '../../template/base.repository';
 import { Permission } from '../permissions/entity/Permission';
 import { Role } from './entity/Role';
+import CustomError from '../../utils/CustomError';
 
 export class RoleSerivce extends baseRepository<Role> {
     public async findById(id: number): Promise<Role> {
@@ -11,7 +13,7 @@ export class RoleSerivce extends baseRepository<Role> {
             relations: ['permissions']
         })
         if (!entity)
-            throw new Error('Role not found')
+            throw new CustomError(StatusCodes.BAD_REQUEST, 'Role not found')
         return entity
     }
     public async findByName(name: string): Promise<Role | null> {

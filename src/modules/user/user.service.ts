@@ -25,6 +25,7 @@ class userService {
             return new CustomSuccessfulResponse(StatusCodes.OK, "Get my infomation successful", user)
         }
     }
+
     deleteUser = async (id: string): Promise<CustomSuccessfulResponse> => {
         const user = await this.userService.findById(parseInt(id))
         if (user.roles[0]?.name == 'admin')
@@ -32,6 +33,7 @@ class userService {
         await this.userService.delete(Number(id))
         return new CustomSuccessfulResponse(StatusCodes.ACCEPTED, "Delete user successful")
     }
+
     updateUser = async (userData: User, id: number): Promise<CustomSuccessfulResponse> => {
         const { name, username, email, password } = userData
         const user = await this.userService.findById(id)
@@ -41,6 +43,7 @@ class userService {
         await this.userService.update(id, userData)
         return new CustomSuccessfulResponse(StatusCodes.ACCEPTED, "Update user successful")
     }
+
     async assignRole(assignRole: AssignRoleDTO): Promise<CustomSuccessfulResponse> {
         const { userId, roleId } = assignRole
         const user = await this.userService.findById(userId)
@@ -52,6 +55,7 @@ class userService {
         await this.userService.assignRole(user, role)
         return new CustomSuccessfulResponse(StatusCodes.CREATED, "Assign role successful")
     }
+
     async removeRole(removeRole: AssignRoleDTO): Promise<CustomSuccessfulResponse> {
         const { userId, roleId } = removeRole
         const user = await this.userService.findById(userId)

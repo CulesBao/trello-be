@@ -1,11 +1,11 @@
 import Joi from "joi"
 import { joiCustomMessage } from "../../../types/joi"
-interface AssignRoleDTO{
+export interface AssignRoleDTO{
     userId: number,
     roleId: number
 }
 const customMessage = new joiCustomMessage()
-const UpdateDTO = Joi.object({
+export const UpdateDTO = Joi.object({
     username: Joi.string().trim().alphanum().min(6).max(50).messages({
         'string.base': customMessage.string('Username'),
         'string.trim': customMessage.trim('Username'),
@@ -33,14 +33,21 @@ const UpdateDTO = Joi.object({
         'string.email': customMessage.email('Email'),
         'any.required': customMessage.required('Email')
     }),
-    phoneNumber: Joi.string().trim().min(10).max(11).messages({
+    phoneNumber: Joi.string().trim().min(10).max(11).allow('').messages({
         'string.base': customMessage.string('Phone number'),
         'string.trim': customMessage.trim('Phone number'),
         'string.min': customMessage.min('Phone number', 10),
         'string.max': customMessage.min('Phone number', 11),
     }),
-    birthDate: Joi.date().messages({
+    birthDate: Joi.date().allow('').messages({
         'date.base': customMessage.date('Birth date')
     })
 })
-export { AssignRoleDTO, UpdateDTO }
+export const RoleAssignDTO = Joi.object({
+    userId: Joi.number().required().messages({
+        'any.required': customMessage.required('Role id')
+    }),
+    roleId: Joi.number().required().messages({
+        'any.required': customMessage.required('Role id')
+    })
+})

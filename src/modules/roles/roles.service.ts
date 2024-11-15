@@ -5,10 +5,10 @@ import { RoleSerivce } from "./roles.repository";
 import { PermissionSerivce } from '../permissions/permission.repository'
 import { Role } from "./entity/Role";
 import { Permission } from "../permissions/entity/Permission";
-import { AssignRoleDTO } from "./dto/role.dto";
+import { assign } from "./dto/role.dto";
 class roles {
     private roleService = new RoleSerivce(Role)
-    private permissionService = new PermissionSerivce()
+    private permissionService = new PermissionSerivce(Permission)
     async createRole(roleInput: Role): Promise<CustomSuccessfulResponse> {
         const role = await this.roleService.findByName(roleInput.name)
         if (role)
@@ -16,10 +16,10 @@ class roles {
         await this.roleService.create(roleInput)
         return new CustomSuccessfulResponse(StatusCodes.CREATED, 'Role created successfully');
     }
-    async assignPermission(assignPermissionToRole: AssignRoleDTO): Promise<CustomSuccessfulResponse> {
+    async assignPermission(assignPermissionToRole: assign): Promise<CustomSuccessfulResponse> {
         const { roleId, permissionId } = assignPermissionToRole;
         const role = await this.roleService.findById(roleId)
-        const permission = await this.permissionService.findById(permissionId)
+        const permission = await this.permissionService.findByField('id', permissionId)
         role.permissions?.forEach((value: Permission) => {
             if (value.id == permissionId)
                 throw new CustomError(StatusCodes.BAD_REQUEST, "Role is already has this permission")
@@ -44,10 +44,10 @@ class roles {
         await this.roleService.delete(Number(id))
         return new CustomSuccessfulResponse(StatusCodes.OK, 'Role deleted successfully');
     }
-    async removePermission(assignPermissionToRole: AssignRoleDTO): Promise<CustomSuccessfulResponse> {
+    async removePermission(assignPermissionToRole: assign): Promise<CustomSuccessfulResponse> {
         const { roleId, permissionId } = assignPermissionToRole;
         const role = await this.roleService.findById(roleId)
-        const permission = await this.permissionService.findById(permissionId)
+        await this.permissionService.findByField('id', permissionId)
         role.permissions?.forEach((value: Permission) => {
             if (value.id == permissionId) {
                 role.permissions?.splice(role.permissions.indexOf(value), 1)

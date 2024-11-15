@@ -1,20 +1,11 @@
-import { NextFunction, Request, Response } from "express";
-import { UpdateDTO } from "./dto/user.dto";
-import CustomError from "../../utils/CustomError";
-import { StatusCodes } from "http-status-codes";
-export class userMiddleware {
-    public async updateUser(req: Request, _: Response, next: NextFunction) {
-        try {
-            const updateData: typeof UpdateDTO = req.body
-            const { error } = UpdateDTO.validate(updateData, {abortEarly: false})
-            if (error){
-                const messages: string[] = error.details.map((err) => err.message)
-                throw new CustomError(StatusCodes.BAD_REQUEST, messages.join(', '))
-            }
-            next()
-        }
-        catch (error) {
-            next(error);
-        }
-    }
+import { UpdateDTO, RoleAssignDTO } from "./dto/user.dto";
+import { baseMiddleware } from "../../template/base.middleware";
+class userMiddleware extends baseMiddleware {
+    public update = this.validateSchema(UpdateDTO)
+
+    public assign = this.validateSchema(RoleAssignDTO)
+
+    public remove = this.validateSchema(RoleAssignDTO)
 }
+
+export default new userMiddleware()

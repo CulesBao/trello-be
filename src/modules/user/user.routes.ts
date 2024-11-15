@@ -2,6 +2,7 @@ import express from 'express';
 import authenticationMiddleware from '../../middleware/authentication.middleware'
 import userController from './user.controller'
 import { Permissions } from '../../types/permissions'
+import userMiddleware from './user.middleware';
 
 const router: express.Router = express.Router();
 router.get('/get/me', authenticationMiddleware.authenticateToken, userController.getMe);
@@ -21,14 +22,16 @@ router.delete('/delete/:id',
     userController.deleteUser
 );
 router.put('/updated', authenticationMiddleware.authenticateToken,
-    userController.updateUser)
+    userMiddleware.update ,userController.updateUser)
 router.post('/assign-role',
     authenticationMiddleware.authenticateToken,
     authenticationMiddleware.authorizePermission(Permissions.ASSIGN_ROLE),
+    userMiddleware.assign,
     userController.assignRole)
 router.delete('/remove-role',
     authenticationMiddleware.authenticateToken,
     authenticationMiddleware.authorizePermission(Permissions.REMOVE_ROLE),
+    userMiddleware.remove,
     userController.removeRole
 )
 export default router;

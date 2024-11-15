@@ -12,4 +12,6 @@ export abstract class baseEntity {
     
     @Column({type: "boolean", default: false})
     isDeleted!: boolean
+
+    [key: string] : any
 }

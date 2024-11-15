@@ -4,46 +4,23 @@ import CustomError from "../../utils/CustomError";
 import { PermissionSerivce } from "./permission.repository";
 import { Permission } from "./entity/Permission";
 class permission {
-    private permissionService = new PermissionSerivce()
+    private permissionService = new PermissionSerivce(Permission)
     async createPermission(permissionInput: Permission): Promise<CustomSuccessfulResponse> {
-        try {
-            const { name, description } = permissionInput;
-            const permission = await this.permissionService.findByName(name)
-            if (permission)
-                throw new CustomError(StatusCodes.CONFLICT, "Permission name is already existed")
-            await this.permissionService.createPermission(permissionInput)
-            return new CustomSuccessfulResponse(StatusCodes.CREATED, 'Permission created successfully');
-        }
-        catch (err) {
-            throw err;
-        }
+        const { name, description } = permissionInput;
+        const entity = await this.permissionService.customFindByField('name', name)
+        if (entity)
+            throw new CustomError(StatusCodes.CONFLICT, "Permission is already existed")
+        await this.permissionService.create(permissionInput)
+        return new CustomSuccessfulResponse(StatusCodes.CREATED, 'Permission created successfully');
     }
     async getPermissions(id: string): Promise<CustomSuccessfulResponse> {
-        try {
-            if (!id)
-                throw new CustomError(StatusCodes.BAD_REQUEST, 'Category id is required');
-            if (id == 'all') {
-                const permissions = await this.permissionService.findAll()
-                return new CustomSuccessfulResponse(StatusCodes.OK, 'Permissions fetched successfully', permissions);
-            }
-            else {
-                const permisison = await this.permissionService.findById(Number(id))
-                if (!permisison)
-                    throw new CustomError(StatusCodes.NOT_FOUND, 'Permission not found');
-                return new CustomSuccessfulResponse(StatusCodes.OK, 'Permission fetched successfully', permisison);
-            }
-        }
-        catch (err) {
-            throw err;
-        }
+        if (!id)
+            throw new CustomError(StatusCodes.BAD_REQUEST, 'Category id is required');
+        return new CustomSuccessfulResponse(StatusCodes.OK, 'Permission fetched successfully', id == 'all' ? await this.permissionService.findAll() : await this.permissionService.findByField('id', id));
     }
     async deletePermission(id: string): Promise<CustomSuccessfulResponse> {
         try {
-            if (!id)
-                throw new CustomError(StatusCodes.BAD_REQUEST, 'Category id is required');
-            const permission = await this.permissionService.findById(Number(id))
-            if (permission)
-                throw new CustomError(StatusCodes.NOT_FOUND, "Permisison not found")
+            const permission = await this.permissionService.findByField('id', id)
             await this.permissionService.delete(parseInt(id))
             return new CustomSuccessfulResponse(StatusCodes.OK, 'Permission deleted successfully');
         }

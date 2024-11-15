@@ -6,7 +6,7 @@ import { baseEntity } from "./baseEntity";
 export abstract class baseRepository<T extends baseEntity> {
     protected repository: Repository<T>;
 
-    constructor(entity: { new (): T }) {
+    constructor(entity: { new(): T }) {
         this.repository = AppDataSource.getRepository(entity);
     }
     public async create(entity: T): Promise<T> {
@@ -16,21 +16,21 @@ export abstract class baseRepository<T extends baseEntity> {
         return await this.repository.find()
     }
     public async findByField(field: string, value: any): Promise<T> {
-        const entity = await this.repository.findOne({ 
-            where: { 
+        const entity = await this.repository.findOne({
+            where: {
                 [field]: value
             } as any
-         })
+        })
         if (!entity)
             throw new CustomError(StatusCodes.NOT_FOUND, `Entity with ${field} ${value} not found`)
         return entity
     }
-    // public async findById(id: number): Promise<T> {
-    //     const entity = await this.repository.findOne(id as any)
-    //     if (!entity)
-    //         throw new CustomError(StatusCodes.NOT_FOUND, `Entity with id ${id} not found`)
-    //     return entity
-    // }
+    public async findById(id: number): Promise<T> {
+        const entity = await this.repository.findOne(id as any)
+        if (!entity)
+            throw new CustomError(StatusCodes.NOT_FOUND, `Entity with id ${id} not found`)
+        return entity
+    }
     public async update(id: number, entity: T): Promise<T> {
         const entityToUpdate = await this.findByField('id', id)
         return this.repository.save({ ...entityToUpdate, ...entity })
