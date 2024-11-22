@@ -5,7 +5,7 @@ import CustomError from '../../utils/CustomError';
 import { StatusCodes } from 'http-status-codes';
 
 export class UserService extends baseRepository<User> {
-    public async findById(id: number): Promise<User> {
+    public override async findById(id: number): Promise<User> {
         const user: User | null = await this.repository.findOne({
             where: {
                 id

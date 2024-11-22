@@ -20,4 +20,7 @@ export class joiCustomMessage {
     public date(field: string){
         return `${field} is invalid`
     }
+    public number(field: string){
+        return `${field} is invalid`
+    }
 }

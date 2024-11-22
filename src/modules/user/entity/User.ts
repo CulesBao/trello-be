@@ -23,8 +23,8 @@ export class User extends baseEntity {
     @Column({ type: "date", nullable: true, default: null })
     birthDate?: Date
 
-    @OneToMany(() => Workspace, workspace => workspace.owner)
-    ownerWorkspaces!: Workspace
+    @ManyToMany(() => Workspace, workspace => workspace.admins)
+    adminWorkspaces!: Workspace[]
 
     @ManyToMany(() => Workspace, workspace => workspace.users)
     workspaces!: Workspace[]

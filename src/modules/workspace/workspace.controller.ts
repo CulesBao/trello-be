@@ -7,10 +7,24 @@ import { StatusCodes } from "http-status-codes";
 import CustomError from "../../utils/CustomError";
 
 class workSpaceController {
-    public async addWorkSpace(req: Request, res: Response, next: NextFunction) {
+    public async createWorkSpace(req: Request, res: Response, next: NextFunction) {
         try {
             const workspace: Workspace = req.body
-            const response: CustomSuccessfulResponse = await workSpaceService.addNewWorkSpace(Number(req.id), workspace)
+            const adminId: number = Number(req.id)
+            const response: CustomSuccessfulResponse = await workSpaceService.createWorkSpace(adminId, workspace)
+            res.status(response.status).json({
+                message: response.message,
+                data: response.data
+            })
+        }
+        catch (err) {
+            next(err)
+        }
+    }
+    public async getMyWorkSpace(req: Request, res: Response, next: NextFunction) {
+        try {
+            const userId: number = Number(req.id)
+            const response: CustomSuccessfulResponse = await workSpaceService.getMyWorkSpace(userId)
             res.status(response.status).json({
                 message: response.message,
                 data: response.data
@@ -34,9 +48,9 @@ class workSpaceController {
     }
     public async updateWorkSpaceById(req: Request, res: Response, next: NextFunction) {
         try {
-            const workspaceId: string = req.params.id
+            const workspaceId: number = Number(req.params.workSpaceId)
             const workspace: Workspace = req.body
-            const response: CustomSuccessfulResponse = await workSpaceService.updateWorkSpaceById(Number(workspaceId), workspace)
+            const response: CustomSuccessfulResponse = await workSpaceService.updateWorkSpaceById(workspaceId, workspace)
             res.status(response.status).json({
                 message: response.message,
                 data: response.data
@@ -48,7 +62,7 @@ class workSpaceController {
     }
     public async deleteWorkSpaceById(req: Request, res: Response, next: NextFunction) {
         try {
-            const workspaceId: string = req.params.id
+            const workspaceId: string = req.params.workSpaceId
             const response: CustomSuccessfulResponse = await workSpaceService.deleteWorkSpaceById(Number(workspaceId))
             res.status(response.status).json({
                 message: response.message
@@ -74,9 +88,9 @@ class workSpaceController {
     }
     public async addMemberToWorkSpace(req: Request, res: Response, next: NextFunction) {
         try {
-            const workspaceId: number = Number(req.params.id)
+            const workspace: Workspace = req.workSpace
             const user: User = req.body
-            const response: CustomSuccessfulResponse = await workSpaceService.addMemberToWorkSpace(Number(workspaceId), user)
+            const response: CustomSuccessfulResponse = await workSpaceService.addMemberToWorkSpace(workspace, user)
             res.status(response.status).json({
                 message: response.message,
                 data: response.data
@@ -115,11 +129,50 @@ class workSpaceController {
     }
     public async deleteMemberOutWorkSpace(req: Request, res: Response, next: NextFunction) {
         try {
-            const workspaceId: string = req.params.id
+            const workSpace: Workspace = req.workSpace
             const memberId: string = req.params.memberId
-            if (memberId == req.id)
-                throw new CustomError(StatusCodes.FORBIDDEN, "Cannot delete admin out of workspace")
-            const response: CustomSuccessfulResponse = await workSpaceService.deleteMemberOutWorkSpace(Number(workspaceId), Number(memberId))
+            const response: CustomSuccessfulResponse = await workSpaceService.deleteMemberOutWorkSpace(workSpace, Number(memberId))
+            res.status(response.status).json({
+                message: response.message,
+                data: response.data
+            })
+        }
+        catch (err) {
+            next(err)
+        }
+    }
+    public async addNewAdmin(req: Request, res: Response, next: NextFunction) {
+        try {
+            const workspace: Workspace = req.workSpace
+            const adminId: number = Number(req.params.adminId)
+            const response: CustomSuccessfulResponse = await workSpaceService.addNewAdmin(workspace, adminId)
+            res.status(response.status).json({
+                message: response.message,
+                data: response.data
+            })
+        }
+        catch (err) {
+            next(err)
+        }
+    }
+    public async getAllAdminFromWorkSpace(req: Request, res: Response, next: NextFunction) {
+        try {
+            const workSpace: Workspace = req.workSpace
+            const response: CustomSuccessfulResponse = await workSpaceService.getAllAdminFromWorkSpace(workSpace)
+            res.status(response.status).json({
+                message: response.message,
+                data: response.data
+            })
+        }
+        catch (err) {
+            next(err)
+        }
+    }
+    public async deleteAdminOutWorkSpace(req: Request, res: Response, next: NextFunction) {
+        try {
+            const workSpace: Workspace = req.workSpace
+            const adminId: string = req.params.adminId
+            const response: CustomSuccessfulResponse = await workSpaceService.deleteAdminOutWorkSpace(workSpace, Number(adminId))
             res.status(response.status).json({
                 message: response.message,
                 data: response.data

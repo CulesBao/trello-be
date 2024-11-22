@@ -12,13 +12,13 @@ export class Workspace extends baseEntity {
     @OneToMany(() => Board, board => board.workspace)
     boards!: Board[]
 
-    @ManyToOne(() => User, user => user.workspaces)
+    @ManyToMany(() => User, user => user.workspacess, { onDelete: "CASCADE" })
     @JoinTable({
-        name: "owner_workspaces",
+        name: "admins_workspaces",
         joinColumn: { name: "workspaceId", referencedColumnName: "id" },
         inverseJoinColumn: { name: "userId", referencedColumnName: "id" }
     })
-    owner!: User
+    admin!: User[]
 
     @ManyToMany(() => User, user => user.workspaces, { onDelete: "CASCADE" })
     @JoinTable({

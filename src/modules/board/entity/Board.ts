@@ -13,7 +13,7 @@ export class Board extends baseEntity {
 
     @OneToMany(() => List, list => list.board)
     lists!: List[]
-
+    
     @ManyToOne(() => Workspace, workspace => workspace.boards)
     @JoinColumn({ name: "workspaceId" })
     workspace!: Workspace

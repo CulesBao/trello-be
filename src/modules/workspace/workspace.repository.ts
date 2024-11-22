@@ -1,27 +1,31 @@
 import { baseRepository } from "../../template/base.repository";
 import { Workspace } from "./entity/Workspace";
-import { Board } from "../board/entity/Board";
 import CustomError from "../../utils/CustomError";
 import { StatusCodes } from "http-status-codes";
 import { User } from "../user/entity/User";
 
 export class WorkSpaceRepository extends baseRepository<Workspace> {
-    public async addBoard(id: number, board: Board): Promise<Workspace> {
-        const workspace = await this.findByField('id', id)
-        workspace.boards.push(board)
-        await this.repository.save(workspace)
-        return workspace
-    }
     public override async findById(id: number): Promise<Workspace> {
         const entity = await this.repository.findOne({
             where: {
                 id
             },
-            relations: ['owner', 'users']
+            relations: ['admin', 'users', 'boards']
         })
         if (!entity)
-            throw new CustomError(StatusCodes.NOT_FOUND, `Entity with id ${id} not found`)
+            throw new CustomError(StatusCodes.NOT_FOUND, `Workspace with id ${id} not found`)
         return entity
+    }
+    public async getMyWorkSpace(userId: number): Promise<Workspace[]> {
+        const workSpaces: Workspace[] = await this.repository.find({
+            where: {
+            admin: {
+                id: userId
+            }
+            },
+            relations: ['admin', 'users', 'boards']
+        });
+        return workSpaces
     }
     public async getField(id: number, field: string): Promise<any> {
         const workspace = await this.findByField('id', id)
@@ -29,8 +33,7 @@ export class WorkSpaceRepository extends baseRepository<Workspace> {
             throw new CustomError(StatusCodes.BAD_REQUEST, "Field invalid!")
         return workspace[field]
     }
-    public async addMemberToWorkSpace(id: number, user: User): Promise<Workspace> {
-        const workspace = await this.findByField('id', id)
+    public async addMemberToWorkSpace(workspace: Workspace, user: User): Promise<Workspace> {
         workspace.users.push(user)
         await this.repository.save(workspace)
         return workspace

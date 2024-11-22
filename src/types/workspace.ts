@@ -1,4 +1,4 @@
-export enum Workspace{
+export enum WorkspaceEnum {
     OWNER = "owner",
     MEMBER = "member"
 }
