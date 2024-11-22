@@ -62,24 +62,10 @@ class workSpaceController {
     }
     public async deleteWorkSpaceById(req: Request, res: Response, next: NextFunction) {
         try {
-            const workspaceId: string = req.params.workSpaceId
-            const response: CustomSuccessfulResponse = await workSpaceService.deleteWorkSpaceById(Number(workspaceId))
+            const workSpace = req.workSpace
+            const response: CustomSuccessfulResponse = await workSpaceService.deleteWorkSpaceById(workSpace.id)
             res.status(response.status).json({
                 message: response.message
-            })
-        }
-        catch (err) {
-            next(err)
-        }
-    }
-    public async getFieldByIdFromWorkSpace(req: Request, res: Response, next: NextFunction) {
-        try {
-            const field: string = req.params.field
-            const workSpace: Workspace = req.workSpace
-            const response: CustomSuccessfulResponse = await workSpaceService.getFieldByIdFromWorkSpace(workSpace, field)
-            res.status(response.status).json({
-                message: response.message,
-                data: response.data
             })
         }
         catch (err) {
@@ -89,8 +75,8 @@ class workSpaceController {
     public async addMemberToWorkSpace(req: Request, res: Response, next: NextFunction) {
         try {
             const workspace: Workspace = req.workSpace
-            const user: User = req.body
-            const response: CustomSuccessfulResponse = await workSpaceService.addMemberToWorkSpace(workspace, user)
+            const email: string = req.body.email
+            const response: CustomSuccessfulResponse = await workSpaceService.addMemberToWorkSpace(workspace, email)
             res.status(response.status).json({
                 message: response.message,
                 data: response.data
@@ -116,8 +102,8 @@ class workSpaceController {
     public async getMemberByIdFromWorkSpace(req: Request, res: Response, next: NextFunction) {
         try {
             const workSpace: Workspace = req.workSpace
-            const memberId: string = req.params.memberId
-            const response: CustomSuccessfulResponse = await workSpaceService.getMemberByIdFromWorkSpace(workSpace, Number(memberId))
+            const memberId: number = Number(req.params.memberId)
+            const response: CustomSuccessfulResponse = await workSpaceService.getMemberByIdFromWorkSpace(workSpace, memberId)
             res.status(response.status).json({
                 message: response.message,
                 data: response.data
@@ -130,8 +116,8 @@ class workSpaceController {
     public async deleteMemberOutWorkSpace(req: Request, res: Response, next: NextFunction) {
         try {
             const workSpace: Workspace = req.workSpace
-            const memberId: string = req.params.memberId
-            const response: CustomSuccessfulResponse = await workSpaceService.deleteMemberOutWorkSpace(workSpace, Number(memberId))
+            const memberId: number = Number(req.params.memberId)
+            const response: CustomSuccessfulResponse = await workSpaceService.deleteMemberOutWorkSpace(workSpace, memberId)
             res.status(response.status).json({
                 message: response.message,
                 data: response.data

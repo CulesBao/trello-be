@@ -10,7 +10,8 @@ export class UserService extends baseRepository<User> {
             where: {
                 id
             },
-            relations: ['roles']
+            // relations: ['roles'],
+            select: ['id', 'username', 'email']
         })
         if (user == null)
             throw new CustomError(StatusCodes.NOT_FOUND, "Cannot find any user with this ID")
@@ -21,7 +22,7 @@ export class UserService extends baseRepository<User> {
             where: {
                 [field]: value
             } as any,
-            relations: ['roles']
+            // relations: ['roles']
         });
         return user;
     }
@@ -30,7 +31,8 @@ export class UserService extends baseRepository<User> {
             where: {
                 username: String(username)
             },
-            relations: ['roles']
+            // relations: ['roles'],
+            select: ['id', 'username', 'email']
         })
         if (user == null)
             throw new CustomError(StatusCodes.NOT_FOUND, "Cannot find any user match this key")
@@ -41,7 +43,8 @@ export class UserService extends baseRepository<User> {
             where: {
                 email: String(email)
             },
-            relations: ['roles']
+            // relations: ['roles'],
+            select: ['id', 'username', 'email']
         })
         if (user == null)
             throw new CustomError(StatusCodes.NOT_FOUND, "Cannot find any user match this key")

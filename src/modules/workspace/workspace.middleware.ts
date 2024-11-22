@@ -4,7 +4,11 @@ import { AddMemberDTO, UpdateDTO, WorkspaceDTO, UpdateMemberDTO } from "./dto/wo
 import { Workspace } from './entity/Workspace'
 import { WorkspaceEnum } from "../../types/workspace";
 import workspaceService from "./workspace.service";
-import client from "../../config/redis.config";
+import CacheService from "../cache/cache.service";
+import { User } from "../user/entity/User";
+import CustomError from "../../utils/CustomError";
+import { StatusCodes } from "http-status-codes";
+import { TrelloEnum } from "../../types/trello";
 
 class workSpaceMiddleware extends baseMiddleware {
     public createWorkSpace = this.validateSchema(WorkspaceDTO)
@@ -18,19 +22,32 @@ class workSpaceMiddleware extends baseMiddleware {
     public checkRole(role: string) {
         return async (req: Request, _: Response, next: NextFunction) => {
             try {
-                const workSpaceId = Number(req.params.workSpaceId)
-                const userId = Number(req.id)
-                let workSpaceString: string | null = await client.get('workspace')
-                let workSpace: Workspace = workSpaceString != null ? JSON.parse(workSpaceString) : new Workspace();
-                if (role == WorkspaceEnum.OWNER) {
-                    workSpace = (workSpace.id != workSpaceId) ? await workspaceService.isOwnerOfWorkSpace(userId, workSpaceId) : workSpace
-                    req.workSpace = workSpace
+                const workSpaceId : number = Number(req.params.workSpaceId)
+                const userId : number = Number(req.id)
+                let workSpaceCache : Object | null | string = await CacheService.get(`${TrelloEnum.Workspace} + ${workSpaceId}`)
+                if (workSpaceCache == null) {
+                    req.workSpace = await workspaceService.getWorkSpaceById(workSpaceId)
+                    CacheService.set(`${TrelloEnum.Workspace} + ${workSpaceId}`, req.workSpace)
                 }
-                else if (role == WorkspaceEnum.MEMBER) {
-                    workSpace = (workSpace.id != workSpaceId) ? await workspaceService.isMemberOfWorkSpace(userId, workSpaceId) : workSpace
-                    req.workSpace = workSpace
+                else{
+                    req.workSpace = typeof workSpaceCache === 'string' ? JSON.parse(workSpaceCache) : workSpaceCache as Workspace
                 }
-                next()
+                switch (role) {
+                    case `${WorkspaceEnum.OWNER}`:
+                        const admin : User | undefined = req.workSpace.admin.find((admin : User) => admin.id === userId)
+                        if (!admin) 
+                            throw new CustomError(StatusCodes.FORBIDDEN, "You are not authorized to perform this action")
+                        next()
+                        break
+                    case `${WorkspaceEnum.MEMBER}`:
+                        const member : User | undefined = req.workSpace.users?.find((member : User) => member.id === userId)
+                        if (!member) 
+                            throw new CustomError(StatusCodes.FORBIDDEN, "You are not authorized to perform this action")
+                        next()
+                        break
+                    default:
+                        throw new CustomError(StatusCodes.BAD_REQUEST, "Invalid role")
+                }
             }
             catch (err) {
                 next(err)
