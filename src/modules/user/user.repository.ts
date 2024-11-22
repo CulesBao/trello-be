@@ -38,7 +38,7 @@ export class UserService extends baseRepository<User> {
             throw new CustomError(StatusCodes.NOT_FOUND, "Cannot find any user match this key")
         return user
     }
-    public async findByEmail(email: string): Promise<User | null> {
+    public async findByEmail(email: string): Promise<User> {
         const user = await this.repository.findOne({
             where: {
                 email: String(email)

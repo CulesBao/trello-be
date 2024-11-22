@@ -1,11 +1,18 @@
 import { baseMiddleware } from "../../template/base.middleware";
-import boardRepository, { BoardRepository } from "./board.repository";
+import boardRepository from "./board.repository";
 import boardService from "./board.service";
-import { AddBoardDTO } from "./dto/Board.dto";
+import { AddBoardDTO, AddMemberDTO } from "./dto/Board.dto";
 import { Request, Response, NextFunction } from "express";
+import { Board } from "./entity/Board";
+import CustomError from "../../utils/CustomError";
+import { StatusCodes } from "http-status-codes";
+import { Workspace } from "../workspace/entity/Workspace";
+import { WorkSpaceRepository } from "../workspace/workspace.repository";
 
 class boardMiddleware extends baseMiddleware {
+    private workSpaceRepository: WorkSpaceRepository = new WorkSpaceRepository(Workspace)
     public addBoard = this.validateSchema(AddBoardDTO)
+    public addMember = this.validateSchema(AddMemberDTO)
     public isBoardInWorkSpace() {
         return async (req: Request, res: Response, next: NextFunction) => {
             try {
@@ -20,16 +27,48 @@ class boardMiddleware extends baseMiddleware {
             }
         }
     }
-    public getParent() {
-        return async (req: Request, res: Response, next: NextFunction) => {
+    public isMemberInBoard() {
+        return async (req: Request, _: Response, next: NextFunction) => {
             try {
                 const boardId: number = Number(req.params.boardId)
-                const board = await boardRepository.findById(boardId)
+                const userId = Number(req.id)
+                const board: Board = await boardRepository.findById(boardId)
                 req.board = board
-                req.workSpace = board.workSpace
+                if (board.users.find((value) => value.id == userId) == undefined)
+                    throw new CustomError(StatusCodes.NOT_FOUND, `User with ID ${userId} cannot found in this board`)
                 next()
             }
-            catch (err) {
+            catch (err : unknown) {
+                next(err)
+            }
+        }
+    }
+    public isAdminInBoard() {
+        return async (req: Request, _: Response, next: NextFunction) => {
+            try {
+                const boardId: number = Number(req.params.boardId)
+                const userId = Number(req.id)
+                const board: Board = await boardRepository.findById(boardId)
+                req.board = board
+                if (board.admin.id != userId)
+                    throw new CustomError(StatusCodes.FORBIDDEN, `User with ID ${userId} cannot access this board`)
+                next()
+            }
+            catch (err : unknown) {
+                next(err)
+            }
+        }
+    }
+    public getParent() {
+        return async (req: Request, _: Response, next: NextFunction) => {
+            try {
+                const workSpaceId : number = Number(req.body.workSpaceId)
+                const workSpace : Workspace = await this.workSpaceRepository.findById(workSpaceId)
+                req.workSpace = workSpace
+
+                next()
+            }
+            catch (err : unknown) {
                 next(err)
             }
         }

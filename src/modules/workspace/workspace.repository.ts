@@ -26,25 +26,12 @@ export class WorkSpaceRepository extends baseRepository<Workspace> {
         return workSpace
     }
     public async getMyWorkSpace(userId: number): Promise<Workspace[]> {
-        const workSpacesCache = await cacheService.get(`${TrelloEnum.Workspace} + "userID" + ${userId}`)
-        let workSpaces : Workspace[] | null;
-        if (workSpacesCache == null){
-            workSpaces = await this.repository.find({
-                where: {
-                    admin: {
-                        id: userId
-                    }
-                },
-                relations: ['admin', 'users', 'boards'],
-                select: ['id', 'name', 'admin', 'users', 'boards']
-            })
-        }
-        else 
-            workSpaces = (typeof workSpacesCache == 'string') ? JSON.parse(workSpacesCache) : workSpacesCache
-        if (workSpaces == null)
-            throw new CustomError(StatusCodes.NOT_FOUND, "User does not have any workspace")
-        await cacheService.set(`${TrelloEnum.Workspace} + "userID" + ${userId}`, workSpaces)
-        return workSpaces
+        const workSpaces: Workspace[] = await this.repository.find({
+            relations: ['admin', 'users', 'boards'],
+            select: ['id', 'name', 'admin', 'users', 'boards']
+        });
+
+        return workSpaces.filter((value: Workspace) => value.users.find((user: User) => user.id === userId))
     }
     public async getField(id: number, field: string): Promise<any> {
         const workspace = await this.findByField('id', id)
@@ -75,9 +62,8 @@ export class WorkSpaceRepository extends baseRepository<Workspace> {
         await cacheService.del(`${TrelloEnum.Workspace} + ${id}`)
     }
     public override async update(id: number, entity: Workspace): Promise<Workspace> {
-        await this.findById(id)
-        await this.repository.save(entity)
-        await cacheService.set(`${TrelloEnum.Workspace} + ${id}`, entity)
-        return entity
+        const workSpace = await super.update(id, entity)
+        await cacheService.set(`${TrelloEnum.Workspace} + ${id}`, workSpace)
+        return workSpace
     }
 }

@@ -2,9 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { Workspace } from "./entity/Workspace";
 import { CustomSuccessfulResponse } from "../../template/response.dto";
 import workSpaceService from './workspace.service'
-import { User } from "../user/entity/User";
 import { StatusCodes } from "http-status-codes";
-import CustomError from "../../utils/CustomError";
 
 class workSpaceController {
     public async createWorkSpace(req: Request, res: Response, next: NextFunction) {

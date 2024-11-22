@@ -2,6 +2,7 @@ import { Entity, Column, ManyToMany, JoinTable, OneToMany } from "typeorm"
 import { Role } from "../../roles/entity/Role"
 import { baseEntity } from "../../../template/baseEntity"
 import { Workspace } from "../../workspace/entity/Workspace"
+import { Board } from "../../board/entity/Board"
 
 @Entity()
 export class User extends baseEntity {
@@ -36,4 +37,10 @@ export class User extends baseEntity {
         inverseJoinColumn: { name: "roleId", referencedColumnName: "id" }
     })
     roles!: Role[]
+
+    @ManyToMany(() => Board, board => board.users)
+    boards!: Board[]
+
+    @OneToMany(() => Board, board => board.admin)
+    boardsAdmin!: Board[]
 }

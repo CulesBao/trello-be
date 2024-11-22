@@ -1,7 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany } from "typeorm";
 import { Workspace } from "../../workspace/entity/Workspace";
 import { baseEntity } from "../../../template/baseEntity";
 import { List } from "../../list/entity/List";
+import { User } from "../../user/entity/User";
 
 @Entity()
 export class Board extends baseEntity {
@@ -13,8 +14,19 @@ export class Board extends baseEntity {
 
     @OneToMany(() => List, list => list.board)
     lists!: List[]
-    
+
     @ManyToOne(() => Workspace, workspace => workspace.boards)
     @JoinColumn({ name: "workspaceId" })
     workspace!: Workspace
+
+    @ManyToMany(() => User, user => user.boards, {onDelete: "CASCADE"})
+    @JoinTable({
+        name: "users_boards",
+        joinColumn: {name: "boardId", referencedColumnName: "id"},
+        inverseJoinColumn: {name: "userId", referencedColumnName: "id"}
+    })
+    users!: User[]
+
+    @ManyToOne(() => User, user => user.boardsAdmin, {onDelete: "CASCADE"})
+    admin!: User
 }

@@ -3,7 +3,7 @@ import workSpaceController from './workspace.controller'
 import workSpaceMiddleware from './workspace.middleware'
 import authenticationMiddleware from '../../middleware/authentication.middleware'
 import { WorkspaceEnum } from '../../types/workspace'
-import boardRouter from '../board/board.routes'
+
 const router: express.Router = express.Router()
 
 router.route('/')
@@ -13,7 +13,6 @@ router.route('/:workSpaceId')
     .get(authenticationMiddleware.authenticateToken, workSpaceMiddleware.checkRole(WorkspaceEnum.MEMBER), workSpaceController.getWorkSpaceById)
     .put(authenticationMiddleware.authenticateToken, workSpaceMiddleware.checkRole(WorkspaceEnum.MEMBER), workSpaceMiddleware.updateWorkSpaceById, workSpaceController.updateWorkSpaceById)
     .delete(authenticationMiddleware.authenticateToken, workSpaceMiddleware.checkRole(WorkspaceEnum.OWNER), workSpaceController.deleteWorkSpaceById)
-router.use('/', boardRouter)
 router.route('/:workSpaceId/members')
     .post(authenticationMiddleware.authenticateToken, workSpaceMiddleware.checkRole(WorkspaceEnum.OWNER), workSpaceMiddleware.addNewMemeber, workSpaceController.addMemberToWorkSpace)
     .get(authenticationMiddleware.authenticateToken, workSpaceMiddleware.checkRole(WorkspaceEnum.MEMBER), workSpaceController.getAllMemberFromWorkSpace)
