@@ -14,7 +14,7 @@ export class List extends baseEntity {
     @OneToMany(() => Card, card => card.list)
     cards!: Card[]
 
-    @ManyToOne(() => Board, board => board.lists)
+    @ManyToOne(() => Board, board => board.lists, {onDelete: "CASCADE"})
     @JoinColumn({name: "boardId"})
     board!: Board
 }

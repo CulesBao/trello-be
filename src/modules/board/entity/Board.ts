@@ -15,11 +15,11 @@ export class Board extends baseEntity {
     @OneToMany(() => List, list => list.board)
     lists!: List[]
 
-    @ManyToOne(() => Workspace, workspace => workspace.boards)
+    @ManyToOne(() => Workspace, workspace => workspace.boards, { onDelete: "CASCADE" })
     @JoinColumn({ name: "workspaceId" })
     workspace!: Workspace
 
-    @ManyToMany(() => User, user => user.boards, {onDelete: "CASCADE"})
+    @ManyToMany(() => User, user => user.boards)
     @JoinTable({
         name: "users_boards",
         joinColumn: {name: "boardId", referencedColumnName: "id"},
@@ -27,6 +27,6 @@ export class Board extends baseEntity {
     })
     users!: User[]
 
-    @ManyToOne(() => User, user => user.boardsAdmin, {onDelete: "CASCADE"})
+    @ManyToOne(() => User, user => user.boardsAdmin)
     admin!: User
 }

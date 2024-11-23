@@ -30,7 +30,6 @@ export default class App {
         this.app.use(urlencoded({ extended: true }))
         this.app.use(express.json())
         this.app.use(loggerHttp)
-        client.set('expamle', 'example')
     }
 
     private initializeRoutes() {

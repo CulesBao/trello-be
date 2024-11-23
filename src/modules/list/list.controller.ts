@@ -9,9 +9,12 @@ class listController {
             const board: Board = req.board
             const list = req.body
             const newList: List = new List();
+
             newList.name = list.name;
             newList.order = list.order;
             newList.board = board
+            newList.cards = []  
+
             const response: CustomSuccessfulResponse = await listService.createList(newList)
             res.status(response.status).json({
                 message: response.message,
@@ -23,8 +26,9 @@ class listController {
     }
     public async getById(req: Request, res: Response, next: NextFunction) {
         try {
-            const list : List = req.list
-            const response: CustomSuccessfulResponse = await listService.getById(list)
+            const listId: number = Number(req.params.id)
+            const userId: number = Number(req.id)
+            const response: CustomSuccessfulResponse = await listService.getById(listId, userId)
             res.status(response.status).json({
                 message: response.message,
                 data: response.data
@@ -36,11 +40,11 @@ class listController {
     public async updateById(req: Request, res: Response, next: NextFunction) {
         try {
             const listId: number = Number(req.params.id)
-            const list = req.body
+            const userId: number = Number(req.id)
             const updatedList: List = new List();
-            updatedList.name = list.name;
-            updatedList.order = list.order;
-            const response: CustomSuccessfulResponse = await listService.updateById(listId, updatedList)
+            updatedList.name = req.body.name;
+            updatedList.order = req.body.order;
+            const response: CustomSuccessfulResponse = await listService.updateById(listId, updatedList, userId)
             res.status(response.status).json({
                 message: response.message,
                 data: response.data

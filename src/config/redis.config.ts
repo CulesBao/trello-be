@@ -7,6 +7,13 @@ const client = createClient({
 
 client.on('connect', () => {
     logger.info('Redis client connected');
+    client.flushAll()
+    .then(() => {
+        logger.info('Redis flushed');
+    })
+    .catch((error: any) => {
+        logger.error(error);
+    });
 });
 
 client.connect().catch((error: any) => {

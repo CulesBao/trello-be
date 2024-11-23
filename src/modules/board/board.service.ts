@@ -57,7 +57,8 @@ class boardService {
         if (board.admin.id == userId)
             throw new CustomError(StatusCodes.FORBIDDEN, `User with ID ${userId} cannot remove himself from board ${board.name}`)
         board.users = board.users.filter((value: User) => value.id != userId)
-        await this.boardReposiory.update(board.id, board)
+        const updatedBoard = { ...board, users: board.users };
+        await this.boardReposiory.update(board.id, updatedBoard);
         return new CustomSuccessfulResponse(StatusCodes.OK, `User with ID ${userId} had been remove from board ${board.name}`, board)
     }  
 }

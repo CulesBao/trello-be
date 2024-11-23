@@ -1,7 +1,6 @@
 import { baseRepository } from "../../template/base.repository";
 import { Workspace } from "../workspace/entity/Workspace";
 import { Board } from "./entity/Board";
-import { WorkSpaceRepository } from "../workspace/workspace.repository";
 import CustomError from "../../utils/CustomError";
 import { StatusCodes } from "http-status-codes";
 import cacheService from "../cache/cache.service";
@@ -31,12 +30,12 @@ export class BoardRepository extends baseRepository<Board> {
         return boards
     }
     public override async findById(id: number): Promise<Board> {
-        const boardCache = await cacheService.get(`${TrelloEnum.Board} + ${id}`)
+        const boardCache = null
         let board: Board | null
         if (boardCache == null) {
             board = await this.repository.findOne({
                 where: { id: id },
-                relations: ['lists', 'admin', 'users', 'workspace']
+                relations: ['lists', 'admin', 'users']
             })
             if (board == undefined)
                 throw new CustomError(StatusCodes.NOT_FOUND, `Board with ID ${id} cannot found`)
@@ -51,9 +50,9 @@ export class BoardRepository extends baseRepository<Board> {
         return board
     }
     public override async update(id: number, entity: Board): Promise<Board> {
-        const board: Board = await super.update(id, entity)
-        await cacheService.set(`${TrelloEnum.Board} + ${id}`, board)
-        return board
+        await this.repository.save(entity)
+        await cacheService.set(`${TrelloEnum.Board} + ${id}`, entity)
+        return entity
     }
     public override async delete(id: number): Promise<void> {
         await super.delete(id)
