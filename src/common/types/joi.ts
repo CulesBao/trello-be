@@ -23,4 +23,10 @@ export class JoiCustomMessage {
     public number(field: string){
         return `${field} is invalid`
     }
+    public empty(field: string){
+        return `${field} is not allowed to be empty`
+    }
+    public max(length: number){
+        return `Max length is ${length}`
+    }
 }

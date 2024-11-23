@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { baseMiddleware } from "../../middleware/base.middleware";
-import { AddCardDTO } from "./card.dto";
+import { AddCardDTO } from "./card.schema";
 import listRepository from "../list/list.repository";
 import CustomError from "../../middleware/CustomError";
 import { StatusCodes } from "http-status-codes";

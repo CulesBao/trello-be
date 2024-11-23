@@ -5,10 +5,10 @@ import express from 'express'
 
 const router: express.Router = express.Router()
 
-router.post('/', authenticationMiddleware.authenticateToken, cardMidlleware.isMemberInBoard(),  cardMidlleware.addCard, cardController.createCard)
+router.post('/', authenticationMiddleware.authenticateToken(), cardMidlleware.isMemberInBoard(),  cardMidlleware.addCard, cardController.createCard)
 router.route('/:id')
-    .get(authenticationMiddleware.authenticateToken, cardMidlleware.isMemberInBoard(), cardController.getCardById)
-    .put(authenticationMiddleware.authenticateToken, cardMidlleware.isMemberInBoard(), cardController.updateById)
-    .delete(authenticationMiddleware.authenticateToken, cardMidlleware.isMemberInBoard(), cardController.deleteCardById)
+    .get(authenticationMiddleware.authenticateToken(), cardMidlleware.isMemberInBoard(), cardController.getCardById)
+    .put(authenticationMiddleware.authenticateToken(), cardMidlleware.isMemberInBoard(), cardController.updateById)
+    .delete(authenticationMiddleware.authenticateToken(), cardMidlleware.isMemberInBoard(), cardController.deleteCardById)
 
 export default router

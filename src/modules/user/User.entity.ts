@@ -3,6 +3,7 @@ import { Role } from "../roles/Role.entity"
 import { baseEntity } from "../../common/base.entity"
 import { Workspace } from "../workspace/Workspace.entity"
 import { Board } from "../board/Board.entity"
+import { Comment } from "../comment/Comment.entity"
 
 @Entity()
 export class User extends baseEntity {
@@ -43,4 +44,7 @@ export class User extends baseEntity {
 
     @OneToMany(() => Board, board => board.admin)
     boardsAdmin!: Board[]
+
+    @OneToMany(() => Comment, comment => comment.user)
+    comments!: Comment[]
 }

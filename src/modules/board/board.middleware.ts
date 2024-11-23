@@ -1,7 +1,7 @@
 import { baseMiddleware } from "../../middleware/base.middleware";
 import boardRepository from "./board.repository";
 import boardService from "./board.service";
-import { AddBoardDTO, AddMemberDTO } from "./Board.dto";
+import { AddBoardDTO, AddMemberDTO } from "./board.schema";
 import { Request, Response, NextFunction } from "express";
 import { Board } from "./Board.entity";
 import CustomError from "../../middleware/CustomError";

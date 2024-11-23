@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { baseMiddleware } from "../../middleware/base.middleware";
-import { AddMemberDTO, UpdateDTO, WorkspaceDTO, UpdateMemberDTO } from "./workspace.dto";
+import { AddMemberDTO, UpdateDTO, WorkspaceDTO, UpdateMemberDTO } from "./workspace.schema";
 import { Workspace } from './Workspace.entity'
 import { Roles } from "../../common/types/roles";
 import workspaceService from "./workspace.service";

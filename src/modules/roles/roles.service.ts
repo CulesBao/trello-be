@@ -5,7 +5,7 @@ import { RoleSerivce } from "./roles.repository";
 import { PermissionSerivce } from '../permissions/permission.repository'
 import { Role } from "./Role.entity";
 import { Permission } from "../permissions/Permission.entity";
-import { assign } from "./role.dto";
+import { assign } from "./role.schema";
 class roles {
     private roleService = new RoleSerivce(Role)
     private permissionService = new PermissionSerivce(Permission)

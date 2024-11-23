@@ -6,7 +6,7 @@ import { User } from './User.entity'
 import { Role } from '../roles/Role.entity'
 import { StatusCodes } from "http-status-codes";
 import hashUtils from '../../common/utils/hash.utils'
-import { AssignRoleDTO } from "./user.dto";
+import { AssignRoleDTO } from "./user.schema";
 
 class userService {
     private userService = new UserService(User)

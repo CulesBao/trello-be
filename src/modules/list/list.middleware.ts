@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { baseMiddleware } from "../../middleware/base.middleware";
-import { createListDTO, updateListDTO } from "./LIst.dto";
+import { createListDTO, updateListDTO } from "./list.schema";
 import { Board } from "../board/Board.entity";
 import boardRepository from "../board/board.repository";
 import CustomError from "../../middleware/CustomError";

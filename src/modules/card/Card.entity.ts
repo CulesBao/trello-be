@@ -1,6 +1,7 @@
-import { Column, Entity, ManyToOne, JoinColumn } from "typeorm";
+import { Column, Entity, ManyToOne, JoinColumn, OneToMany } from "typeorm";
 import { baseEntity } from "../../common/base.entity";
 import { List } from "../list/List.entity";
+import { Comment } from "../comment/Comment.entity";
 
 @Entity()
 export class Card extends baseEntity {
@@ -16,4 +17,7 @@ export class Card extends baseEntity {
     @ManyToOne(() => List, list => list.cards, {onDelete: 'CASCADE', cascade: true})
     @JoinColumn({ name: "listId" })
     list!: List
+
+    @OneToMany(() => Comment, comment => comment.card)
+    comments!: Comment[]
 }

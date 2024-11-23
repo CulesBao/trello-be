@@ -3,24 +3,30 @@ import tokenUtils from '../common/utils/token.uitls';
 import rolesService from '../service/roles.service';
 import { NextFunction, Request, Response } from 'express';
 import CustomError from './CustomError';
+import { UserService } from '../modules/user/user.repository';
+import { User } from '../modules/user/User.entity';
 
 class authentication {
-    authenticateToken(req: Request, _: Response, next: NextFunction) {
-        try {
-            const authHeader: string | undefined = req.headers['authorization']
-            if (!authHeader)
-                throw new CustomError(StatusCodes.UNAUTHORIZED, "Cannot found token")
-            const token: string = authHeader.split(' ')[1]
-            if (token == null)
-                throw new CustomError(StatusCodes.UNAUTHORIZED, 'Unauthorized')
-            const id: number = tokenUtils.verifyToken(token)
-            if (!id)
-                throw new CustomError(StatusCodes.UNAUTHORIZED, 'Unauthorized')
-            req.id = id
-            next()
-        }
-        catch (err) {
-            next(err)
+    private userService: UserService = new UserService(User)
+    authenticateToken() {
+        return async (req: Request, _: Response, next: NextFunction) => {
+            try {
+                const authHeader: string | undefined = req.headers['authorization']
+                if (!authHeader)
+                    throw new CustomError(StatusCodes.UNAUTHORIZED, "Cannot found token")
+                const token: string = authHeader.split(' ')[1]
+                if (token == null)
+                    throw new CustomError(StatusCodes.UNAUTHORIZED, 'Unauthorized')
+                const id: number = tokenUtils.verifyToken(token)
+                if (!id)
+                    throw new CustomError(StatusCodes.UNAUTHORIZED, 'Unauthorized')
+                req.id = id
+                req.user = await this.userService.findById(id)
+                next()
+            }
+            catch (err) {
+                next(err)
+            }
         }
     }
     authorizeRole = (requiredRole: string) => {

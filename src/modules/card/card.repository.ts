@@ -18,6 +18,7 @@ class cardRepositoy extends baseRepository<Card> {
 
         const card: Card | null = await this.repository.findOne({
             where: { id: id },
+            relations: ["list.board.users", "comments"]
         })
         await cacheService.set(`${TrelloEnum.Card} + ${id}`, card)
         if (!card)

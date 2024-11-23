@@ -7,6 +7,7 @@ import apiWorkSpace from '../modules/workspace/workspace.routes'
 import apiBoard from '../modules/board/board.routes'
 import apiLists from '../modules/list/list.routes'
 import apiCards from '../modules/card/card.routes'
+import apiComments from '../modules/comment/comment.routes'
 
 const router: express.Router = express.Router()
 
@@ -18,4 +19,5 @@ router.use('/api/workspaces', apiWorkSpace)
 router.use('/api/boards', apiBoard)
 router.use('/api/lists', apiLists)
 router.use('/api/cards', apiCards)
+router.use('/api/comments', apiComments)
 export default router

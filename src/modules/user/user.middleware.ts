@@ -1,4 +1,4 @@
-import { UpdateDTO, RoleAssignDTO } from "./user.dto";
+import { UpdateDTO, RoleAssignDTO } from "./user.schema";
 import { baseMiddleware } from "../../middleware/base.middleware";
 class userMiddleware extends baseMiddleware {
     public update = this.validateSchema(UpdateDTO)

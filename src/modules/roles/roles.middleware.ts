@@ -1,4 +1,4 @@
-import { AssignDTO, RoleDTO } from "./role.dto";
+import { AssignDTO, RoleDTO } from "./role.schema";
 import { baseMiddleware } from "../../middleware/base.middleware";
 class roleValidation extends baseMiddleware {
 

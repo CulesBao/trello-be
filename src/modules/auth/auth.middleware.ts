@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { LoginDTO, RegisterDTO } from "./auth.dto";
+import { LoginDTO, RegisterDTO } from "./auth.schema";
 import { baseMiddleware } from "../../middleware/base.middleware";
 
 class authMiddleware extends baseMiddleware {
