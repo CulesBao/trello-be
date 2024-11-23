@@ -1,9 +1,9 @@
-import { baseRepository } from "../../template/base.repository";
-import { List } from "./entity/List";
+import { baseRepository } from "../../common/base.repository";
+import { List } from "./List.entity";
 import { StatusCodes } from "http-status-codes";
-import CustomError from "../../utils/CustomError";
-import cacheService from "../cache/cache.service";
-import { TrelloEnum } from "../../types/trello";
+import CustomError from "../../middleware/CustomError";
+import cacheService from "../../service/cache.service";
+import { TrelloEnum } from '../../common/types/trello'
 
 class listRepository extends baseRepository<List> {
     public async createList(list: List): Promise<List> {
@@ -13,11 +13,11 @@ class listRepository extends baseRepository<List> {
         return newList
     }
     public override async findById(id: number): Promise<List> {
-        const listCache : Object | string | null = null
+        const listCache: Object | string | null = null
         if (listCache) {
             return listCache as List
         }
-        const list : List | null = await this.repository.findOne({
+        const list: List | null = await this.repository.findOne({
             where: { id },
             relations: ['board.users', 'board', 'cards']
         })

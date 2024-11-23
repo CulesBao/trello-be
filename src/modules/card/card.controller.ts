@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { Card } from "./entity/Card";
-import { List } from "../list/entity/List";
-import { CustomSuccessfulResponse } from "../../template/response.dto";
+import { Card } from "./Card.entity";
+import { List } from "../list/List.entity";
+import { CustomSuccessfulResponse } from "../../middleware/successResponse.middleware";
 import cardService from "./card.service";
 
 class cardController {

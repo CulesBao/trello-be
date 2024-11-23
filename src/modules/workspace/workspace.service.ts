@@ -1,12 +1,10 @@
-import { User } from "../user/entity/User";
-import { Workspace } from "./entity/Workspace";
+import { User } from "../user/User.entity";
+import { Workspace } from "./Workspace.entity";
 import { WorkSpaceRepository } from "./workspace.repository";
 import { UserService } from "../user/user.repository";
-import { CustomSuccessfulResponse } from "../../template/response.dto";
+import { CustomSuccessfulResponse } from "../../middleware/successResponse.middleware";
 import { StatusCodes } from "http-status-codes";
-import CustomError from "../../utils/CustomError";
-import cacheService from "../cache/cache.service";
-import { TrelloEnum } from "../../types/trello";
+import CustomError from "../../middleware/CustomError";
 
 class workspaceService {
     private workSpaceRepository = new WorkSpaceRepository(Workspace)

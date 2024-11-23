@@ -1,12 +1,12 @@
-import { baseMiddleware } from "../../template/base.middleware";
+import { baseMiddleware } from "../../middleware/base.middleware";
 import boardRepository from "./board.repository";
 import boardService from "./board.service";
-import { AddBoardDTO, AddMemberDTO } from "./dto/Board.dto";
+import { AddBoardDTO, AddMemberDTO } from "./Board.dto";
 import { Request, Response, NextFunction } from "express";
-import { Board } from "./entity/Board";
-import CustomError from "../../utils/CustomError";
+import { Board } from "./Board.entity";
+import CustomError from "../../middleware/CustomError";
 import { StatusCodes } from "http-status-codes";
-import { Workspace } from "../workspace/entity/Workspace";
+import { Workspace } from "../workspace/Workspace.entity";
 import { WorkSpaceRepository } from "../workspace/workspace.repository";
 
 class boardMiddleware extends baseMiddleware {
@@ -38,7 +38,7 @@ class boardMiddleware extends baseMiddleware {
                     throw new CustomError(StatusCodes.NOT_FOUND, `User with ID ${userId} cannot found in this board`)
                 next()
             }
-            catch (err : unknown) {
+            catch (err: unknown) {
                 next(err)
             }
         }
@@ -54,7 +54,7 @@ class boardMiddleware extends baseMiddleware {
                     throw new CustomError(StatusCodes.FORBIDDEN, `User with ID ${userId} cannot access this board`)
                 next()
             }
-            catch (err : unknown) {
+            catch (err: unknown) {
                 next(err)
             }
         }
@@ -62,13 +62,13 @@ class boardMiddleware extends baseMiddleware {
     public getParent() {
         return async (req: Request, _: Response, next: NextFunction) => {
             try {
-                const workSpaceId : number = Number(req.body.workSpaceId)
-                const workSpace : Workspace = await this.workSpaceRepository.findById(workSpaceId)
+                const workSpaceId: number = Number(req.body.workSpaceId)
+                const workSpace: Workspace = await this.workSpaceRepository.findById(workSpaceId)
                 req.workSpace = workSpace
 
                 next()
             }
-            catch (err : unknown) {
+            catch (err: unknown) {
                 next(err)
             }
         }

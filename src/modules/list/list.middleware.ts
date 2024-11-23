@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { baseMiddleware } from "../../template/base.middleware";
-import { createListDTO, updateListDTO } from "./dto/LIst.dto";
-import { Board } from "../board/entity/Board";
+import { baseMiddleware } from "../../middleware/base.middleware";
+import { createListDTO, updateListDTO } from "./LIst.dto";
+import { Board } from "../board/Board.entity";
 import boardRepository from "../board/board.repository";
-import CustomError from "../../utils/CustomError";
+import CustomError from "../../middleware/CustomError";
 import { StatusCodes } from "http-status-codes";
 class listMiddleware extends baseMiddleware {
     public createList = this.validateSchema(createListDTO)
@@ -19,7 +19,7 @@ class listMiddleware extends baseMiddleware {
                     throw new CustomError(StatusCodes.NOT_FOUND, `User with ID ${userId} cannot found in this board`)
                 next()
             }
-            catch (err : unknown) {
+            catch (err: unknown) {
                 next(err)
             }
         }

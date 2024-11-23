@@ -1,7 +1,7 @@
 import { JoinTable, Column, ManyToMany, ManyToOne, Entity, OneToMany } from "typeorm";
-import { baseEntity } from "../../../template/baseEntity";
-import { User } from "../../user/entity/User";
-import { Board } from "../../board/entity/Board";
+import { baseEntity } from "../../common/base.entity";
+import { User } from "../user/User.entity";
+import { Board } from "../board/Board.entity";
 @Entity()
 export class Workspace extends baseEntity {
     @Column({ type: "varchar", length: 100, nullable: false })

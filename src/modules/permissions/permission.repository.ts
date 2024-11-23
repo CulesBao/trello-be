@@ -1,11 +1,11 @@
-import { baseRepository } from '../../template/base.repository';
-import CustomError from '../../utils/CustomError';
-import { Permission } from './entity/Permission';
+import { baseRepository } from '../../common/base.repository'
+import CustomError from '../../middleware/CustomError';
+import { Permission } from './Permission.entity';
 
 export class PermissionSerivce extends baseRepository<Permission> {
-    public async customFindByField(field: string, value: any): Promise<Permission | null>{
+    public async customFindByField(field: string, value: any): Promise<Permission | null> {
         return await this.repository.findOne({
-            where:{
+            where: {
                 [field]: value
             }
         })

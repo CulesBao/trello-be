@@ -1,8 +1,8 @@
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany } from "typeorm";
-import { Workspace } from "../../workspace/entity/Workspace";
-import { baseEntity } from "../../../template/baseEntity";
-import { List } from "../../list/entity/List";
-import { User } from "../../user/entity/User";
+import { Workspace } from "../workspace/Workspace.entity";
+import { baseEntity } from "../../common/base.entity";
+import { List } from "../list/List.entity";
+import { User } from "../user/User.entity";
 
 @Entity()
 export class Board extends baseEntity {
@@ -22,8 +22,8 @@ export class Board extends baseEntity {
     @ManyToMany(() => User, user => user.boards)
     @JoinTable({
         name: "users_boards",
-        joinColumn: {name: "boardId", referencedColumnName: "id"},
-        inverseJoinColumn: {name: "userId", referencedColumnName: "id"}
+        joinColumn: { name: "boardId", referencedColumnName: "id" },
+        inverseJoinColumn: { name: "userId", referencedColumnName: "id" }
     })
     users!: User[]
 

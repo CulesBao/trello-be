@@ -1,9 +1,9 @@
 import { StatusCodes } from 'http-status-codes'
-import CustomError from '../utils/CustomError'
+import CustomError from '../middleware/CustomError'
 import { UserService } from '../modules/user/user.repository'
-import { User } from '../modules/user/entity/User'
-import { Role } from '../modules/roles/entity/Role'
-import { Permission } from '../modules/permissions/entity/Permission'
+import { User } from '../modules/user/User.entity'
+import { Role } from '../modules/roles/Role.entity'
+import { Permission } from '../modules/permissions/Permission.entity'
 import { AppDataSource } from '../config/data-source'
 
 const userRepository = AppDataSource.getRepository(User)

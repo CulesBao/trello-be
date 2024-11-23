@@ -1,7 +1,7 @@
 import Joi from "joi"
-import { joiCustomMessage } from "../../../types/joi"
+import { JoiCustomMessage } from "../../common/types/joi"
 
-const customMessage = new joiCustomMessage()
+const customMessage = new JoiCustomMessage()
 
 export const AddBoardDTO = Joi.object({
     name: Joi.string().required().max(100).trim().messages({

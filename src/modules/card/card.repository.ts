@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { baseRepository } from "../../template/base.repository";
-import CustomError from "../../utils/CustomError";
-import { Card } from "./entity/Card";
+import CustomError from "../../middleware/CustomError";
+import { Card } from "./Card.entity";
 
 class cardRepositoy extends baseRepository<Card> {
     public override async findById(id: number): Promise<Card> {

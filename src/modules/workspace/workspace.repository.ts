@@ -1,16 +1,16 @@
-import { baseRepository } from "../../template/base.repository";
-import { Workspace } from "./entity/Workspace";
-import CustomError from "../../utils/CustomError";
+import { baseRepository } from "../../common/base.repository";
+import { Workspace } from "./Workspace.entity";
+import CustomError from "../../middleware/CustomError";
 import { StatusCodes } from "http-status-codes";
-import { User } from "../user/entity/User";
-import cacheService from "../cache/cache.service";
-import { TrelloEnum } from "../../types/trello";
+import { User } from "../user/User.entity";
+import cacheService from "../../service/cache.service";
+import { TrelloEnum } from "../../common/types/trello";
 
 export class WorkSpaceRepository extends baseRepository<Workspace> {
     public override async findById(id: number): Promise<Workspace> {
         const workSpaceCache = await cacheService.get(`${TrelloEnum.Workspace} + ${id}`)
-        let workSpace : Workspace | null;
-        if (workSpaceCache == null){
+        let workSpace: Workspace | null;
+        if (workSpaceCache == null) {
             workSpace = await this.repository.findOne({
                 where: {
                     id
@@ -19,7 +19,7 @@ export class WorkSpaceRepository extends baseRepository<Workspace> {
                 select: ['id', 'name', 'admin', 'users', 'boards']
             })
         }
-        else 
+        else
             workSpace = (typeof workSpaceCache == 'string') ? JSON.parse(workSpaceCache) : workSpaceCache
         if (!workSpace)
             throw new CustomError(StatusCodes.NOT_FOUND, `Workspace with id ${id} not found`)

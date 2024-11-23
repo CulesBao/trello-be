@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { Workspace } from "./entity/Workspace";
-import { CustomSuccessfulResponse } from "../../template/response.dto";
+import { Workspace } from "./Workspace.entity";
+import { CustomSuccessfulResponse } from "../../middleware/successResponse.middleware";
 import workSpaceService from './workspace.service'
 import { StatusCodes } from "http-status-codes";
 

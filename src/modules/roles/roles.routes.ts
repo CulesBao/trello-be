@@ -1,7 +1,7 @@
 import express from 'express';
 import rolesController from './roles.controller';
 import authentication from '../../middleware/authentication.middleware'
-import { Permissions } from '../../types/permissions';
+import { Permissions} from '../../common/types/permissions'
 import roleValidation from './roles.middleware'
 const router = express.Router();
 

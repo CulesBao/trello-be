@@ -1,11 +1,11 @@
-import { CustomSuccessfulResponse } from "../../template/response.dto";
-import CustomError from "../../utils/CustomError";
+import { CustomSuccessfulResponse } from "../../middleware/successResponse.middleware";
+import CustomError from "../../middleware/CustomError";
 import { StatusCodes } from "http-status-codes";
 import { RoleSerivce } from "./roles.repository";
 import { PermissionSerivce } from '../permissions/permission.repository'
-import { Role } from "./entity/Role";
-import { Permission } from "../permissions/entity/Permission";
-import { assign } from "./dto/role.dto";
+import { Role } from "./Role.entity";
+import { Permission } from "../permissions/Permission.entity";
+import { assign } from "./role.dto";
 class roles {
     private roleService = new RoleSerivce(Role)
     private permissionService = new PermissionSerivce(Permission)

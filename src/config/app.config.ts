@@ -4,7 +4,6 @@ import 'reflect-metadata'
 import { errorMiddleware } from '../middleware/error.middleware';
 import { AppDataSource } from './data-source';
 import { logger, loggerHttp } from './pino.config';
-import client from './redis.config';
 
 export default class App {
     public app: express.Application

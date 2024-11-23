@@ -1,7 +1,6 @@
 import Joi from "joi";
-import { joiCustomMessage } from "../../../types/joi";
-import { create } from "domain";
-const customMessage = new joiCustomMessage()
+import { JoiCustomMessage } from "../../common/types/joi";
+const customMessage = new JoiCustomMessage()
 
 export const createListDTO = Joi.object({
     name: Joi.string().required().max(100).trim().messages({

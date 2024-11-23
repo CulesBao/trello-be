@@ -1,8 +1,8 @@
 import { StatusCodes } from 'http-status-codes';
-import tokenUtils from '../utils/token.uitls';
+import tokenUtils from '../common/utils/token.uitls';
 import rolesService from '../service/roles.service';
 import { NextFunction, Request, Response } from 'express';
-import CustomError from '../utils/CustomError';
+import CustomError from './CustomError';
 
 class authentication {
     authenticateToken(req: Request, _: Response, next: NextFunction) {

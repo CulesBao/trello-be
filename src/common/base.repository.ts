@@ -1,8 +1,8 @@
 import { Repository } from "typeorm";
 import { AppDataSource } from "../config/data-source";
-import CustomError from "../utils/CustomError";
+import CustomError from "../middleware/CustomError";
 import { StatusCodes } from "http-status-codes";
-import { baseEntity } from "./baseEntity";
+import { baseEntity } from "./base.entity";
 export abstract class baseRepository<T extends baseEntity> {
     protected repository: Repository<T>;
 

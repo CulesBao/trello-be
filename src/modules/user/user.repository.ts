@@ -1,7 +1,7 @@
-import { Role } from '../roles/entity/Role';
-import { User } from './entity/User';
-import { baseRepository } from '../../template/base.repository';
-import CustomError from '../../utils/CustomError';
+import { Role } from '../roles/Role.entity';
+import { User } from './User.entity';
+import { baseRepository } from '../../common/base.repository';
+import CustomError from '../../middleware/CustomError';
 import { StatusCodes } from 'http-status-codes';
 
 export class UserService extends baseRepository<User> {
@@ -10,7 +10,7 @@ export class UserService extends baseRepository<User> {
             where: {
                 id
             },
-            // relations: ['roles'],
+
             select: ['id', 'username', 'email']
         })
         if (user == null)
@@ -31,7 +31,7 @@ export class UserService extends baseRepository<User> {
             where: {
                 username: String(username)
             },
-            // relations: ['roles'],
+
             select: ['id', 'username', 'email']
         })
         if (user == null)
@@ -43,7 +43,7 @@ export class UserService extends baseRepository<User> {
             where: {
                 email: String(email)
             },
-            // relations: ['roles'],
+
             select: ['id', 'username', 'email']
         })
         if (user == null)

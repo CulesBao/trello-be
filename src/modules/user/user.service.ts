@@ -1,12 +1,12 @@
-import { CustomSuccessfulResponse } from "../../template/response.dto";
+import { CustomSuccessfulResponse } from "../../middleware/successResponse.middleware";
 import { UserService } from './user.repository'
 import { RoleSerivce } from '../roles/roles.repository'
-import CustomError from '../../utils/CustomError'
-import { User } from '../user/entity/User'
-import { Role } from '../roles/entity/Role'
+import CustomError from '../../middleware/CustomError'
+import { User } from './User.entity'
+import { Role } from '../roles/Role.entity'
 import { StatusCodes } from "http-status-codes";
-import hashUtils from '../../utils/hash.utils'
-import { AssignRoleDTO } from "./dto/user.dto";
+import hashUtils from '../../common/utils/hash.utils'
+import { AssignRoleDTO } from "./user.dto";
 
 class userService {
     private userService = new UserService(User)

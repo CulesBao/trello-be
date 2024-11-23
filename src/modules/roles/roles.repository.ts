@@ -1,8 +1,8 @@
 import { StatusCodes } from 'http-status-codes';
-import { baseRepository } from '../../template/base.repository';
-import { Permission } from '../permissions/entity/Permission';
-import { Role } from './entity/Role';
-import CustomError from '../../utils/CustomError';
+import { baseRepository } from '../../common/base.repository'
+import { Permission } from '../permissions/Permission.entity';
+import { Role } from './Role.entity';
+import CustomError from '../../middleware/CustomError';
 
 export class RoleSerivce extends baseRepository<Role> {
     public async findById(id: number): Promise<Role> {

@@ -1,10 +1,10 @@
 import Joi from "joi"
-import { joiCustomMessage } from "../../../types/joi"
-export interface AssignRoleDTO{
+import { JoiCustomMessage } from "../../common/types/joi"
+export interface AssignRoleDTO {
     userId: number,
     roleId: number
 }
-const customMessage = new joiCustomMessage()
+const customMessage = new JoiCustomMessage()
 export const UpdateDTO = Joi.object({
     username: Joi.string().trim().alphanum().min(6).max(50).messages({
         'string.base': customMessage.string('Username'),

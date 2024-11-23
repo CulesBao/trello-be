@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, JoinColumn } from "typeorm";
-import { baseEntity } from "../../../template/baseEntity";
-import { List } from "../../list/entity/List";
+import { baseEntity } from "../../common/base.entity";
+import { List } from "../list/List.entity";
 
 @Entity()
 export class Card extends baseEntity {

@@ -1,4 +1,4 @@
-import { CustomSuccessfulResponse } from '../../template/response.dto';
+import { CustomSuccessfulResponse } from '../../middleware/successResponse.middleware';
 import authService from './auth.service'
 import { NextFunction, Request, Response } from "express";
 

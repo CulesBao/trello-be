@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 import Joi from "joi";
-import CustomError from "../utils/CustomError";
+import CustomError from "./CustomError";
 import { StatusCodes } from "http-status-codes";
 export class baseMiddleware {
     public validateSchema(schema: Joi.ObjectSchema) {

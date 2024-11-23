@@ -1,7 +1,7 @@
 import { NextFunction, Request, response, Response } from "express";
-import { Board } from "../board/entity/Board";
-import { List } from "./entity/List";
-import { CustomSuccessfulResponse } from "../../template/response.dto";
+import { Board } from "../board/Board.entity";
+import { List } from "./List.entity";
+import { CustomSuccessfulResponse } from "../../middleware/successResponse.middleware";
 import listService from './list.service'
 class listController {
     public async createList(req: Request, res: Response, next: NextFunction) {
@@ -13,7 +13,7 @@ class listController {
             newList.name = list.name;
             newList.order = list.order;
             newList.board = board
-            newList.cards = []  
+            newList.cards = []
 
             const response: CustomSuccessfulResponse = await listService.createList(newList)
             res.status(response.status).json({

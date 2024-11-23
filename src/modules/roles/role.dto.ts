@@ -1,6 +1,6 @@
 import Joi from "joi";
-import { joiCustomMessage } from "../../../types/joi";
-const customMessage = new joiCustomMessage();
+import { JoiCustomMessage } from "../../common/types/joi";
+const customMessage = new JoiCustomMessage();
 export const RoleDTO = Joi.object({
     name: Joi.string().required().min(3).max(100).messages({
         "string.base": customMessage.string("name"),

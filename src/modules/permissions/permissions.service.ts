@@ -1,8 +1,8 @@
-import { CustomSuccessfulResponse } from "../../template/response.dto";
+import { CustomSuccessfulResponse } from "../../middleware/successResponse.middleware";
 import { StatusCodes } from "http-status-codes";
-import CustomError from "../../utils/CustomError";
+import CustomError from "../../middleware/CustomError";
 import { PermissionSerivce } from "./permission.repository";
-import { Permission } from "./entity/Permission";
+import { Permission } from "./Permission.entity";
 class permission {
     private permissionService = new PermissionSerivce(Permission)
     async createPermission(permissionInput: Permission): Promise<CustomSuccessfulResponse> {

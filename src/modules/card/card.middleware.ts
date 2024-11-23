@@ -1,6 +1,6 @@
-import { baseMiddleware } from "../../template/base.middleware";
-import { AddCardDTO } from "./dto/card.dto";
+import { baseMiddleware } from "../../middleware/base.middleware";
+import { AddCardDTO } from "./card.dto";
 
-class cardMiddleware extends baseMiddleware{
+class cardMiddleware extends baseMiddleware {
     public addCard = this.validateSchema(AddCardDTO)
 }

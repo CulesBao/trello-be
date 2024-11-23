@@ -1,5 +1,5 @@
-import { AssignDTO, RoleDTO } from "./dto/role.dto";
-import { baseMiddleware } from "../../template/base.middleware";
+import { AssignDTO, RoleDTO } from "./role.dto";
+import { baseMiddleware } from "../../middleware/base.middleware";
 class roleValidation extends baseMiddleware {
 
     public createRole = this.validateSchema(RoleDTO)

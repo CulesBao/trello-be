@@ -1,4 +1,4 @@
-export class joiCustomMessage {
+export class JoiCustomMessage {
     public string(field: string) {
         return `${field} is not a string`
     }

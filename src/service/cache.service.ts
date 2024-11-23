@@ -1,4 +1,4 @@
-import client from "../../config/redis.config";
+import client from "../config/redis.config";
 
 class CacheService {
     async get(key: string): Promise<object | string | null> {

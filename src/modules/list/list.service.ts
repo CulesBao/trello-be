@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
-import { CustomSuccessfulResponse } from "../../template/response.dto";
-import { List } from "./entity/List";
+import { CustomSuccessfulResponse } from "../../middleware/successResponse.middleware";
+import { List } from "./List.entity";
 import listRepository from "./list.repository";
 
 class listService {
@@ -26,6 +26,6 @@ class listService {
         }
         const updateList: List = await listRepository.update(listId, updatedList)
         return new CustomSuccessfulResponse(StatusCodes.OK, 'List updated successfully', updateList)
-    } 
+    }
 }
 export default new listService()

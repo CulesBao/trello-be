@@ -1,7 +1,7 @@
 import express from 'express';
 import authenticationMiddleware from '../../middleware/authentication.middleware'
 import userController from './user.controller'
-import { Permissions } from '../../types/permissions'
+import { Permissions } from '../../common/types/permissions';
 import userMiddleware from './user.middleware';
 
 const router: express.Router = express.Router();

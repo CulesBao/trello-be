@@ -1,7 +1,7 @@
 import Joi from "joi";
-import { joiCustomMessage } from "../../../types/joi";
+import { JoiCustomMessage } from "../../common/types/joi";
 
-const customMessage = new joiCustomMessage()
+const customMessage = new JoiCustomMessage()
 export const PermissionDTO = Joi.object({
     name: Joi.string().min(5).max(100).required().messages({
         'string.min': customMessage.min("Name", 5),

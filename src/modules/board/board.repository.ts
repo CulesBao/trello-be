@@ -1,11 +1,11 @@
-import { baseRepository } from "../../template/base.repository";
-import { Workspace } from "../workspace/entity/Workspace";
-import { Board } from "./entity/Board";
-import CustomError from "../../utils/CustomError";
+import { baseRepository } from '../../common/base.repository'
+import { Workspace } from "../workspace/Workspace.entity";
+import { Board } from "./Board.entity";
+import CustomError from "../../middleware/CustomError";
 import { StatusCodes } from "http-status-codes";
-import cacheService from "../cache/cache.service";
-import { TrelloEnum } from "../../types/trello";
-import { User } from "../user/entity/User";
+import cacheService from '../../service/cache.service';
+import { TrelloEnum } from '../../common/types/trello'
+import { User } from "../user/User.entity";
 
 export class BoardRepository extends baseRepository<Board> {
     public async createBoard(board: Board, workSpace: Workspace, user: User): Promise<Board> {

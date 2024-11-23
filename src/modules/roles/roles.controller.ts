@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { CustomSuccessfulResponse } from '../../template/response.dto';
+import { CustomSuccessfulResponse } from '../../middleware/successResponse.middleware';
 import rolesService from './roles.service';
 
 class roles {

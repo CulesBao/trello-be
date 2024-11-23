@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import permissionService from './permissions.service';
-import { CustomSuccessfulResponse } from '../../template/response.dto';
+import { CustomSuccessfulResponse } from '../../middleware/successResponse.middleware';
 
 class permission {
     async createPermission(req: Request, res: Response, next: NextFunction) {
