@@ -13,10 +13,7 @@ export class Card extends baseEntity {
     @Column({ type: "int", nullable: false })
     order!: number
 
-    @Column({ type: "date", nullable: true })
-    dueDate?: Date
-
-    @ManyToOne(() => List, list => list.cards)
+    @ManyToOne(() => List, list => list.cards, {onDelete: 'CASCADE', cascade: true})
     @JoinColumn({ name: "listId" })
     list!: List
 }

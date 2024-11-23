@@ -14,23 +14,25 @@ class cardController {
             newCard.description = cardData.description
             newCard.order = cardData.order
             newCard.list = list
+
             const response: CustomSuccessfulResponse = await cardService.addCard(newCard)
             res.status(response.status).json({
                 message: response.message,
                 data: response.data
             })
-        } catch (error) {
+        } catch (error : unknown) {
             next(error)
         }
     }
     public async getCardById(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const card: Card = req.card
+            const cardId: number = Number(req.params.id)
+            const card : Card = await cardService.getCardById(cardId)
             res.status(200).json({
                 message: 'Card found',
                 data: card
             })
-        } catch (error) {
+        } catch (error : unknown) {
             next(error)
         }
     }
@@ -42,24 +44,26 @@ class cardController {
             card.title = cardData.title
             card.description = cardData.description
             card.order = cardData.order
+
             const response: CustomSuccessfulResponse = await cardService.updateCard(cardId, card)
             res.status(response.status).json({
                 message: response.message,
                 data: response.data
             })
-        } catch (error) {
+        } catch (error : unknown) {
             next(error)
         }
     }
     public async deleteCardById(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const card: Card = req.card
-            const response: CustomSuccessfulResponse = await cardService.deleteCard(card.id)
+            const cardId: number = Number(req.params.id)
+
+            const response: CustomSuccessfulResponse = await cardService.deleteCard(cardId)
             res.status(response.status).json({
                 message: response.message,
                 data: response.data
             })
-        } catch (error) {
+        } catch (error : unknown) {
             next(error)
         }
     }

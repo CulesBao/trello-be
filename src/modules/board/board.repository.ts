@@ -50,7 +50,7 @@ export class BoardRepository extends baseRepository<Board> {
         return board
     }
     public override async update(id: number, entity: Board): Promise<Board> {
-        await this.repository.save(entity)
+        await this.repository.update(id, entity)
         await cacheService.set(`${TrelloEnum.Board} + ${id}`, entity)
         return entity
     }

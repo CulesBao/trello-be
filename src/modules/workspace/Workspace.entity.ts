@@ -9,7 +9,7 @@ export class Workspace extends baseEntity {
     @Column({ type: "varchar", length: 100, nullable: true })
     description?: string
 
-    @OneToMany(() => Board, board => board.workspace)
+    @OneToMany(() => Board, board => board.workspace, { onDelete: "CASCADE" })
     boards!: Board[]
 
     @ManyToMany(() => User, user => user.workspacess, { onDelete: "CASCADE" })

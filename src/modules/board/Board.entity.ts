@@ -12,10 +12,10 @@ export class Board extends baseEntity {
     @Column({ type: "varchar", length: 100, nullable: true })
     description?: string
 
-    @OneToMany(() => List, list => list.board)
+    @OneToMany(() => List, list => list.board, { onDelete: "CASCADE" })
     lists!: List[]
 
-    @ManyToOne(() => Workspace, workspace => workspace.boards, { onDelete: "CASCADE" })
+    @ManyToOne(() => Workspace, workspace => workspace.boards, { onDelete: "CASCADE", cascade: true })
     @JoinColumn({ name: "workspaceId" })
     workspace!: Workspace
 
