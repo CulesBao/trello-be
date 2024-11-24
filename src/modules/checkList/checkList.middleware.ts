@@ -1,14 +1,15 @@
-import { baseMiddleware } from "../../middleware/base.middleware";
-import { AddComment, UpdateComment } from "./comment.schema";
 import { Request, Response, NextFunction } from "express";
 import cardRepository from "../card/card.repository";
 import { Card } from "../card/Card.entity";
 import CustomError from "../../middleware/CustomError";
 import { StatusCodes } from "http-status-codes";
+import { baseMiddleware } from "../../middleware/base.middleware";
+import { AddCheckList, UpdateCheckList } from "./checkList.schema";
 
-class commentMiddleware extends baseMiddleware {
-    public addComment = this.validateSchema(AddComment)
-    public updateComment = this.validateSchema(UpdateComment)
+
+class checkListMiddleware extends baseMiddleware{
+    public AddCheckList = this.validateSchema(AddCheckList)
+    public UpdateCheckList = this.validateSchema(UpdateCheckList)
 
     public isUserInBoard() {
         return async (req: Request, _: Response, next: NextFunction) => {
@@ -30,4 +31,4 @@ class commentMiddleware extends baseMiddleware {
     }
 }
 
-export default new commentMiddleware()
+export default new checkListMiddleware()

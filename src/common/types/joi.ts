@@ -8,25 +8,28 @@ export class JoiCustomMessage {
     public alphanum(field: string) {
         return `${field} only contain number and alphabet`
     }
-    public min(field: string, length: number){
+    public min(field: string, length: number) {
         return `${field}.length must be greater than ${length}`
     }
-    public required(field: string){
+    public required(field: string) {
         return `${field} is required!`
     }
-    public email(field: string){
+    public email(field: string) {
         return `${field} is invalid`
     }
-    public date(field: string){
+    public date(field: string) {
         return `${field} is invalid`
     }
-    public number(field: string){
+    public number(field: string) {
         return `${field} is invalid`
     }
-    public empty(field: string){
+    public empty(field: string) {
         return `${field} is not allowed to be empty`
     }
-    public max(length: number){
+    public max(length: number) {
         return `Max length is ${length}`
+    }
+    public boolean(field: string) {
+        return `${field} is invalid`
     }
 }

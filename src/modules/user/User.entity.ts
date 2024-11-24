@@ -4,6 +4,7 @@ import { baseEntity } from "../../common/base.entity"
 import { Workspace } from "../workspace/Workspace.entity"
 import { Board } from "../board/Board.entity"
 import { Comment } from "../comment/Comment.entity"
+import { CheckList } from "../checkList/CheckList.entity"
 
 @Entity()
 export class User extends baseEntity {
@@ -47,4 +48,7 @@ export class User extends baseEntity {
 
     @OneToMany(() => Comment, comment => comment.user)
     comments!: Comment[]
+
+    @OneToMany(() => CheckList, checkList => checkList.user)
+    checkLists!: CheckList[]
 }

@@ -2,6 +2,7 @@ import { Column, Entity, ManyToOne, JoinColumn, OneToMany } from "typeorm";
 import { baseEntity } from "../../common/base.entity";
 import { List } from "../list/List.entity";
 import { Comment } from "../comment/Comment.entity";
+import { CheckList } from "../checkList/CheckList.entity";
 
 @Entity()
 export class Card extends baseEntity {
@@ -20,4 +21,7 @@ export class Card extends baseEntity {
 
     @OneToMany(() => Comment, comment => comment.card)
     comments!: Comment[]
+
+    @OneToMany(() => CheckList, checkList => checkList.card)
+    checkLists!: CheckList[]
 }
