@@ -4,7 +4,7 @@ import CustomError from "../../middleware/CustomError";
 import { StatusCodes } from "http-status-codes";
 import { User } from "../user/User.entity";
 import cacheService from "../../service/cache.service";
-import { TrelloEnum } from "../../common/types/trello";
+import { TrelloEnum } from "../../common/enums/trello.enum";
 
 export class WorkSpaceRepository extends baseRepository<Workspace> {
     public override async findById(id: number): Promise<Workspace> {

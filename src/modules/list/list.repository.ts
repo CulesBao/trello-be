@@ -3,7 +3,7 @@ import { List } from "./List.entity";
 import { StatusCodes } from "http-status-codes";
 import CustomError from "../../middleware/CustomError";
 import cacheService from "../../service/cache.service";
-import { TrelloEnum } from '../../common/types/trello'
+import { TrelloEnum } from '../../common/enums/trello.enum'
 
 class listRepository extends baseRepository<List> {
     public async createList(list: List): Promise<List> {

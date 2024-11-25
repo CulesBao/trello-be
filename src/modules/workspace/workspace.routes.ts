@@ -2,7 +2,7 @@ import express from 'express'
 import workSpaceController from './workspace.controller'
 import workSpaceMiddleware from './workspace.middleware'
 import authenticationMiddleware from '../../middleware/authentication.middleware'
-import { Roles } from '../../common/types/roles'
+import { Roles } from '../../common/enums/roles.enum'
 
 const router: express.Router = express.Router()
 

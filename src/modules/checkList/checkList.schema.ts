@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { JoiCustomMessage } from "../../common/types/joi";
+import { JoiCustomMessage } from "../../common/enums/Joi.enum";
 
 const CustomMessage = new JoiCustomMessage()
 

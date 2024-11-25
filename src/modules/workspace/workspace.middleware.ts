@@ -2,13 +2,13 @@ import { NextFunction, Request, Response } from "express";
 import { baseMiddleware } from "../../middleware/base.middleware";
 import { AddMemberDTO, UpdateDTO, WorkspaceDTO, UpdateMemberDTO } from "./workspace.schema";
 import { Workspace } from './Workspace.entity'
-import { Roles } from "../../common/types/roles";
+import { Roles } from "../../common/enums/roles.enum";
 import workspaceService from "./workspace.service";
 import CacheService from "../../service/cache.service";
 import { User } from "../user/User.entity";
 import CustomError from "../../middleware/CustomError";
 import { StatusCodes } from "http-status-codes";
-import { TrelloEnum } from "../../common/types/trello"
+import { TrelloEnum } from "../../common/enums/trello.enum"
 
 class workSpaceMiddleware extends baseMiddleware {
     public createWorkSpace = this.validateSchema(WorkspaceDTO)

@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { JoiCustomMessage } from "../../common/types/joi";
+import { JoiCustomMessage } from "../../common/enums/Joi.enum";
 const customMessage = new JoiCustomMessage();
 export const RoleDTO = Joi.object({
     name: Joi.string().required().min(3).max(100).messages({

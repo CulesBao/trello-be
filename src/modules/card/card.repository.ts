@@ -3,7 +3,7 @@ import { baseRepository } from "../../common/base.repository";
 import CustomError from "../../middleware/CustomError";
 import { Card } from "./Card.entity";
 import cacheService from "../../service/cache.service";
-import { TrelloEnum } from "../../common/types/trello";
+import { TrelloEnum } from "../../common/enums/trello.enum";
 
 class cardRepositoy extends baseRepository<Card> {
     public override async create(card: Card): Promise<Card> {
@@ -23,7 +23,7 @@ class cardRepositoy extends baseRepository<Card> {
         await cacheService.set(`${TrelloEnum.Card} + ${id}`, card)
         if (!card)
             throw new CustomError(StatusCodes.NOT_FOUND, 'Card not found')
-        
+
         return card
     }
     public async findForFile(id: number): Promise<Card | null> {

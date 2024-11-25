@@ -4,7 +4,7 @@ import { Board } from "./Board.entity";
 import CustomError from "../../middleware/CustomError";
 import { StatusCodes } from "http-status-codes";
 import cacheService from '../../service/cache.service';
-import { TrelloEnum } from '../../common/types/trello'
+import { TrelloEnum } from '../../common/enums/trello.enum'
 import { User } from "../user/User.entity";
 
 export class BoardRepository extends baseRepository<Board> {

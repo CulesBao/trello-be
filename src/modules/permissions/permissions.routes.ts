@@ -1,7 +1,7 @@
 import express from 'express';
 import permissionController from './permissions.controller';
 import authentication from '../../middleware/authentication.middleware';
-import { Permissions } from '../../common/types/permissions'
+import { Permissions } from '../../common/enums/permissions.enum'
 import permissionValidation from './permissions.middleware'
 const router = express.Router();
 
