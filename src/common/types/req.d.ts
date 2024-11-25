@@ -12,7 +12,10 @@ declare global {
             workSpace: Workspace,
             board: Board,
             list: List,
-            card: Card
+            card: Card,
+            cardId: number,
+            userNotInBoard: boolean,
+            file: any
         }
     }
 }

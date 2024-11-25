@@ -9,6 +9,7 @@ import apiLists from '../modules/list/list.routes'
 import apiCards from '../modules/card/card.routes'
 import apiComments from '../modules/comment/comment.routes'
 import apiCheckLists from '../modules/checkList/checkList.routes'
+import apiAttachments from '../modules/attachment/attachment.routes'
 
 const router: express.Router = express.Router()
 
@@ -22,5 +23,6 @@ router.use('/api/lists', apiLists)
 router.use('/api/cards', apiCards)
 router.use('/api/comments', apiComments)
 router.use('/api/checklists', apiCheckLists)
+router.use('/api/attachments', apiAttachments)
 
 export default router

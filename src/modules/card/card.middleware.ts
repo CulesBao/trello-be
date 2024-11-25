@@ -16,7 +16,6 @@ class cardMiddleware extends baseMiddleware {
                 const userId : number = Number(req.id)
 
                 req.list = await listRepository.findById(listId)
-                console.log(req.list)
                 if (req.list.board.users.find((member : User) => member.id == userId) == undefined) 
                     throw new CustomError(StatusCodes.FORBIDDEN, 'You are not authorized to perform this action')
 

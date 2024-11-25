@@ -26,6 +26,13 @@ class cardRepositoy extends baseRepository<Card> {
         
         return card
     }
+    public async findForFile(id: number): Promise<Card | null> {
+        const card: Card | null = await this.repository.findOne({
+            where: { id: id },
+            relations: ["list.board.users"]
+        })
+        return card
+    }
     public override async findAll(): Promise<Card[]> {
         const cards: Card[] = await this.repository.find({
         })

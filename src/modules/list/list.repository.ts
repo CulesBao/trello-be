@@ -23,7 +23,6 @@ class listRepository extends baseRepository<List> {
         })
         if (!list)
             throw new CustomError(StatusCodes.NOT_FOUND, `List with id ${id} not found`)
-        console.log(list)
         await cacheService.set(`${TrelloEnum.List} + ${id}`, list)
         return list
     }
