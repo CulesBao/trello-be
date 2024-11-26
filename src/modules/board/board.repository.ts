@@ -5,14 +5,9 @@ import CustomError from "../../middleware/CustomError";
 import { StatusCodes } from "http-status-codes";
 import cacheService from '../../service/cache.service';
 import { TrelloEnum } from '../../common/enums/trello.enum'
-import { User } from "../user/User.entity";
 
 export class BoardRepository extends baseRepository<Board> {
-    public async createBoard(board: Board, workSpace: Workspace, user: User): Promise<Board> {
-        board.lists = []
-        board.workspace = workSpace
-        board.admin = user
-        board.users = [user]
+    public async createBoard(board: Board): Promise<Board> {
         await this.repository.save(board)
         await cacheService.set(`${TrelloEnum.Board} + ${board.id}`, board)
 
@@ -50,9 +45,8 @@ export class BoardRepository extends baseRepository<Board> {
         return board
     }
     public override async update(id: number, entity: Board): Promise<Board> {
-        await this.repository.update(id, entity)
-        await cacheService.set(`${TrelloEnum.Board} + ${id}`, entity)
-        return entity
+        const board = await super.update(id, entity)
+        return board
     }
     public override async delete(id: number): Promise<void> {
         await super.delete(id)

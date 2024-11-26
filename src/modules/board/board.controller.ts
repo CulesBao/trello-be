@@ -3,16 +3,22 @@ import { CustomSuccessfulResponse } from '../../middleware/successResponse.middl
 import boardService from './board.service'
 import { Workspace } from '../workspace/Workspace.entity'
 import { Board } from './Board.entity'
+import { User } from '../user/User.entity'
 class boardController {
     public async addNewBoardToWorkSpace(req: Request, res: Response, next: NextFunction) {
         try {
             const workspace: Workspace = req.workSpace
             const board: Board = new Board()
-            const userId: number = Number(req.id)
+            const user: User = req.user
+
             board.name = req.body.name
             board.description = req.body.description
+            board.workspace = workspace
+            board.admin = user
+            board.users = [user]
+            board.lists = []
 
-            const response: CustomSuccessfulResponse = await boardService.addNewBoardToWorkSpace(workspace, board, userId)
+            const response: CustomSuccessfulResponse = await boardService.addNewBoardToWorkSpace(board, user)
             res.status(response.status).json({
                 message: response.message,
                 data: response.data
@@ -68,7 +74,7 @@ class boardController {
             boardToUpdate.description = req.body.description
             const board: Board = req.board
 
-            const response: CustomSuccessfulResponse = await boardService.updateBoard(boardToUpdate, board.id)
+            const response: CustomSuccessfulResponse = await boardService.updateBoard(boardToUpdate, board.id, req.user)
             res.status(response.status).json({
                 message: response.message,
                 data: response.data
@@ -95,6 +101,7 @@ class boardController {
         try {
             const board: Board = req.board
             const email: string = req.body.email
+
             const response: CustomSuccessfulResponse = await boardService.addMemberToBoard(board, email)
             res.status(response.status).json({
                 message: response.message,

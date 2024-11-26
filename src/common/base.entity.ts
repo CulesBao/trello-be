@@ -4,14 +4,14 @@ export abstract class baseEntity {
     @PrimaryGeneratedColumn()
     id!: number
 
-    @CreateDateColumn()
+    @CreateDateColumn({type: "timestamp"})
     createAt!: Date
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({type: "timestamp"})
     updateAt!: Date
-    
-    @Column({type: "boolean", default: false})
+
+    @Column({ type: "boolean", default: false })
     isDeleted!: boolean
 
-    [key: string] : any
+    [key: string]: any
 }

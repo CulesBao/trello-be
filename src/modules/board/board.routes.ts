@@ -5,7 +5,7 @@ import boardMiddleware from './board.middleware'
 const router: express.Router = express.Router()
 
 router.route('/')
-    .post(authenticationMiddleware.authenticateToken(), boardMiddleware.getParent(), boardMiddleware.addBoard, boardController.addNewBoardToWorkSpace)
+    .post(authenticationMiddleware.authenticateToken(), boardMiddleware.isUserInWorkspace(), boardMiddleware.addBoard, boardController.addNewBoardToWorkSpace)
 router.route('/:boardId')
     .get(authenticationMiddleware.authenticateToken(),boardMiddleware.isMemberInBoard(), boardController.getBoardFromWorkSpace)
     .put(authenticationMiddleware.authenticateToken(), boardMiddleware.isMemberInBoard(), boardMiddleware.addBoard, boardController.updateBoard)

@@ -2,5 +2,8 @@ export enum TrelloEnum {
     Workspace = "workspace",
     Board = "board",
     List = "list",
-    Card = "card"
+    Card = "card",
+    Comment = "comment",
+    Checklist = "checklist",
+    Attachment = "attachment",
 }

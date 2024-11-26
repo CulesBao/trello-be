@@ -6,20 +6,26 @@ import { BoardRepository } from "./board.repository"
 import { Board } from "./Board.entity"
 import { StatusCodes } from "http-status-codes"
 import { UserService } from "../user/user.repository"
+import activityLogController from "../activityLog/activityLog.controller"
+import { Actions } from "../../common/enums/actitvitiesLog.enum"
 class boardService {
     private boardReposiory = new BoardRepository(Board)
     private userRepository = new UserService(User)
-    public async addNewBoardToWorkSpace(workSpace: Workspace, board: Board, userId: number): Promise<CustomSuccessfulResponse> {
-        const user: User | undefined = workSpace?.users?.find((value: User) => value.id == userId)
-        if (user == undefined)
-            throw new CustomError(StatusCodes.NOT_FOUND, `User with ID ${userId} cannot found in this workspace`)
-        const newBoard: Board = await this.boardReposiory.createBoard(board, workSpace, user)
-        return new CustomSuccessfulResponse(StatusCodes.CREATED, `Board had been add to workspace ${workSpace.name}`, newBoard)
+    public async addNewBoardToWorkSpace(board: Board, user: User): Promise<CustomSuccessfulResponse> {
+        const newBoard: Board = await this.boardReposiory.createBoard(board)
+
+        await activityLogController.BoardActivity(user, newBoard, `${Actions.CREATE_BOARD}`)
+
+        return new CustomSuccessfulResponse(StatusCodes.CREATED, `Board had been add to workspace`, newBoard)
     }
     public async getBoardFromWorkSpace(board: Board): Promise<CustomSuccessfulResponse> {
         return new CustomSuccessfulResponse(StatusCodes.OK, `Board with ID ${board.id} had been found`, board)
     }
     public async deleteBoardFromWorkSpace(boardId: number): Promise<CustomSuccessfulResponse> {
+        const board: Board = await this.boardReposiory.findById(boardId)
+
+        await activityLogController.BoardActivity(board.admin, board, `${Actions.DELETE_BOARD}`)
+
         await this.boardReposiory.delete(boardId)
         return new CustomSuccessfulResponse(StatusCodes.OK, `Board with ID ${boardId} had been deleted`)
     }
@@ -27,8 +33,10 @@ class boardService {
         const boards: Board[] = await this.boardReposiory.getAllBoardByWorkSpace(workSpace)
         return new CustomSuccessfulResponse(StatusCodes.OK, `All boards from workspace ${workSpace.name} had been found`, boards)
     }
-    public async updateBoard(board: Board, boardId: number): Promise<CustomSuccessfulResponse> {
+    public async updateBoard(board: Board, boardId: number, user: User): Promise<CustomSuccessfulResponse> {
         const updatedBoard: Board = await this.boardReposiory.update(boardId, board)
+        await activityLogController.BoardActivity(user, updatedBoard, `${Actions.UPDATE_BOARD}`)
+
         return new CustomSuccessfulResponse(StatusCodes.OK, `Board with ID ${boardId} had been updated`, updatedBoard)
     }
     public isBoardInWorkSpace(workSpace: Workspace, boardId: number): Board {
@@ -47,7 +55,9 @@ class boardService {
         if (board.users.find((value: User) => value.id == user.id) != undefined)
             throw new CustomError(StatusCodes.BAD_REQUEST, `User with ID ${user.id} had been add to board ${board.name}`)
         board.users.push(user)
+
         await this.boardReposiory.update(board.id, board)
+        await activityLogController.BoardActivity(board.admin, board, `${Actions.ADD_MEMBER}`, user)
         return new CustomSuccessfulResponse(StatusCodes.CREATED, `User with ID ${user.id} had been add to board ${board.name}`, board)
     }
     public async removeMemberFromBoard(board: Board, userId: number): Promise<CustomSuccessfulResponse> {
@@ -58,6 +68,9 @@ class boardService {
             throw new CustomError(StatusCodes.FORBIDDEN, `User with ID ${userId} cannot remove himself from board ${board.name}`)
         board.users = board.users.filter((value: User) => value.id != userId)
         const updatedBoard = { ...board, users: board.users };
+
+        await activityLogController.BoardActivity(board.admin, board, `${Actions.REMOVE_MEMBER}`, user)
+
         await this.boardReposiory.update(board.id, updatedBoard);
         return new CustomSuccessfulResponse(StatusCodes.OK, `User with ID ${userId} had been remove from board ${board.name}`, board)
     }

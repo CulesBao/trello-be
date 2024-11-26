@@ -59,11 +59,15 @@ class boardMiddleware extends baseMiddleware {
             }
         }
     }
-    public getParent() {
+    public isUserInWorkspace() {
         return async (req: Request, _: Response, next: NextFunction) => {
             try {
                 const workSpaceId: number = Number(req.body.workSpaceId)
                 const workSpace: Workspace = await this.workSpaceRepository.findById(workSpaceId)
+
+                if (workSpace.users.find((value) => value.id == req.id) == undefined)
+                    throw new CustomError(StatusCodes.NOT_FOUND, `User with ID ${req.id} cannot found in this workspace`)
+
                 req.workSpace = workSpace
 
                 next()
