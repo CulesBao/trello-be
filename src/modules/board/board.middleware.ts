@@ -7,10 +7,9 @@ import { Board } from "./Board.entity";
 import CustomError from "../../middleware/CustomError";
 import { StatusCodes } from "http-status-codes";
 import { Workspace } from "../workspace/Workspace.entity";
-import { WorkSpaceRepository } from "../workspace/workspace.repository";
+import workspaceRepository from "../workspace/workspace.repository";
 
 class boardMiddleware extends baseMiddleware {
-    private workSpaceRepository: WorkSpaceRepository = new WorkSpaceRepository(Workspace)
     public addBoard = this.validateSchema(AddBoardDTO)
     public addMember = this.validateSchema(AddMemberDTO)
     public isBoardInWorkSpace() {
@@ -63,7 +62,7 @@ class boardMiddleware extends baseMiddleware {
         return async (req: Request, _: Response, next: NextFunction) => {
             try {
                 const workSpaceId: number = Number(req.body.workSpaceId)
-                const workSpace: Workspace = await this.workSpaceRepository.findById(workSpaceId)
+                const workSpace: Workspace = await workspaceRepository.findById(workSpaceId)
 
                 if (workSpace.users.find((value) => value.id == req.id) == undefined)
                     throw new CustomError(StatusCodes.NOT_FOUND, `User with ID ${req.id} cannot found in this workspace`)

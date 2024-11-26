@@ -10,7 +10,6 @@ class CustomError extends Error {
     super(message);
     this.name = 'Expected Error';
     this.statusCode = statusCode;
-    Error.captureStackTrace(this, this.constructor); 
   }
 }
 
