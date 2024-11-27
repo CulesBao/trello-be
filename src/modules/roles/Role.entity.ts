@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from "typeorm";
+import { Entity, Column, ManyToMany, JoinTable } from "typeorm";
 import { User } from "../user/User.entity";
 import { Permission } from "../permissions/Permission.entity";
 import { baseEntity } from "../../common/base.entity";

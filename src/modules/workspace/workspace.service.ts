@@ -2,13 +2,13 @@ import { User } from "../user/User.entity";
 import { Workspace } from "./Workspace.entity";
 import workSpaceRepository from "./workspace.repository";
 import { UserService } from "../user/user.repository";
-import { WorkSpaceDTO, WorkSpaceConstructor, WorkSpaceRequest } from "./workspace.dto";
+import { WorkSpaceDTO, WorkSpaceRequest } from "./workspace.dto";
 import { BadRequest, Forbidden } from "../../handler/failed.handler";
 import { MessageConstant } from "../../common/constants/message.constants";
 
 class workspaceService {
     private userRepository = new UserService(User)
-    public async createWorkSpace(workSpaceBody: WorkSpaceRequest, admin: User): Promise<void> {
+    public async createWorkSpace(workSpaceBody: WorkSpaceRequest, admin: User): Promise<WorkSpaceDTO> {
         const workSpace: Workspace = new Workspace()
         workSpace.name = workSpaceBody.name
         workSpace.description = workSpaceBody.description
@@ -16,10 +16,11 @@ class workspaceService {
         workSpace.users = [admin]
         workSpace.boards = []
 
-        await workSpaceRepository.create(workSpace)
+        const newWorkSpace: Workspace = await workSpaceRepository.create(workSpace)
+        return new WorkSpaceDTO(newWorkSpace)
     }
     public async getWorkSpace(workSpace: Workspace): Promise<WorkSpaceDTO> {
-        return WorkSpaceConstructor(workSpace)
+        return new WorkSpaceDTO(workSpace)
     }
     public async getWorkSpaceById(workSpaceId: number): Promise<Workspace> {
         const workSpace: Workspace = await workSpaceRepository.findById(workSpaceId)
@@ -27,7 +28,7 @@ class workspaceService {
     }
     public async getMyWorkSpace(member: User): Promise<WorkSpaceDTO[]> {
         const workSpaces: Workspace[] = await workSpaceRepository.getMyWorkSpace(member.id)
-        const workSpaceResponse: WorkSpaceDTO[] = workSpaces.map((workSpace: Workspace) => WorkSpaceConstructor(workSpace))
+        const workSpaceResponse: WorkSpaceDTO[] = workSpaces.map((workSpace: Workspace) => new WorkSpaceDTO(workSpace))
         return workSpaceResponse
     }
     public async updateWorkSpaceById(id: number, workSpaceUpdate: WorkSpaceRequest): Promise<WorkSpaceDTO> {
@@ -37,7 +38,7 @@ class workspaceService {
         workSpace.description = workSpaceUpdate.description
 
         const updatedWorkSpace: Workspace = await workSpaceRepository.update(id, workSpace)
-        return WorkSpaceConstructor(updatedWorkSpace)
+        return new WorkSpaceDTO(updatedWorkSpace)
     }
 
     public async deleteWorkSpaceById(workSpaceId: number): Promise<void> {
@@ -52,10 +53,10 @@ class workspaceService {
         workSpace.users.push(newUser)
 
         const updatedWorkSpace = await workSpaceRepository.update(workSpace.id, workSpace)
-        return WorkSpaceConstructor(updatedWorkSpace)
+        return new WorkSpaceDTO(updatedWorkSpace)
     }
 
-    public async deleteMemberOutWorkSpace(workSpace: Workspace, memberId: number): Promise<void> {
+    public async deleteMemberOutWorkSpace(workSpace: Workspace, memberId: number): Promise<WorkSpaceDTO> {
         const user: User | undefined = workSpace.users.find((value) => value.id == memberId)
         if (user == undefined)
             throw new BadRequest(MessageConstant.Role.NOT_FOUND_MEMBER)
@@ -64,7 +65,8 @@ class workspaceService {
             throw new BadRequest(MessageConstant.Role.DELETE_ADMIN)
         workSpace.users = workSpace.users.filter((value) => value.id != memberId)
 
-        await workSpaceRepository.update(workSpace.id, workSpace)
+        const updatedWorkSpace: Workspace = await workSpaceRepository.update(workSpace.id, workSpace)
+        return new WorkSpaceDTO(updatedWorkSpace)
     }
     public async addNewAdmin(workSpace: Workspace, userId: number): Promise<WorkSpaceDTO> {
         const isExistUser: User | undefined = workSpace.users.find((value: User) => value.id == userId)
@@ -77,9 +79,9 @@ class workspaceService {
         const user: User = isExistUser
         workSpace.admin.push(user)
         const updatedWorkSpace: Workspace = await workSpaceRepository.update(workSpace.id, workSpace)
-        return WorkSpaceConstructor(updatedWorkSpace)
+        return new WorkSpaceDTO(updatedWorkSpace)
     }
-    public async deleteAdmin(workSpace: Workspace, userId: number): Promise<void> {
+    public async deleteAdmin(workSpace: Workspace, userId: number): Promise<WorkSpaceDTO> {
         const isExistAdmin: boolean = workSpace.admin.find((value: User) => value.id == userId) != undefined
         if (!isExistAdmin)
             throw new BadRequest(MessageConstant.Role.NOT_FOUND_ADMIN)
@@ -87,7 +89,8 @@ class workspaceService {
             throw new Forbidden(MessageConstant.Role.REQUIRED_ADMIN)
 
         workSpace.admin = workSpace.admin.filter((value: User) => value.id != userId)
-        await workSpaceRepository.update(workSpace.id, workSpace)
+        const updatedWorkspace: Workspace = await workSpaceRepository.update(workSpace.id, workSpace)
+        return new WorkSpaceDTO(updatedWorkspace)
     }
 }
 export default new workspaceService()

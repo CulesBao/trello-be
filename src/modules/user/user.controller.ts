@@ -1,87 +1,84 @@
+import { NoContent, OK } from "../../handler/success.handler";
 import { CustomSuccessfulResponse } from "../../middleware/successResponse.middleware";
+import { AssignRoleDTO, UpdateUserDTO, UserDTO } from "./user.dto";
+import { User } from "./User.entity";
 import userService from './user.service'
 import { NextFunction, Request, Response } from "express";
 
 class userController {
     async get(req: Request, res: Response, next: NextFunction) {
         try {
-            const info = (req.params.id) ? req.params.id : 'all'
-            const id = Number(req.id)
-            const response: CustomSuccessfulResponse = await userService.get(info, id)
-            res.status(response.status).json({
-                message: response.message,
-                data: response.data
-            })
+            const userId: number = Number(req.params.id)
+            const user: UserDTO | UserDTO[] = await userService.get('id', userId)
+
+            new OK(res, "User found", user)
         }
-        catch (err: any) {
+        catch (err: unknown) {
             next(err)
         }
     }
     async getMe(req: Request, res: Response, next: NextFunction) {
         try {
-            const response: CustomSuccessfulResponse = await userService.get('me', Number(req.id))
-            res.status(response.status).json({
-                message: response.message,
-                data: response.data
-            })
+            const user: User = req.user
+
+            new OK(res, "User found", new UserDTO(user))
         }
-        catch (err: any) {
+        catch (err: unknown) {
             next(err)
         }
     }
-    async getAll(req: Request, res: Response, next: NextFunction) {
+    async getAll(_: Request, res: Response, next: NextFunction) {
         try {
-            const response: CustomSuccessfulResponse = await userService.get('all', Number(req.id))
-            res.status(response.status).json({
-                message: response.message,
-                data: response.data
-            })
+            const users: UserDTO | UserDTO[] = await userService.get('all', 0)
+
+            new OK(res, "Users found", users)
         }
-        catch (err: any) {
+        catch (err: unknown) {
             next(err)
         }
     }
     async deleteUser(req: Request, res: Response, next: NextFunction) {
         try {
-            const response: CustomSuccessfulResponse = await userService.deleteUser(req.params.id)
-            res.status(response.status).json({
-                message: response.message
-            })
+            const userId: number = Number(req.params.id)
+            await userService.deleteUser(userId)
+
+            new NoContent(res, "User deleted")
         }
-        catch (err: any) {
+        catch (err: unknown) {
             next(err)
         }
     }
     async updateUser(req: Request, res: Response, next: NextFunction) {
         try {
-            const response: CustomSuccessfulResponse = await userService.updateUser(req.body, Number(req.id))
-            res.status(response.status).json({
-                message: response.message
-            })
+            const user: User = req.user
+            const updatedInfo: UpdateUserDTO = req.body
+            const updatedUser: UserDTO = await userService.updateUser(user, updatedInfo)
+
+            new OK(res, "User updated", updatedUser)
         }
-        catch (err: any) {
+        catch (err: unknown) {
             next(err)
         }
     }
     async assignRole(req: Request, res: Response, next: NextFunction) {
         try {
-            const response: CustomSuccessfulResponse = await userService.assignRole(req.body)
-            res.status(response.status).json({
-                message: response.message
-            })
+            const assignRole: AssignRoleDTO = req.body
+            await userService.assignRole(assignRole)
+
+            new NoContent(res, "Role assigned")
         }
-        catch (err: any) {
+        catch (err: unknown) {
             next(err)
         }
     }
     async removeRole(req: Request, res: Response, next: NextFunction) {
         try {
-            const response: CustomSuccessfulResponse = await userService.removeRole(req.body)
-            res.status(response.status).json({
-                message: response.message
-            })
+            const removeRole: AssignRoleDTO = req.body
+            await userService.removeRole(removeRole)
+
+            new NoContent(res, "Role removed")
         }
-        catch (err: any) {
+        catch (err: unknown) {
             next(err)
         }
     }

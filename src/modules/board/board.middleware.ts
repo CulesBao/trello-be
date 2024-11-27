@@ -1,31 +1,17 @@
 import { baseMiddleware } from "../../middleware/base.middleware";
 import boardRepository from "./board.repository";
-import boardService from "./board.service";
 import { AddBoardDTO, AddMemberDTO } from "./board.schema";
 import { Request, Response, NextFunction } from "express";
 import { Board } from "./Board.entity";
-import CustomError from "../../middleware/CustomError";
-import { StatusCodes } from "http-status-codes";
 import { Workspace } from "../workspace/Workspace.entity";
 import workspaceRepository from "../workspace/workspace.repository";
+import { Forbidden } from "../../handler/failed.handler";
+import { MessageConstant } from "../../common/constants/message.constants";
 
 class boardMiddleware extends baseMiddleware {
     public addBoard = this.validateSchema(AddBoardDTO)
     public addMember = this.validateSchema(AddMemberDTO)
-    public isBoardInWorkSpace() {
-        return async (req: Request, res: Response, next: NextFunction) => {
-            try {
-                const workSpace = req.workSpace
-                const boardId = Number(req.params.boardId)
-                const board = boardService.isBoardInWorkSpace(workSpace, boardId)
-                req.board = board
-                next()
-            }
-            catch (err) {
-                next(err)
-            }
-        }
-    }
+
     public isMemberInBoard() {
         return async (req: Request, _: Response, next: NextFunction) => {
             try {
@@ -34,7 +20,7 @@ class boardMiddleware extends baseMiddleware {
                 const board: Board = await boardRepository.findById(boardId)
                 req.board = board
                 if (board.users.find((value) => value.id == userId) == undefined)
-                    throw new CustomError(StatusCodes.NOT_FOUND, `User with ID ${userId} cannot found in this board`)
+                    throw new Forbidden(MessageConstant.Role.MEMBER)
                 next()
             }
             catch (err: unknown) {
@@ -50,7 +36,7 @@ class boardMiddleware extends baseMiddleware {
                 const board: Board = await boardRepository.findById(boardId)
                 req.board = board
                 if (board.admin.id != userId)
-                    throw new CustomError(StatusCodes.FORBIDDEN, `User with ID ${userId} cannot access this board`)
+                    throw new Forbidden(MessageConstant.Role.ADMIN)
                 next()
             }
             catch (err: unknown) {
@@ -65,7 +51,7 @@ class boardMiddleware extends baseMiddleware {
                 const workSpace: Workspace = await workspaceRepository.findById(workSpaceId)
 
                 if (workSpace.users.find((value) => value.id == req.id) == undefined)
-                    throw new CustomError(StatusCodes.NOT_FOUND, `User with ID ${req.id} cannot found in this workspace`)
+                    throw new Forbidden(MessageConstant.Role.MEMBER)
 
                 req.workSpace = workSpace
 

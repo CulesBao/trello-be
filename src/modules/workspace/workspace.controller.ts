@@ -3,16 +3,16 @@ import { Workspace } from "./Workspace.entity";
 import workSpaceService from './workspace.service'
 import { WorkSpaceDTO, WorkSpaceRequest } from "./workspace.dto";
 import { User } from "../user/User.entity";
-import { Created, OK } from "../../handler/success.handler";
+import { Created, NoContent, OK } from "../../handler/success.handler";
 
 class workSpaceController {
     public async createWorkSpace(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const workSpace: WorkSpaceRequest = req.body
             const admin: User = req.user
-            await workSpaceService.createWorkSpace(workSpace, admin)
+            const newWorkSpace: WorkSpaceDTO = await workSpaceService.createWorkSpace(workSpace, admin)
 
-            new Created(res, "Create workspace successful")
+            new Created(res, "Create workspace successful", newWorkSpace)
         }
         catch (err) {
             next(err)
@@ -57,7 +57,7 @@ class workSpaceController {
             const workSpace = req.workSpace
             await workSpaceService.deleteWorkSpaceById(workSpace.id)
 
-            new OK(res, "Delete workspace successful")
+            new NoContent(res, "Delete workspace successful")
         }
         catch (err) {
             next(err)
@@ -80,9 +80,9 @@ class workSpaceController {
         try {
             const workSpace: Workspace = req.workSpace
             const memberId: number = Number(req.params.memberId)
-            await workSpaceService.deleteMemberOutWorkSpace(workSpace, memberId)
+            const updatedWorkSpace: WorkSpaceDTO = await workSpaceService.deleteMemberOutWorkSpace(workSpace, memberId)
 
-            new OK(res, "Delete member out workspace successful")
+            new OK(res, "Delete member out workspace successful", updatedWorkSpace)
         }
         catch (err) {
             next(err)
@@ -105,7 +105,7 @@ class workSpaceController {
         try {
             const workSpace: Workspace = req.workSpace
             const adminId: string = req.params.adminId
-            await workSpaceService.deleteAdmin(workSpace, Number(adminId))
+            const updatedWorkSpace: WorkSpaceDTO = await workSpaceService.deleteAdmin(workSpace, Number(adminId))
 
             new OK(res, "Delete admin out workspace successful")
         }

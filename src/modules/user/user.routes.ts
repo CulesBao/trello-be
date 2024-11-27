@@ -5,7 +5,11 @@ import { Permissions } from '../../common/enums/permissions.enum';
 import userMiddleware from './user.middleware';
 
 const router: express.Router = express.Router();
-router.get('/get/me', authenticationMiddleware.authenticateToken(), userController.getMe);
+router.route('/')
+    .get(authenticationMiddleware.authenticateToken(), userController.getMe)
+    .put(authenticationMiddleware.authenticateToken(),
+        userMiddleware.update, userController.updateUser)
+
 router.get('/get/all',
     authenticationMiddleware.authenticateToken(),
     authenticationMiddleware.authorizePermission(Permissions.GET_USER),
@@ -16,13 +20,11 @@ router.get('/get/:id',
     authenticationMiddleware.authorizePermission(Permissions.GET_USER),
     userController.get
 );
-router.delete('/delete/:id',
+router.delete('/:id',
     authenticationMiddleware.authenticateToken(),
     authenticationMiddleware.authorizePermission(Permissions.DELETE_USER),
     userController.deleteUser
 );
-router.put('/updated', authenticationMiddleware.authenticateToken(),
-    userMiddleware.update, userController.updateUser)
 router.post('/assign-role',
     authenticationMiddleware.authenticateToken(),
     authenticationMiddleware.authorizePermission(Permissions.ASSIGN_ROLE),

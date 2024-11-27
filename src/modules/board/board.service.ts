@@ -8,57 +8,51 @@ import { StatusCodes } from "http-status-codes"
 import { UserService } from "../user/user.repository"
 import activityLogController from "../activityLog/activityLog.controller"
 import { Actions } from "../../common/enums/actitvitiesLog.enum"
+import { BoardDTO } from "./board.dto"
+import { BadRequest, NotFound } from "../../handler/failed.handler"
+import { MessageConstant } from "../../common/constants/message.constants"
 class boardService {
     private boardReposiory = new BoardRepository(Board)
     private userRepository = new UserService(User)
-    public async addNewBoardToWorkSpace(board: Board, user: User): Promise<CustomSuccessfulResponse> {
+    public async addNewBoard(board: Board, user: User): Promise<BoardDTO> {
         const newBoard: Board = await this.boardReposiory.createBoard(board)
 
         await activityLogController.BoardActivity(user, newBoard, `${Actions.CREATE_BOARD}`)
-
-        return new CustomSuccessfulResponse(StatusCodes.CREATED, `Board had been add to workspace`, newBoard)
+        return new BoardDTO(newBoard)
     }
-    public async getBoardFromWorkSpace(board: Board): Promise<CustomSuccessfulResponse> {
+    public async getBoard(board: Board): Promise<CustomSuccessfulResponse> {
         return new CustomSuccessfulResponse(StatusCodes.OK, `Board with ID ${board.id} had been found`, board)
     }
-    public async deleteBoardFromWorkSpace(boardId: number): Promise<CustomSuccessfulResponse> {
-        const board: Board = await this.boardReposiory.findById(boardId)
-
+    public async deleteBoard(board: Board): Promise<void> {
+        await this.boardReposiory.delete(board.id)
         await activityLogController.BoardActivity(board.admin, board, `${Actions.DELETE_BOARD}`)
-
-        await this.boardReposiory.delete(boardId)
-        return new CustomSuccessfulResponse(StatusCodes.OK, `Board with ID ${boardId} had been deleted`)
     }
-    public async getAllBoard(workSpace: Workspace): Promise<CustomSuccessfulResponse> {
-        const boards: Board[] = await this.boardReposiory.getAllBoardByWorkSpace(workSpace)
-        return new CustomSuccessfulResponse(StatusCodes.OK, `All boards from workspace ${workSpace.name} had been found`, boards)
+    public async getAllBoard(workSpace: Workspace): Promise<BoardDTO[]> {
+        const boards: Board[] = workSpace.boards
+        return boards.map((value: Board) => new BoardDTO(value))
     }
-    public async updateBoard(board: Board, boardId: number, user: User): Promise<CustomSuccessfulResponse> {
+    public async updateBoard(board: Board, boardId: number, user: User): Promise<BoardDTO> {
         const updatedBoard: Board = await this.boardReposiory.update(boardId, board)
         await activityLogController.BoardActivity(user, updatedBoard, `${Actions.UPDATE_BOARD}`)
 
-        return new CustomSuccessfulResponse(StatusCodes.OK, `Board with ID ${boardId} had been updated`, updatedBoard)
+        return new BoardDTO(updatedBoard)
     }
     public isBoardInWorkSpace(workSpace: Workspace, boardId: number): Board {
         const board: Board | undefined = workSpace.boards.find((value: Board) => value.id == boardId)
         if (board == undefined)
-            throw new CustomError(StatusCodes.NOT_FOUND, `Board with ID ${boardId} cannot found in this work space`)
+            throw new NotFound(MessageConstant.Board.NOT_FOUND)
         return board
     }
-    public async getAllMemberFromBoard(board: Board): Promise<CustomSuccessfulResponse> {
-        if (board.users == undefined)
-            throw new CustomError(StatusCodes.NOT_FOUND, `User cannot found in this board`)
-        return new CustomSuccessfulResponse(StatusCodes.OK, `All members from board ${board.name} had been found`, board.users)
-    }
-    public async addMemberToBoard(board: Board, email: string): Promise<CustomSuccessfulResponse> {
-        const user: User = await this.userRepository.findByEmail(email)
-        if (board.users.find((value: User) => value.id == user.id) != undefined)
-            throw new CustomError(StatusCodes.BAD_REQUEST, `User with ID ${user.id} had been add to board ${board.name}`)
-        board.users.push(user)
 
-        await this.boardReposiory.update(board.id, board)
-        await activityLogController.BoardActivity(board.admin, board, `${Actions.ADD_MEMBER}`, user)
-        return new CustomSuccessfulResponse(StatusCodes.CREATED, `User with ID ${user.id} had been add to board ${board.name}`, board)
+    public async addMemberToBoard(user: User, board: Board, email: string): Promise<BoardDTO> {
+        const affectedUser: User = await this.userRepository.findByEmail(email)
+        if (board.users.find((value: User) => value.id == affectedUser.id) != undefined)
+            throw new BadRequest(MessageConstant.Role.EXISTED_MEMBER)
+        board.users.push(affectedUser)
+
+        const updatedBoard: Board = await this.boardReposiory.update(board.id, board)
+        await activityLogController.BoardActivity(user, board, `${Actions.ADD_MEMBER}`, affectedUser)
+        return new BoardDTO(updatedBoard)
     }
     public async removeMemberFromBoard(board: Board, userId: number): Promise<CustomSuccessfulResponse> {
         const user: User | undefined = board.users.find((value: User) => value.id == userId)

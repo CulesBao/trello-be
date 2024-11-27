@@ -1,8 +1,8 @@
 import { Role } from '../roles/Role.entity';
 import { User } from './User.entity';
 import { baseRepository } from '../../common/base.repository';
-import CustomError from '../../middleware/CustomError';
-import { StatusCodes } from 'http-status-codes';
+import { NotFound } from '../../handler/failed.handler';
+import { MessageConstant } from '../../common/constants/message.constants';
 
 export class UserService extends baseRepository<User> {
     public override async findById(id: number): Promise<User> {
@@ -10,11 +10,9 @@ export class UserService extends baseRepository<User> {
             where: {
                 id
             },
-
-            select: ['id', 'username', 'email']
         })
         if (user == null)
-            throw new CustomError(StatusCodes.NOT_FOUND, "Cannot find any user with this ID")
+            throw new NotFound(MessageConstant.User.NOT_FOUND)
         return user
     }
     public async findForRegister(field: string, value: any): Promise<User | null> {
@@ -22,8 +20,7 @@ export class UserService extends baseRepository<User> {
             where: {
                 [field]: value
             } as any,
-            // relations: ['roles']
-        });
+        })
         return user;
     }
     public async findByUsername(username: string): Promise<User> {
@@ -31,11 +28,9 @@ export class UserService extends baseRepository<User> {
             where: {
                 username: String(username)
             },
-
-            select: ['id', 'username', 'email']
         })
         if (user == null)
-            throw new CustomError(StatusCodes.NOT_FOUND, "Cannot find any user match this key")
+            throw new NotFound(MessageConstant.User.NOT_FOUND)
         return user
     }
     public async findByEmail(email: string): Promise<User> {
@@ -43,15 +38,13 @@ export class UserService extends baseRepository<User> {
             where: {
                 email: String(email)
             },
-
-            select: ['id', 'username', 'email']
         })
         if (user == null)
-            throw new CustomError(StatusCodes.NOT_FOUND, "Cannot find any user match this key")
+            throw new NotFound(MessageConstant.User.NOT_FOUND)
         return user
     }
     public async assignRole(user: User, role: Role): Promise<void> {
         user.roles.push(role)
-        await this.repository.save(user)
+        await this.repository.update(user.id, user)
     }
 }

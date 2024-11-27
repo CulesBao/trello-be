@@ -4,8 +4,10 @@ import boardService from './board.service'
 import { Workspace } from '../workspace/Workspace.entity'
 import { Board } from './Board.entity'
 import { User } from '../user/User.entity'
+import { Created, NoContent, OK } from '../../handler/success.handler'
+import { BoardDTO } from './board.dto'
 class boardController {
-    public async addNewBoardToWorkSpace(req: Request, res: Response, next: NextFunction) {
+    public async addNewBoard(req: Request, res: Response, next: NextFunction) {
         try {
             const workspace: Workspace = req.workSpace
             const board: Board = new Board()
@@ -18,37 +20,28 @@ class boardController {
             board.users = [user]
             board.lists = []
 
-            const response: CustomSuccessfulResponse = await boardService.addNewBoardToWorkSpace(board, user)
-            res.status(response.status).json({
-                message: response.message,
-                data: response.data
-            })
+            const newBoard: BoardDTO = await boardService.addNewBoard(board, user)
+            new Created(res, "Board had been created", newBoard)
         }
         catch (err) {
             next(err)
         }
     }
-    public async getBoardFromWorkSpace(req: Request, res: Response, next: NextFunction) {
+    public async getBoard(req: Request, res: Response, next: NextFunction) {
         try {
-            const board: Board = req.board
-            const reponse: CustomSuccessfulResponse = await boardService.getBoardFromWorkSpace(board)
-            res.status(reponse.status).json({
-                message: reponse.message,
-                data: reponse.data
-            })
+            const board: BoardDTO = req.board
+            new OK(res, `Board with ID ${board.id} had been found`, board)
         }
         catch (err) {
             next(err)
         }
     }
-    public async deleteBoardFromWorkSpace(req: Request, res: Response, next: NextFunction): Promise<void> {
+    public async deleteBoard(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const board: Board = req.board
-            const response: CustomSuccessfulResponse = await boardService.deleteBoardFromWorkSpace(board.id)
-            res.status(response.status).json({
-                message: response.message,
-                data: response.data
-            })
+            await boardService.deleteBoard(board)
+
+            new NoContent(res, `Board with ID ${board.id} had been deleted`)
         }
         catch (err) {
             next(err)
@@ -57,11 +50,9 @@ class boardController {
     public async getAllBoard(req: Request, res: Response, next: NextFunction) {
         try {
             const workSpace: Workspace = req.workSpace
-            const response: CustomSuccessfulResponse = await boardService.getAllBoard(workSpace)
-            res.status(response.status).json({
-                message: response.message,
-                data: response.data
-            })
+            const boards: BoardDTO[] = await boardService.getAllBoard(workSpace)
+
+            new OK(res, `All boards from workspace ${workSpace.name} had been found`, boards)
         }
         catch (err) {
             next(err)
@@ -70,43 +61,27 @@ class boardController {
     public async updateBoard(req: Request, res: Response, next: NextFunction) {
         try {
             const boardToUpdate = new Board()
+            const board: Board = req.board
+            const user: User = req.user
             boardToUpdate.name = req.body.name
             boardToUpdate.description = req.body.description
-            const board: Board = req.board
 
-            const response: CustomSuccessfulResponse = await boardService.updateBoard(boardToUpdate, board.id, req.user)
-            res.status(response.status).json({
-                message: response.message,
-                data: response.data
-            })
+            const updateBoard: BoardDTO = await boardService.updateBoard(boardToUpdate, board.id, user)
+            new OK(res, `Board with ID ${updateBoard.id} had been updated`, updateBoard)
         }
         catch (err) {
             next(err)
         }
     }
-    public async getAllMemberFromBoard(req: Request, res: Response, next: NextFunction) {
-        try {
-            const board: Board = req.board
-            const response: CustomSuccessfulResponse = await boardService.getAllMemberFromBoard(board)
-            res.status(response.status).json({
-                message: response.message,
-                data: response.data
-            })
-        }
-        catch (err) {
-            next(err)
-        }
-    }
+
     public async addMemberToBoard(req: Request, res: Response, next: NextFunction) {
         try {
             const board: Board = req.board
             const email: string = req.body.email
+            const user: User = req.user
 
-            const response: CustomSuccessfulResponse = await boardService.addMemberToBoard(board, email)
-            res.status(response.status).json({
-                message: response.message,
-                data: response.data
-            })
+            const updatedBoard: BoardDTO = await boardService.addMemberToBoard(user, board, email)
+            new OK(res, `User with email ${email} had been added to board`, updatedBoard)
         }
         catch (err) {
             next(err)

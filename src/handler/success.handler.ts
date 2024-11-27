@@ -33,7 +33,13 @@ export class OK extends SuccessfulResponse {
 }
 
 export class Created extends SuccessfulResponse {
-    constructor(res: Response, message: string = StatusCodes[StatusCodes.CREATED]) {
-        super(res, StatusCodes.CREATED, message);
+    constructor(res: Response, message: string = StatusCodes[StatusCodes.CREATED], data?: any) {
+        super(res, StatusCodes.CREATED, message, data);
+    }
+}
+
+export class NoContent extends SuccessfulResponse {
+    constructor(res: Response, message: string = StatusCodes[StatusCodes.NO_CONTENT], data?: any) {
+        super(res, StatusCodes.NO_CONTENT, message, data);
     }
 }
