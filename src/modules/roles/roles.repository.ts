@@ -1,27 +1,39 @@
-import { StatusCodes } from 'http-status-codes';
 import { baseRepository } from '../../common/base.repository'
 import { Permission } from '../permissions/Permission.entity';
 import { Role } from './Role.entity';
-import CustomError from '../../middleware/CustomError';
+import { NotFound } from '../../handler/failed.handler';
+import { MessageConstant } from '../../common/constants/message.constants';
 
-export class RoleSerivce extends baseRepository<Role> {
-    public async findById(id: number): Promise<Role> {
-        const entity = await this.repository.findOne({
+class roleRepository extends baseRepository<Role> {
+    public override async findById(id: number): Promise<Role> {
+        const role = await this.repository.findOne({
             where: {
-                id: Number(id),
+                id: id,
             },
             relations: ['permissions']
         })
-        if (!entity)
-            throw new CustomError(StatusCodes.BAD_REQUEST, 'Role not found')
-        return entity
+        if (!role){
+            console.log('role', role)
+            throw new NotFound(MessageConstant.Role.INVALID_ROLE)
+        }
+        return role
     }
-    public async findByName(name: string): Promise<Role | null> {
-        return await this.repository.findOne({
+    public async findByName(name: string): Promise<Role> {
+        const role: Role | null = await this.repository.findOne({
             where: {
                 name: String(name)
             },
             relations: ['permissions']
+        })
+        if (!role)
+            throw new NotFound(MessageConstant.Role.INVALID_ROLE)
+        return role
+    }
+    public async findForCreate(name: string): Promise<Role | null> {
+        return await this.repository.findOne({
+            where: {
+                name: name
+            }
         })
     }
     public override async findAll(): Promise<Role[]> {
@@ -31,6 +43,7 @@ export class RoleSerivce extends baseRepository<Role> {
     }
     public async assignPermission(role: Role, permission: Permission): Promise<void> {
         role.permissions.push(permission)
-        await this.repository.save(role)
+        await super.update(role.id, role)
     }
 }
+export default new roleRepository(Role)

@@ -32,13 +32,13 @@ export class User extends baseEntity {
     @ManyToMany(() => Workspace, workspace => workspace.users)
     workspaces!: Workspace[]
 
-    @ManyToMany(() => Role, role => role.users, { onDelete: "CASCADE" })
-    @JoinTable({
-        name: "user_roles",
-        joinColumn: { name: "userId", referencedColumnName: "id" },
-        inverseJoinColumn: { name: "roleId", referencedColumnName: "id" }
-    })
-    roles!: Role[]
+    // @ManyToMany(() => Role, role => role.users, { onDelete: "CASCADE" })
+    // @JoinTable({
+    //     name: "user_roles",
+    //     joinColumn: { name: "userId", referencedColumnName: "id" },
+    //     inverseJoinColumn: { name: "roleId", referencedColumnName: "id" }
+    // })
+    // roles!: Role[]
 
     @ManyToMany(() => Board, board => board.users)
     boards!: Board[]

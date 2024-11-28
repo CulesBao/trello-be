@@ -1,14 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
-import { CustomSuccessfulResponse } from '../../middleware/successResponse.middleware';
 import rolesService from './roles.service';
+import { Created, NoContent, OK } from '../../handler/success.handler';
+import { Role } from './Role.entity';
+import { RoleDto } from './role.dto';
 
 class roles {
     async createRole(req: Request, res: Response, next: NextFunction) {
         try {
-            const response: CustomSuccessfulResponse = await rolesService.createRole(req.body);
-            res.status(response.status).json({
-                message: response.message
-            });
+            await rolesService.createRole(req.body);
+            new Created(res, 'Role created successfully');
         }
         catch (err) {
             next(err)
@@ -16,10 +16,8 @@ class roles {
     }
     async assignPermission(req: Request, res: Response, next: NextFunction) {
         try {
-            const response: CustomSuccessfulResponse = await rolesService.assignPermission(req.body);
-            res.status(response.status).json({
-                message: response.message
-            });
+            await rolesService.assignPermission(req.body);
+            new Created(res, 'Permission assigned to role successfully');
         }
         catch (err) {
             next(err)
@@ -27,11 +25,9 @@ class roles {
     }
     async getRoles(req: Request, res: Response, next: NextFunction) {
         try {
-            const response: CustomSuccessfulResponse = await rolesService.getRoles(req.params.id);
-            res.status(response.status).json({
-                message: response.message,
-                data: response.data
-            });
+            const roles : RoleDto | RoleDto[]  = await rolesService.getRoles(req.params.id);
+            
+            new OK(res, "Roles fetched successfully", roles);
         }
         catch (err) {
             next(err)
@@ -39,10 +35,8 @@ class roles {
     }
     async deleteRole(req: Request, res: Response, next: NextFunction) {
         try {
-            const response: CustomSuccessfulResponse = await rolesService.deleteRole(req.params.id);
-            res.status(response.status).json({
-                message: response.message
-            });
+            await rolesService.deleteRole(req.params.id);
+            new NoContent(res, 'Role deleted successfully');
         }
         catch (err) {
             next(err)
@@ -50,10 +44,9 @@ class roles {
     }
     async removePermission(req: Request, res: Response, next: NextFunction) {
         try {
-            const response: CustomSuccessfulResponse = await rolesService.removePermission(req.body);
-            res.status(response.status).json({
-                message: response.message
-            });
+            const role: Role = await rolesService.removePermission(req.body);
+
+            new OK(res, 'Permission removed from role successfully', role);
         }
         catch (err) {
             next(err)

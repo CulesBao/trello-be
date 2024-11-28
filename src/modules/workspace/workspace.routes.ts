@@ -2,7 +2,7 @@ import express from 'express'
 import workSpaceController from './workspace.controller'
 import workSpaceMiddleware from './workspace.middleware'
 import authenticationMiddleware from '../../middleware/authentication.middleware'
-import { Roles } from '../../common/enums/roles.enum'
+import { Permissions } from '../../common/enums/permissions.enum'
 
 const router: express.Router = express.Router()
 
@@ -10,14 +10,14 @@ router.route('/')
     .post(authenticationMiddleware.authenticateToken(), workSpaceMiddleware.createWorkSpace, workSpaceController.createWorkSpace)
     .get(authenticationMiddleware.authenticateToken(), workSpaceController.getMyWorkSpace)
 router.route('/:workSpaceId')
-    .get(authenticationMiddleware.authenticateToken(), workSpaceMiddleware.checkRole(Roles.USER), workSpaceController.getWorkSpaceById)
-    .put(authenticationMiddleware.authenticateToken(), workSpaceMiddleware.checkRole(Roles.USER), workSpaceMiddleware.updateWorkSpaceById, workSpaceController.updateWorkSpaceById)
-    .delete(authenticationMiddleware.authenticateToken(), workSpaceMiddleware.checkRole(Roles.ADMIN), workSpaceController.deleteWorkSpaceById)
+    .get(authenticationMiddleware.authenticateToken(), authenticationMiddleware.authorizePermission(Permissions.GET_WORKSPACE), workSpaceController.getWorkSpaceById)
+    .put(authenticationMiddleware.authenticateToken(), authenticationMiddleware.authorizePermission(Permissions.UPDATE_WORKSPACE), workSpaceMiddleware.updateWorkSpaceById, workSpaceController.updateWorkSpaceById)
+    .delete(authenticationMiddleware.authenticateToken(), authenticationMiddleware.authorizePermission(Permissions.DELETE_WORKSPACE), workSpaceController.deleteWorkSpaceById)
 router.route('/:workSpaceId/members')
-    .post(authenticationMiddleware.authenticateToken(), workSpaceMiddleware.checkRole(Roles.ADMIN), workSpaceMiddleware.addNewMemeber, workSpaceController.addMemberToWorkSpace)
+    .post(authenticationMiddleware.authenticateToken(), authenticationMiddleware.authorizePermission(Permissions.ADD_USER_TO_WORKSPACE), workSpaceMiddleware.addNewMemeber, workSpaceController.addMemberToWorkSpace)
 router.route('/:workSpaceId/member/:memberId')
-    .delete(authenticationMiddleware.authenticateToken(), workSpaceMiddleware.checkRole(Roles.ADMIN), workSpaceController.deleteMemberOutWorkSpace)
+    .delete(authenticationMiddleware.authenticateToken(), authenticationMiddleware.authorizePermission(Permissions.REMOVE_USER_FROM_WORKSPACE), workSpaceController.deleteMemberOutWorkSpace)
 router.route('/:workSpaceId/admin/:adminId')
-    .post(authenticationMiddleware.authenticateToken(), workSpaceMiddleware.checkRole(Roles.ADMIN), workSpaceController.addNewAdmin)
-    .delete(authenticationMiddleware.authenticateToken(), workSpaceMiddleware.checkRole(Roles.ADMIN), workSpaceController.deleteAdminOutWorkSpace)
+    .post(authenticationMiddleware.authenticateToken(), authenticationMiddleware.authorizePermission(Permissions.ADD_MEMBER_AS_ADMIN), workSpaceController.addNewAdmin)
+    .delete(authenticationMiddleware.authenticateToken(), authenticationMiddleware.authorizePermission(Permissions.REMOVE_ADMIN_FROM_WORKSPACE), workSpaceController.deleteAdminOutWorkSpace)
 export default router

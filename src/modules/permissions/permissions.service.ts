@@ -1,28 +1,29 @@
-import { CustomSuccessfulResponse } from "../../middleware/successResponse.middleware";
-import { StatusCodes } from "http-status-codes";
-import CustomError from "../../middleware/CustomError";
-import { PermissionSerivce } from "./permission.repository";
+import perissionRepository from "./permission.repository";
 import { Permission } from "./Permission.entity";
+import { BadRequest } from "../../handler/failed.handler";
+import { MessageConstant } from "../../common/constants/message.constants";
 class permission {
-    private permissionService = new PermissionSerivce(Permission)
-    async createPermission(permissionInput: Permission): Promise<CustomSuccessfulResponse> {
+    async createPermission(permissionInput: Permission): Promise<void> {
         const { name, description } = permissionInput;
-        const entity = await this.permissionService.customFindByField('name', name)
-        if (entity)
-            throw new CustomError(StatusCodes.CONFLICT, "Permission is already existed")
-        await this.permissionService.create(permissionInput)
-        return new CustomSuccessfulResponse(StatusCodes.CREATED, 'Permission created successfully');
+        const permisison: Permission | null = await perissionRepository.findByName(name)
+        if (permisison)
+            throw new BadRequest(MessageConstant.Permission.EXISTED)
+        await perissionRepository.create(permissionInput)
     }
-    async getPermissions(id: string): Promise<CustomSuccessfulResponse> {
-        if (!id)
-            throw new CustomError(StatusCodes.BAD_REQUEST, 'Category id is required');
-        return new CustomSuccessfulResponse(StatusCodes.OK, 'Permission fetched successfully', id == 'all' ? await this.permissionService.findAll() : await this.permissionService.findByField('id', id));
+    async getPermissions(id: string): Promise<Permission | Permission[]> {
+        if (id == 'all'){
+            const permissions = await perissionRepository.findAll();
+            return permissions;
+        }
+        else {
+            const permission = await perissionRepository.findById(parseInt(id))
+            return permission;
+        }
     }
-    async deletePermission(id: string): Promise<CustomSuccessfulResponse> {
+    async deletePermission(id: number): Promise<void> {
         try {
-            const permission = await this.permissionService.findByField('id', id)
-            await this.permissionService.delete(parseInt(id))
-            return new CustomSuccessfulResponse(StatusCodes.OK, 'Permission deleted successfully');
+            await perissionRepository.findById(id)
+            await perissionRepository.delete(id)
         }
         catch (err) {
             throw err;

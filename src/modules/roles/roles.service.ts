@@ -1,61 +1,57 @@
-import { CustomSuccessfulResponse } from "../../middleware/successResponse.middleware";
-import CustomError from "../../middleware/CustomError";
-import { StatusCodes } from "http-status-codes";
-import { RoleSerivce } from "./roles.repository";
-import { PermissionSerivce } from '../permissions/permission.repository'
+import roleRepository from "./roles.repository";
+import permissionRepository from '../permissions/permission.repository'
 import { Role } from "./Role.entity";
 import { Permission } from "../permissions/Permission.entity";
 import { assign } from "./role.schema";
-class roles {
-    private roleService = new RoleSerivce(Role)
-    private permissionService = new PermissionSerivce(Permission)
-    async createRole(roleInput: Role): Promise<CustomSuccessfulResponse> {
-        const role = await this.roleService.findByName(roleInput.name)
+import { BadRequest, Forbidden } from "../../handler/failed.handler";
+import { MessageConstant } from "../../common/constants/message.constants";
+import { RoleDto } from "./role.dto";
+
+class roleService {
+    async createRole(roleInput: Role): Promise<void> {
+        const role: Role | null = await roleRepository.findForCreate(roleInput.name)
         if (role)
-            throw new CustomError(StatusCodes.CONFLICT, 'Role already existed');
-        await this.roleService.create(roleInput)
-        return new CustomSuccessfulResponse(StatusCodes.CREATED, 'Role created successfully');
+            throw new BadRequest(MessageConstant.Role.EXISTED_ROLE)
+        await roleRepository.create(roleInput)
     }
-    async assignPermission(assignPermissionToRole: assign): Promise<CustomSuccessfulResponse> {
+    async assignPermission(assignPermissionToRole: assign): Promise<void> {
         const { roleId, permissionId } = assignPermissionToRole;
-        const role = await this.roleService.findById(roleId)
-        const permission = await this.permissionService.findByField('id', permissionId)
+        const role = await roleRepository.findById(roleId)
+        const permission = await permissionRepository.findByField('id', permissionId)
         role.permissions?.forEach((value: Permission) => {
             if (value.id == permissionId)
-                throw new CustomError(StatusCodes.BAD_REQUEST, "Role is already has this permission")
+                throw new BadRequest(MessageConstant.Permission.EXISTED)
         })
-        await this.roleService.assignPermission(role, permission)
-        return new CustomSuccessfulResponse(StatusCodes.CREATED, 'Assign permission to role successfully');
+        await roleRepository.assignPermission(role, permission)
     }
-    async getRoles(id: string): Promise<CustomSuccessfulResponse> {
+    async getRoles(id: string): Promise<RoleDto | RoleDto[]> {
         if (id == 'all') {
-            const roles = await this.roleService.findAll()
-            return new CustomSuccessfulResponse(StatusCodes.OK, 'Roles found', roles);
+            const roles = await roleRepository.findAll()
+            return roles.map((role: Role) => new RoleDto(role))
         }
         else {
-            const role = await this.roleService.findById(Number(id))
-            return new CustomSuccessfulResponse(StatusCodes.OK, 'Role found', role);
+            const role = await roleRepository.findById(Number(id))
+            return new RoleDto(role)
         }
     }
-    async deleteRole(id: string) {
-        const role = await this.roleService.findById(Number(id))
+    async deleteRole(id: string): Promise<void> {
+        const role = await roleRepository.findById(Number(id))
         if (role.name == 'admin')
-            throw new CustomError(StatusCodes.FORBIDDEN, "Cannot delete role admin")
-        await this.roleService.delete(Number(id))
-        return new CustomSuccessfulResponse(StatusCodes.OK, 'Role deleted successfully');
+            throw new Forbidden(MessageConstant.Role.REQUIRED_ADMIN)
+        await roleRepository.delete(Number(id))
     }
-    async removePermission(assignPermissionToRole: assign): Promise<CustomSuccessfulResponse> {
+    async removePermission(assignPermissionToRole: assign): Promise<Role> {
         const { roleId, permissionId } = assignPermissionToRole;
-        const role = await this.roleService.findById(roleId)
-        await this.permissionService.findByField('id', permissionId)
+        const role = await roleRepository.findById(roleId)
+        await permissionRepository.findByField('id', permissionId)
         role.permissions?.forEach((value: Permission) => {
             if (value.id == permissionId) {
                 role.permissions?.splice(role.permissions.indexOf(value), 1)
             }
         })
-        await this.roleService.create(role)
-        return new CustomSuccessfulResponse(StatusCodes.OK, 'Remove permission from role successfully');
+        const updatedRole: Role = await roleRepository.update(roleId, role)
+        return updatedRole
     }
 }
 
-export default new roles();
+export default new roleService();

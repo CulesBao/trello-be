@@ -1,13 +1,15 @@
 import tokenUtils from '../common/utils/token.uitls';
-import rolesService from '../service/roles.service';
 import { NextFunction, Request, Response } from 'express';
-import { UserService } from '../modules/user/user.repository';
-import { User } from '../modules/user/User.entity';
-import { Forbidden, Unauthorized } from '../handler/failed.handler';
+import userRepository from '../modules/user/user.repository';
+import { Unauthorized } from '../handler/failed.handler';
 import { MessageConstant } from '../common/constants/message.constants';
+import assignRoleService from '../modules/assignRole/assignRole.service';
+import { AssignRole } from '../modules/assignRole/AssignRole.entity';
+import { Role } from '../modules/roles/Role.entity';
+import rolesRepository from '../modules/roles/roles.repository';
+import { boolean } from 'joi';
 
 class authentication {
-    private userService: UserService = new UserService(User)
     authenticateToken() {
         return async (req: Request, _: Response, next: NextFunction) => {
             try {
@@ -21,7 +23,7 @@ class authentication {
                 if (!id)
                     throw new Unauthorized(MessageConstant.Auth.INVALID_TOKEN)
                 req.id = id
-                req.user = await this.userService.findById(id)
+                req.user = await userRepository.findById(id)
                 next()
             }
             catch (err) {
@@ -29,31 +31,26 @@ class authentication {
             }
         }
     }
-    authorizeRole = (requiredRole: string) => {
-        return async (req: any, _: any, next: any) => {
-            try {
-                const id: number = req.id;
-                const rolesName: string[] = await rolesService.userRoles(id);
-
-                if (!rolesName.includes(requiredRole)) {
-                    throw new Forbidden(MessageConstant.Role.INVALID_ROLE)
-                }
-                next();
-            } catch (err) {
-                next(err);
-            }
-        };
-    }
     authorizePermission = (requiredPermission: string) => {
         return async (req: Request, _: Response, next: NextFunction) => {
             try {
+                let isMatchPermission = false;
                 const id: number = Number(req.id);
-                const permissions: string[] = await rolesService.userPermissions(id);
-
-                if (!permissions.includes(requiredPermission)) {
-                    throw new Forbidden(MessageConstant.Permission.NOT_FOUND)
+                const userRoles: AssignRole[] = await assignRoleService.findRoleByUserId(id);
+                for (const data of userRoles) {
+                    const fullRole: Role = await rolesRepository.findById(data.role.id);
+                    const permissions: string[] = fullRole.permissions.map((permission) => permission.name);
+                    
+                    if (permissions.includes(requiredPermission)) {
+                        isMatchPermission = true;
+                        break;
+                    }
                 }
-                next();
+                if (isMatchPermission) {
+                    next();
+                } else {
+                    throw new Unauthorized(MessageConstant.Permission.NOT_FOUND);
+                }
             } catch (err) {
                 next(err);
             }

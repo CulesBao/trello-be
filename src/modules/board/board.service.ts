@@ -5,7 +5,7 @@ import { Workspace } from "../workspace/Workspace.entity"
 import { BoardRepository } from "./board.repository"
 import { Board } from "./Board.entity"
 import { StatusCodes } from "http-status-codes"
-import { UserService } from "../user/user.repository"
+import userRepository from "../user/user.repository"
 import activityLogController from "../activityLog/activityLog.controller"
 import { Actions } from "../../common/enums/actitvitiesLog.enum"
 import { BoardDTO } from "./board.dto"
@@ -13,7 +13,6 @@ import { BadRequest, NotFound } from "../../handler/failed.handler"
 import { MessageConstant } from "../../common/constants/message.constants"
 class boardService {
     private boardReposiory = new BoardRepository(Board)
-    private userRepository = new UserService(User)
     public async addNewBoard(board: Board, user: User): Promise<BoardDTO> {
         const newBoard: Board = await this.boardReposiory.createBoard(board)
 
@@ -45,7 +44,7 @@ class boardService {
     }
 
     public async addMemberToBoard(user: User, board: Board, email: string): Promise<BoardDTO> {
-        const affectedUser: User = await this.userRepository.findByEmail(email)
+        const affectedUser: User = await userRepository.findByEmail(email)
         if (board.users.find((value: User) => value.id == affectedUser.id) != undefined)
             throw new BadRequest(MessageConstant.Role.EXISTED_MEMBER)
         board.users.push(affectedUser)

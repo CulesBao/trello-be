@@ -4,22 +4,21 @@ import tokenUtils from '../../common/utils/token.uitls'
 import { StatusCodes } from 'http-status-codes'
 import CustomError from '../../middleware/CustomError'
 import { User } from '../user/User.entity'
-import { UserService } from '../user/user.repository'
+import userService  from '../user/user.repository'
 import client from '../../config/redis.config'
 
 class authService {
-    private userService = new UserService(User)
     async register(userData: User): Promise<CustomSuccessfulResponse> {
-        const findByUsername = await this.userService.findForRegister('username', userData.username)
-        const findByEmail = await this.userService.findForRegister('email', userData.email)
+        const findByUsername = await userService.findForRegister('username', userData.username)
+        const findByEmail = await userService.findForRegister('email', userData.email)
         if (findByUsername || findByEmail)
             throw new CustomError(StatusCodes.BAD_REQUEST, "Username or email existed")
         userData.password = await hashUtils.hashPassword(userData.password)
-        await this.userService.create(userData)
+        await userService.create(userData)
         return new CustomSuccessfulResponse(StatusCodes.CREATED, "Register successful")
     }
     async login(loginData: User): Promise<CustomSuccessfulResponse> {
-        const user = await this.userService.findForRegister('username', loginData.username)
+        const user = await userService.findForRegister('username', loginData.username)
         if (user == null || !await hashUtils.comparePassword(loginData.password, user.password))
             throw new CustomError(StatusCodes.NOT_FOUND, "Wrong username or password")
         client.set('logger', JSON.stringify(user))

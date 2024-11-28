@@ -20,7 +20,6 @@ export const AssignDTO = Joi.object({
         'any.required': customMessage.required('Role id')
     })
 })
-
 export interface assign {
     roleId: number,
     permissionId: number

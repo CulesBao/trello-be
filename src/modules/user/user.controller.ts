@@ -65,7 +65,7 @@ class userController {
             const assignRole: AssignRoleDTO = req.body
             await userService.assignRole(assignRole)
 
-            new NoContent(res, "Role assigned")
+            new OK(res, "Role assigned")
         }
         catch (err: unknown) {
             next(err)

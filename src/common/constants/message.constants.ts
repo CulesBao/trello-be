@@ -30,6 +30,7 @@ export const MessageConstant = {
     },
     Permission: {
         NOT_FOUND: new DetailsError("PER_001", "Permission not found"),
+        EXISTED: new DetailsError("PER_002", "Permission is already existed"),
     },
     Auth: {
         REQUIRED_TOKEN: new DetailsError("AUT_001", "Token is required"),

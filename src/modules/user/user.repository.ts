@@ -1,10 +1,9 @@
-import { Role } from '../roles/Role.entity';
 import { User } from './User.entity';
 import { baseRepository } from '../../common/base.repository';
 import { NotFound } from '../../handler/failed.handler';
 import { MessageConstant } from '../../common/constants/message.constants';
 
-export class UserService extends baseRepository<User> {
+class userRepository extends baseRepository<User> {
     public override async findById(id: number): Promise<User> {
         const user: User | null = await this.repository.findOne({
             where: {
@@ -43,8 +42,5 @@ export class UserService extends baseRepository<User> {
             throw new NotFound(MessageConstant.User.NOT_FOUND)
         return user
     }
-    public async assignRole(user: User, role: Role): Promise<void> {
-        user.roles.push(role)
-        await this.repository.update(user.id, user)
-    }
 }
+export default new userRepository(User)

@@ -1,13 +1,14 @@
 import { User } from "../user/User.entity";
 import { Workspace } from "./Workspace.entity";
 import workSpaceRepository from "./workspace.repository";
-import { UserService } from "../user/user.repository";
+import userRepository from "../user/user.repository";
 import { WorkSpaceDTO, WorkSpaceRequest } from "./workspace.dto";
 import { BadRequest, Forbidden } from "../../handler/failed.handler";
 import { MessageConstant } from "../../common/constants/message.constants";
+import assignRoleService from "../assignRole/assignRole.service";
+import { Roles } from "../../common/enums/roles.enum";
 
 class workspaceService {
-    private userRepository = new UserService(User)
     public async createWorkSpace(workSpaceBody: WorkSpaceRequest, admin: User): Promise<WorkSpaceDTO> {
         const workSpace: Workspace = new Workspace()
         workSpace.name = workSpaceBody.name
@@ -17,6 +18,7 @@ class workspaceService {
         workSpace.boards = []
 
         const newWorkSpace: Workspace = await workSpaceRepository.create(workSpace)
+        await assignRoleService.assignRoleWorkSpace(admin.id, Roles.ADMIN_WORKSPACE, newWorkSpace)
         return new WorkSpaceDTO(newWorkSpace)
     }
     public async getWorkSpace(workSpace: Workspace): Promise<WorkSpaceDTO> {
@@ -49,10 +51,11 @@ class workspaceService {
         const isExistUser: User | undefined = workSpace.users.find((value: User) => value.email == email)
         if (isExistUser)
             throw new BadRequest(MessageConstant.Role.EXISTED_MEMBER)
-        const newUser: User = await this.userRepository.findByEmail(email)
+        const newUser: User = await userRepository.findByEmail(email)
         workSpace.users.push(newUser)
 
         const updatedWorkSpace = await workSpaceRepository.update(workSpace.id, workSpace)
+        await assignRoleService.assignRoleWorkSpace(newUser.id, Roles.MEMBER_WORKSPACE, updatedWorkSpace)
         return new WorkSpaceDTO(updatedWorkSpace)
     }
 
@@ -66,6 +69,7 @@ class workspaceService {
         workSpace.users = workSpace.users.filter((value) => value.id != memberId)
 
         const updatedWorkSpace: Workspace = await workSpaceRepository.update(workSpace.id, workSpace)
+        // await assignRoleService.deleteRoleWorkSpace(memberId, updatedWorkSpace)
         return new WorkSpaceDTO(updatedWorkSpace)
     }
     public async addNewAdmin(workSpace: Workspace, userId: number): Promise<WorkSpaceDTO> {
