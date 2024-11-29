@@ -19,9 +19,11 @@ class workspaceService {
 
         const newWorkSpace: Workspace = await workSpaceRepository.create(workSpace)
         await assignRoleService.assignRoleWorkSpace(admin.id, Roles.ADMIN_WORKSPACE, newWorkSpace)
+        await assignRoleService.assignRoleWorkSpace(admin.id, Roles.MEMBER_WORKSPACE, newWorkSpace)
         return new WorkSpaceDTO(newWorkSpace)
     }
-    public async getWorkSpace(workSpace: Workspace): Promise<WorkSpaceDTO> {
+    public async getWorkSpace(workSpaceId: number): Promise<WorkSpaceDTO> {
+        const workSpace: Workspace = await workSpaceRepository.findById(workSpaceId)
         return new WorkSpaceDTO(workSpace)
     }
     public async getWorkSpaceById(workSpaceId: number): Promise<Workspace> {
@@ -47,7 +49,9 @@ class workspaceService {
         await workSpaceRepository.delete(workSpaceId)
     }
 
-    public async addMemberToWorkSpace(workSpace: Workspace, email: string): Promise<WorkSpaceDTO> {
+    public async addMemberToWorkSpace(workSpaceId: number, email: string): Promise<WorkSpaceDTO> {
+        console.log(workSpaceId, email)
+        const workSpace: Workspace = await workSpaceRepository.findById(workSpaceId)
         const isExistUser: User | undefined = workSpace.users.find((value: User) => value.email == email)
         if (isExistUser)
             throw new BadRequest(MessageConstant.Role.EXISTED_MEMBER)
@@ -59,7 +63,8 @@ class workspaceService {
         return new WorkSpaceDTO(updatedWorkSpace)
     }
 
-    public async deleteMemberOutWorkSpace(workSpace: Workspace, memberId: number): Promise<WorkSpaceDTO> {
+    public async deleteMemberOutWorkSpace(workSpaceId: number, memberId: number): Promise<WorkSpaceDTO> {
+        const workSpace: Workspace = await workSpaceRepository.findById(workSpaceId)
         const user: User | undefined = workSpace.users.find((value) => value.id == memberId)
         if (user == undefined)
             throw new BadRequest(MessageConstant.Role.NOT_FOUND_MEMBER)
@@ -69,10 +74,11 @@ class workspaceService {
         workSpace.users = workSpace.users.filter((value) => value.id != memberId)
 
         const updatedWorkSpace: Workspace = await workSpaceRepository.update(workSpace.id, workSpace)
-        // await assignRoleService.deleteRoleWorkSpace(memberId, updatedWorkSpace)
+        await assignRoleService.deleteRoleWorkSpace(memberId, Roles.MEMBER_WORKSPACE, updatedWorkSpace)
         return new WorkSpaceDTO(updatedWorkSpace)
     }
-    public async addNewAdmin(workSpace: Workspace, userId: number): Promise<WorkSpaceDTO> {
+    public async addNewAdmin(workSpaceId: number, userId: number): Promise<WorkSpaceDTO> {
+        const workSpace: Workspace = await workSpaceRepository.findById(workSpaceId)
         const isExistUser: User | undefined = workSpace.users.find((value: User) => value.id == userId)
         if (!isExistUser)
             throw new BadRequest(MessageConstant.Role.NOT_FOUND_MEMBER)
@@ -83,9 +89,11 @@ class workspaceService {
         const user: User = isExistUser
         workSpace.admin.push(user)
         const updatedWorkSpace: Workspace = await workSpaceRepository.update(workSpace.id, workSpace)
+        await assignRoleService.assignRoleWorkSpace(user.id, Roles.ADMIN_WORKSPACE, updatedWorkSpace)
         return new WorkSpaceDTO(updatedWorkSpace)
     }
-    public async deleteAdmin(workSpace: Workspace, userId: number): Promise<WorkSpaceDTO> {
+    public async deleteAdmin(workSpaceId: number, userId: number): Promise<WorkSpaceDTO> {
+        const workSpace: Workspace = await workSpaceRepository.findById(workSpaceId)
         const isExistAdmin: boolean = workSpace.admin.find((value: User) => value.id == userId) != undefined
         if (!isExistAdmin)
             throw new BadRequest(MessageConstant.Role.NOT_FOUND_ADMIN)
@@ -94,6 +102,7 @@ class workspaceService {
 
         workSpace.admin = workSpace.admin.filter((value: User) => value.id != userId)
         const updatedWorkspace: Workspace = await workSpaceRepository.update(workSpace.id, workSpace)
+        await assignRoleService.deleteRoleWorkSpace(userId, Roles.ADMIN_WORKSPACE, updatedWorkspace)
         return new WorkSpaceDTO(updatedWorkspace)
     }
 }

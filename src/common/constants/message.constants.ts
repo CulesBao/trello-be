@@ -35,6 +35,7 @@ export const MessageConstant = {
     Auth: {
         REQUIRED_TOKEN: new DetailsError("AUT_001", "Token is required"),
         INVALID_TOKEN: new DetailsError("AUT_002", "Invalid token"),
+        INVALID_PERMISSION: new DetailsError("AUT_003", "User does not have permission to perform this action"),
     },
     User: {
         NOT_FOUND: new DetailsError("USE_001", "User not found"),

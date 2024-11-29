@@ -24,6 +24,11 @@ class assignRoleService {
     public async findRoleByUserId(userId: number): Promise<AssignRole[]> {
         return await assignRoleRepository.findByUserId(userId)
     }
+
+
+    public async findRoleByUserIdAndWorkSpaceId(userId: number, workSpaceId: number): Promise<AssignRole[]> {
+        return await assignRoleRepository.findByUserIdAndWorkSpaceId(userId, workSpaceId)
+    }
     public async assignRoleWorkSpace(userId: number, roleName: string, workSpace: Workspace): Promise<void> {
         const user: User = await userRepository.findById(userId)
         const role: Role = await rolesRepository.findByName(roleName)
@@ -35,6 +40,13 @@ class assignRoleService {
 
         await assignRoleRepository.create(newData)
     }
+    public async findForWorkSpace(user: User, roleName: string, workSpace: Workspace): Promise<AssignRole> {
+        return await assignRoleRepository.findForWorkSpace(user.id, roleName, workSpace.id)
+    }
+    public async deleteRoleWorkSpace(userId: number, roleName: string, workSpace: Workspace): Promise<void> {
+        await assignRoleRepository.deleteRoleWorkSpace(userId, roleName, workSpace.id)
+    }
+
     public async assignRoleBoard(userId: number, roleName: string, board: Board): Promise<void> {
         const user: User = await userRepository.findById(userId)
         const role: Role = await rolesRepository.findByName(roleName)
@@ -46,9 +58,6 @@ class assignRoleService {
         newData.board = board
 
         await assignRoleRepository.create(newData)
-    }
-    public async findForWorkSpace(user: User, roleName: string, workSpace: Workspace): Promise<AssignRole> {
-        return await assignRoleRepository.findForWorkSpace(user.id, roleName, workSpace.id)
     }
 }
 export default new assignRoleService();

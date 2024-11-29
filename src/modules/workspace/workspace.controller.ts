@@ -31,8 +31,8 @@ class workSpaceController {
     }
     public async getWorkSpaceById(req: Request, res: Response, next: NextFunction) {
         try {
-            const workSpace: Workspace = req.workSpace
-            const workSpaceResponse : WorkSpaceDTO = await workSpaceService.getWorkSpace(workSpace)
+            const workSpaceId: number = Number(req.params.workSpaceId)
+            const workSpaceResponse : WorkSpaceDTO = await workSpaceService.getWorkSpace(workSpaceId)
 
             new OK(res, "Get workspace successful", workSpaceResponse)
         }
@@ -42,7 +42,7 @@ class workSpaceController {
     }
     public async updateWorkSpaceById(req: Request, res: Response, next: NextFunction) {
         try {
-            const workSpaceId: number = Number(req.params.id)
+            const workSpaceId: number = Number(req.params.workSpaceId)
             const workSpace: WorkSpaceRequest = req.body
             const updatedWorkSpace: WorkSpaceDTO = await workSpaceService.updateWorkSpaceById(workSpaceId, workSpace)
 
@@ -54,8 +54,8 @@ class workSpaceController {
     }
     public async deleteWorkSpaceById(req: Request, res: Response, next: NextFunction) {
         try {
-            const workSpace = req.workSpace
-            await workSpaceService.deleteWorkSpaceById(workSpace.id)
+            const workSpaceId: number = Number(req.params.workSpaceId)
+            await workSpaceService.deleteWorkSpaceById(workSpaceId)
 
             new NoContent(res, "Delete workspace successful")
         }
@@ -65,9 +65,9 @@ class workSpaceController {
     }
     public async addMemberToWorkSpace(req: Request, res: Response, next: NextFunction) {
         try {
-            const workspace: Workspace = req.workSpace
+            const workspaceId: number = Number(req.params.workSpaceId)
             const email: string = req.body.email
-            const updatedWorkSpace: WorkSpaceDTO = await workSpaceService.addMemberToWorkSpace(workspace, email)
+            const updatedWorkSpace: WorkSpaceDTO = await workSpaceService.addMemberToWorkSpace(workspaceId, email)
 
             new OK(res, "Add member to workspace successful", updatedWorkSpace)
         }
@@ -78,9 +78,9 @@ class workSpaceController {
 
     public async deleteMemberOutWorkSpace(req: Request, res: Response, next: NextFunction) {
         try {
-            const workSpace: Workspace = req.workSpace
+            const workSpaceId: number = Number(req.params.workSpaceId)
             const memberId: number = Number(req.params.memberId)
-            const updatedWorkSpace: WorkSpaceDTO = await workSpaceService.deleteMemberOutWorkSpace(workSpace, memberId)
+            const updatedWorkSpace: WorkSpaceDTO = await workSpaceService.deleteMemberOutWorkSpace(workSpaceId, memberId)
 
             new OK(res, "Delete member out workspace successful", updatedWorkSpace)
         }
@@ -90,9 +90,9 @@ class workSpaceController {
     }
     public async addNewAdmin(req: Request, res: Response, next: NextFunction) {
         try {
-            const workspace: Workspace = req.workSpace
+            const workspaceId: number = Number(req.params.workSpaceId)
             const adminId: number = Number(req.params.adminId)
-            const updatedWorkSpace: WorkSpaceDTO = await workSpaceService.addNewAdmin(workspace, adminId)
+            const updatedWorkSpace: WorkSpaceDTO = await workSpaceService.addNewAdmin(workspaceId, adminId)
 
             new OK(res, "Add new admin successful", updatedWorkSpace)
         }
@@ -103,9 +103,9 @@ class workSpaceController {
 
     public async deleteAdminOutWorkSpace(req: Request, res: Response, next: NextFunction) {
         try {
-            const workSpace: Workspace = req.workSpace
+            const workSpaceId: number = Number(req.params.workSpaceId)
             const adminId: string = req.params.adminId
-            const updatedWorkSpace: WorkSpaceDTO = await workSpaceService.deleteAdmin(workSpace, Number(adminId))
+            await workSpaceService.deleteAdmin(workSpaceId, Number(adminId))
 
             new OK(res, "Delete admin out workspace successful")
         }

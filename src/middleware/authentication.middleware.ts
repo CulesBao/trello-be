@@ -40,7 +40,7 @@ class authentication {
                 for (const data of userRoles) {
                     const fullRole: Role = await rolesRepository.findById(data.role.id);
                     const permissions: string[] = fullRole.permissions.map((permission) => permission.name);
-                    
+
                     if (permissions.includes(requiredPermission)) {
                         isMatchPermission = true;
                         break;
@@ -49,12 +49,38 @@ class authentication {
                 if (isMatchPermission) {
                     next();
                 } else {
-                    throw new Unauthorized(MessageConstant.Permission.NOT_FOUND);
+                    throw new Unauthorized(MessageConstant.Auth.INVALID_PERMISSION);
                 }
             } catch (err) {
                 next(err);
             }
         };
+    }
+    public authorizePermissionWorkSpace(requiredPermission: string) {
+        return async (req: Request, _: Response, next: NextFunction) => {
+            try {
+                const workSpaceId: number = Number(req.params.workSpaceId);
+                const userId: number = Number(req.id);
+
+                const userRoles: AssignRole[] = await assignRoleService.findRoleByUserIdAndWorkSpaceId(userId, workSpaceId);
+                let isMatchPermission = false;
+                for (const data of userRoles) {
+                    const fullRole: Role = await rolesRepository.findById(data.role.id);
+                    const permissions: string[] = fullRole.permissions.map((permission) => permission.name);
+                    if (permissions.includes(requiredPermission)) {
+                        isMatchPermission = true;
+                        break;
+                    }
+                }
+                if (isMatchPermission) {
+                    next();
+                } else {
+                    throw new Unauthorized(MessageConstant.Auth.INVALID_PERMISSION);
+                }
+            } catch (err) {
+                next(err);
+            }
+        }
     }
 }
 export default new authentication()
