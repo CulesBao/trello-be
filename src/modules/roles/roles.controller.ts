@@ -45,7 +45,6 @@ class roles {
     async removePermission(req: Request, res: Response, next: NextFunction) {
         try {
             const role: Role = await rolesService.removePermission(req.body);
-
             new OK(res, 'Permission removed from role successfully', role);
         }
         catch (err) {

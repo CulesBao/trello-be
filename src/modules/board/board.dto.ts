@@ -32,10 +32,10 @@ export class BoardDTO {
         this.id = board.id
         this.name = board.name
         this.description = board.description
-        this.lists = board.lists.map((list: List) => new ListDTOForBoard(list))
+        this.lists = board.lists?.map((list: List) => new ListDTOForBoard(list))
         this.workspace = new WorkSpaceDTOForBoard(board.workspace)
         this.admin = new UserDTOForWorkspace(board.admin)
-        this.users = board.users.map((user: User) => new UserDTOForWorkspace(user))
+        this.users = board.users?.map((user: User) => new UserDTOForWorkspace(user))
         this.createAt = board.createAt
         this.updateAt = board.updateAt
     }

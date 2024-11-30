@@ -15,11 +15,11 @@ export class AssignRole extends baseEntity{
     @JoinColumn({name: 'role_id'})
     role!: Role;
 
-    @ManyToOne(() => Workspace, workspace => workspace.assignRoles)
+    @ManyToOne(() => Workspace, workspace => workspace.assignRoles, {onDelete: "CASCADE", cascade: true})
     @JoinColumn({name: 'workspace_id'})
     workspace: Workspace | null = null;
 
-    @ManyToOne(() => Board, board => board.assignRoles)
+    @ManyToOne(() => Board, board => board.assignRoles, {onDelete: "CASCADE", cascade: true})
     @JoinColumn({name: 'board_id'})
     board: Board | null = null;
 }

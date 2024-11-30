@@ -42,11 +42,11 @@ class roleService {
     }
     async removePermission(assignPermissionToRole: assign): Promise<Role> {
         const { roleId, permissionId } = assignPermissionToRole;
-        const role = await roleRepository.findById(roleId)
-        await permissionRepository.findByField('id', permissionId)
-        role.permissions?.forEach((value: Permission) => {
+        const role: Role = await roleRepository.findById(roleId)
+        await permissionRepository.findById(permissionId)
+        role.permissions?.forEach((value: Permission, index: number) => {
             if (value.id == permissionId) {
-                role.permissions?.splice(role.permissions.indexOf(value), 1)
+                role.permissions?.splice(index, 1)
             }
         })
         const updatedRole: Role = await roleRepository.update(roleId, role)

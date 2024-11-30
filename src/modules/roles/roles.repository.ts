@@ -12,8 +12,7 @@ class roleRepository extends baseRepository<Role> {
             },
             relations: ['permissions']
         })
-        if (!role){
-            console.log('role', role)
+        if (!role) {
             throw new NotFound(MessageConstant.Role.INVALID_ROLE)
         }
         return role
