@@ -8,12 +8,13 @@ import { List } from '../list/List.entity';
 import { Card } from '../card/Card.entity';
 import { Comment } from '../comment/Comment.entity';
 import { CheckList } from '../checkList/CheckList.entity';
+import boardRepository from '../board/board.repository';
 
 
 class activityLogController {
     public async getActivityLog(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const boardId: number = req.board.id
+            const boardId: number = Number(req.params.id)
             const response: CustomSuccessfulResponse = await activityLogService.getActivityLog(boardId)
 
             res.status(response.status).json({
@@ -33,8 +34,9 @@ class activityLogController {
 
         await activityLogService.saveActivityLog(activityLog)
     }
-    public async ListActivity(user: User, board: Board, action: string, list: List): Promise<void> {
+    public async ListActivity(user: User, boardId: number, action: string, list: List): Promise<void> {
         const activityLog = new ActivityLog()
+        const board: Board = await boardRepository.findById(boardId)
         activityLog.setUser(user)
         activityLog.setBoard(board)
         activityLog.setAction(action)

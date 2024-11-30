@@ -1,38 +1,24 @@
-import { NextFunction, Request, response, Response } from "express";
-import { Board } from "../board/Board.entity";
+import { NextFunction, Request, Response } from "express";
 import { List } from "./List.entity";
-import { CustomSuccessfulResponse } from "../../middleware/successResponse.middleware";
 import listService from './list.service'
+import { ListDTO } from "./list.dto";
+import { Created, OK } from "../../handler/success.handler";
+import { User } from "../user/User.entity";
 class listController {
     public async createList(req: Request, res: Response, next: NextFunction) {
         try {
-            const board: Board = req.board
-            const list = req.body
-            const newList: List = new List();
-
-            newList.name = list.name;
-            newList.order = list.order;
-            newList.board = board
-            newList.cards = []
-
-            const response: CustomSuccessfulResponse = await listService.createList(newList)
-            res.status(response.status).json({
-                message: response.message,
-                data: response.data
-            })
+            const list: ListDTO = await listService.createList(req.user, req.body)
+            new Created(res, "List created successfully", list)
         } catch (error) {
             next(error)
         }
     }
-    public async getById(req: Request, res: Response, next: NextFunction) {
+    public async findById(req: Request, res: Response, next: NextFunction) {
         try {
             const listId: number = Number(req.params.id)
-            const userId: number = Number(req.id)
-            const response: CustomSuccessfulResponse = await listService.getById(listId, userId)
-            res.status(response.status).json({
-                message: response.message,
-                data: response.data
-            })
+            const list: ListDTO = await listService.findById(listId)
+
+            new OK(res, "List found", list)
         } catch (error) {
             next(error)
         }
@@ -40,15 +26,13 @@ class listController {
     public async updateById(req: Request, res: Response, next: NextFunction) {
         try {
             const listId: number = Number(req.params.id)
-            const userId: number = Number(req.id)
+            const user: User = req.user
             const updatedList: List = new List();
             updatedList.name = req.body.name;
             updatedList.order = req.body.order;
-            const response: CustomSuccessfulResponse = await listService.updateById(listId, updatedList, userId)
-            res.status(response.status).json({
-                message: response.message,
-                data: response.data
-            })
+
+            const list: ListDTO = await listService.updateById(listId, updatedList, user)
+            new OK(res, "List updated successfully", list)
         } catch (error) {
             next(error)
         }

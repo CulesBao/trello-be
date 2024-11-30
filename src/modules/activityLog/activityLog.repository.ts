@@ -23,13 +23,12 @@ class activityLog extends baseRepository<ActivityLog> {
             },
             relations: ["user", "board", "list", "card", "comment", "checkList", "affectedUser"]
         })
-
         const activitiesLogStr: String[] = activityLogs.map((activityLog: ActivityLog) => {
             switch (activityLog.action) {
                 case Actions.CREATE_BOARD:
                     return `${activityLog.user.name} created board ${activityLog.board.name} at ${activityLog.createAt}`
                 case Actions.CREATE_LIST:
-                    return `${activityLog.user.name} created list ${activityLog.lists.name} at ${activityLog.createAt}`
+                    return `${activityLog.user.name} created list ${activityLog.list?.name} at ${activityLog.createAt}`
                 case Actions.CREATE_CARD:
                     return `${activityLog.user.name} created card ${activityLog.card?.title} in list ${activityLog.list?.name} at ${activityLog.createAt}`
                 case Actions.CREATE_COMMENT:

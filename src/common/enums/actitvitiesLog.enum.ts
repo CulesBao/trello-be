@@ -17,6 +17,7 @@ export enum Actions {
     //List
     CREATE_LIST = 'create list',
     DELETE_LIST = 'delete list',
+    UPDATE_LIST = 'update list',
 
     //Card
     CREATE_CARD = 'create card',

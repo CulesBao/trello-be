@@ -7,7 +7,6 @@ import assignRoleService from '../modules/assignRole/assignRole.service';
 import { AssignRole } from '../modules/assignRole/AssignRole.entity';
 import { Role } from '../modules/roles/Role.entity';
 import rolesRepository from '../modules/roles/roles.repository';
-import { boolean } from 'joi';
 
 class authentication {
     authenticateToken() {
@@ -85,13 +84,13 @@ class authentication {
     public authorizePermissionBoard(requiredPermission: string) {
         return async (req: Request, _: Response, next: NextFunction) => {
             try {
-                const boardId: number = Number(req.params.boardId);
+                const boardId: number = Number(req.params.boardId) || Number(req.body.boardId);
                 const userId: number = Number(req.id);
                 const userRoles: AssignRole[] = await assignRoleService.findRoleByUserIdAndBoardId(userId, boardId);
                 let isMatchPermission = false;
                 for (const data of userRoles) {
                     const fullRole: Role = await rolesRepository.findById(data.role.id);
-                    const permissions: string[] = fullRole.permissions.map((permission) => permission.name);
+                    const permissions: string[] = fullRole.permissions?.map((permission) => permission.name);
                     if (permissions.includes(requiredPermission)) {
                         isMatchPermission = true;
                         break;

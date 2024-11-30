@@ -2,7 +2,6 @@ import { ListDTOForBoard } from "../list/list.dto"
 import { List } from "../list/List.entity"
 import {UserDTOForWorkspace } from "../user/user.dto"
 import { User } from "../user/User.entity"
-import { WorkSpaceDTOForBoard } from "../workspace/workspace.dto"
 import { Board } from "./Board.entity"
 
 export class BoardDTOForWorkSpace{
@@ -23,7 +22,6 @@ export class BoardDTO {
     name: string
     description: string | undefined
     lists: ListDTOForBoard[]
-    workspace: WorkSpaceDTOForBoard
     admin: UserDTOForWorkspace
     users: UserDTOForWorkspace[]
     createAt: Date
@@ -33,7 +31,6 @@ export class BoardDTO {
         this.name = board.name
         this.description = board.description
         this.lists = board.lists?.map((list: List) => new ListDTOForBoard(list))
-        this.workspace = new WorkSpaceDTOForBoard(board.workspace)
         this.admin = new UserDTOForWorkspace(board.admin)
         this.users = board.users?.map((user: User) => new UserDTOForWorkspace(user))
         this.createAt = board.createAt

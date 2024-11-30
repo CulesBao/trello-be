@@ -10,6 +10,7 @@ import { BadRequest, Forbidden, NotFound } from "../../handler/failed.handler"
 import { MessageConstant } from "../../common/constants/message.constants"
 import assignRoleService from "../assignRole/assignRole.service"
 import { Roles } from "../../common/enums/roles.enum"
+import workspaceRepository from "../workspace/workspace.repository"
 
 class boardService {
     private boardReposiory = new BoardRepository(Board)
@@ -41,6 +42,9 @@ class boardService {
     public async addMemberToBoard(user: User, boardId: number, email: string): Promise<BoardDTO> {
         const affectedUser: User = await userRepository.findByEmail(email)
         const board: Board = await this.boardReposiory.findById(boardId)
+        const workspace: Workspace = await workspaceRepository.findById(board.workspace.id)
+        if (workspace.users.find((value: User) => value.id == affectedUser.id) == undefined)
+            throw new NotFound(MessageConstant.Role.NOT_FOUND_MEMBER)
         if (board.users.find((value: User) => value.id == affectedUser.id) != undefined)
             throw new BadRequest(MessageConstant.Role.EXISTED_MEMBER)
         board.users.push(affectedUser)
