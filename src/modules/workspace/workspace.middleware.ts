@@ -6,7 +6,7 @@ import { Roles } from "../../common/enums/roles.enum";
 import workspaceService from "./workspace.service";
 import { User } from "../user/User.entity";
 import { BadRequest, Forbidden } from "../../handler/failed.handler";
-import { MessageConstant } from "../../common/constants/message.constants";
+import { MessageConstant } from "../../common/message.constants";
 
 
 class workSpaceMiddleware extends baseMiddleware {

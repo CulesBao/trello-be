@@ -14,7 +14,6 @@ declare global {
             list: List,
             card: Card,
             cardId: number,
-            userNotInBoard: boolean,
             file: any
         }
     }

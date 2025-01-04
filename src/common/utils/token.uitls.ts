@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
-import ApiError from '../../middleware/CustomError';
-import { StatusCodes } from 'http-status-codes';
+import { NotFound, Unauthorized } from '../../handler/failed.handler';
+import { MessageConstant } from '../message.constants';
 dotenv.config()
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
 const generateToken = (id: number): string => {
@@ -14,12 +14,12 @@ const generateToken = (id: number): string => {
 const verifyToken = (token: string): number => {
     try {
         if (!accessTokenSecret)
-            throw new ApiError(StatusCodes.UNAUTHORIZED, 'Unauthorized');
+            throw new Unauthorized(MessageConstant.Token.INVALID)
 
         const decoded = jwt.verify(token, accessTokenSecret) as jwt.JwtPayload;
 
         if (!decoded || typeof decoded === 'string' || !decoded.id) {
-            throw new ApiError(StatusCodes.NOT_FOUND, 'Not found');
+            throw new NotFound(MessageConstant.Token.NOT_FOUND)
         }
 
         return decoded.id;

@@ -28,6 +28,23 @@ export const MessageConstant = {
         EXISTED_ROLE: new DetailsError("ROL_010", "Role is already existed"),
         NOT_EXISTED_ROLE: new DetailsError("ROL_011", "Role is not existed"),
     },
+    List: {
+        NOT_FOUND: new DetailsError("LIS_001", "List not found"),
+        EXISTED: new DetailsError("LIS_002", "List is already existed"),
+    },
+    Card: {
+        NOT_FOUND: new DetailsError("CAR_001", "Card not found"),
+        EXISTED: new DetailsError("CAR_002", "Card is already existed"),
+    },
+    CheckList: {
+        NOT_FOUND: new DetailsError("CHE_001", "CheckList not found"),
+        EXISTED: new DetailsError("CHE_002", "CheckList is already existed"),
+    },
+    Comment: {
+        NOT_FOUND: new DetailsError("COM_001", "Comment not found"),
+        EXISTED: new DetailsError("COM_002", "Comment is already existed"),
+        FORBIDDEN: new DetailsError("COM_003", "You are not authorized to perform this action"),
+    },
     Permission: {
         NOT_FOUND: new DetailsError("PER_001", "Permission not found"),
         EXISTED: new DetailsError("PER_002", "Permission is already existed"),
@@ -46,5 +63,23 @@ export const MessageConstant = {
         INVALID_FULLNAME: new DetailsError("USE_006", "Invalid fullname"),
         INVALID_PHONE: new DetailsError("USE_007", "Invalid phone"),
         INVALID_BIRTHDAY: new DetailsError("USE_008", "Invalid birthday"),
+        INVALID: new DetailsError("USE_009", "Wrong username or password"),
+    },
+    Token: {
+        INVALID: new DetailsError("TOK_001", "Invalid token"),
+        EXPIRED: new DetailsError("TOK_002", "Token is expired"),
+        NOT_FOUND: new DetailsError("TOK_003", "Token not found"),
+    },
+    Entity: {
+        NOT_FOUND: new DetailsError("ENT_001", "Entity not found"),
+        EXISTED: new DetailsError("ENT_002", "Entity is already existed"),
+    },
+    ActivityLog: {
+        NOT_FOUND: new DetailsError("ACT_001", "ActivityLog not found")
+    },
+    Attachment: {
+        NOT_FOUND: new DetailsError("ATT_001", "Attachment not found"),
+        INVALID_FORMAT: new DetailsError("ATT_002", "File format is not supported"),
+        FORBIDDEN: new DetailsError("ATT_003", "You are not authorized to perform this action"),
     }
 }

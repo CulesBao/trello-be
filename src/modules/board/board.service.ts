@@ -7,7 +7,7 @@ import activityLogController from "../activityLog/activityLog.controller"
 import { Actions } from "../../common/enums/actitvitiesLog.enum"
 import { BoardDTO } from "./board.dto"
 import { BadRequest, Forbidden, NotFound } from "../../handler/failed.handler"
-import { MessageConstant } from "../../common/constants/message.constants"
+import { MessageConstant } from "../../common/message.constants"
 import assignRoleService from "../assignRole/assignRole.service"
 import { Roles } from "../../common/enums/roles.enum"
 import workspaceRepository from "../workspace/workspace.repository"
@@ -29,7 +29,6 @@ class boardService {
     public async deleteBoard(boardId: number): Promise<void> {
         const board: Board = await this.boardReposiory.findById(boardId)
         await assignRoleService.deleteRoleBoard(board.admin.id, Roles.ADMIN_BOARD, board)
-        await activityLogController.BoardActivity(board.admin, board, `${Actions.DELETE_BOARD}`)
         await this.boardReposiory.delete(boardId)
     }
     public async updateBoard(boardToUpdate: Board, boardId: number, user: User): Promise<BoardDTO> {
@@ -63,7 +62,7 @@ class boardService {
         if (board.admin.id == userId)
             throw new Forbidden(MessageConstant.Role.REQUIRED_ADMIN)
         board.users = board.users.filter((value: User) => value.id != userId)
-        
+
         const updatedBoard: Board = await this.boardReposiory.update(board.id, board);
         await activityLogController.BoardActivity(board.admin, board, `${Actions.REMOVE_MEMBER}`, user)
         await assignRoleService.deleteRoleBoard(userId, Roles.MEMBER_BOARD, board)

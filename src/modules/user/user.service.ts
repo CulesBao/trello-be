@@ -6,7 +6,7 @@ import { Role } from '../roles/Role.entity'
 import { AssignRoleDTO } from "./user.dto";
 import { UpdateUserDTO, UserDTO } from "./user.dto";
 import { BadRequest, Forbidden } from "../../handler/failed.handler";
-import { MessageConstant } from "../../common/constants/message.constants";
+import { MessageConstant } from "../../common/message.constants";
 
 class userService {
     async get(info: string, id: number): Promise<UserDTO | UserDTO[]> {

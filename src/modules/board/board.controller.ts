@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express'
-import { CustomSuccessfulResponse } from '../../middleware/successResponse.middleware'
 import boardService from './board.service'
 import { Workspace } from '../workspace/Workspace.entity'
 import { Board } from './Board.entity'

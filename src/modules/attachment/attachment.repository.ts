@@ -1,7 +1,7 @@
-import { StatusCodes } from "http-status-codes";
 import { baseRepository } from "../../common/base.repository";
-import CustomError from "../../middleware/CustomError";
 import { Attachment } from "./Attachment.entity";
+import { NotFound } from "../../handler/failed.handler";
+import { MessageConstant } from "../../common/message.constants";
 
 class attachmentReposiotry extends baseRepository<Attachment>{
     public override async create(entity: Attachment): Promise<Attachment> {
@@ -13,7 +13,7 @@ class attachmentReposiotry extends baseRepository<Attachment>{
             relations: ['user', 'card']
         })
         if (!attachment)
-            throw new CustomError(StatusCodes.NOT_FOUND, 'Attachment not found');
+            throw new NotFound(MessageConstant.Attachment.NOT_FOUND);
         return attachment;
     }
     public async findByCardId(cardId: number): Promise<Attachment[]> {
@@ -22,7 +22,7 @@ class attachmentReposiotry extends baseRepository<Attachment>{
             select: ['id', 'url', 'user.id', 'user.name']
         })
         if (!attachments)
-            throw new CustomError(StatusCodes.NOT_FOUND, 'Attachments not found');
+            throw new NotFound(MessageConstant.Attachment.NOT_FOUND);
         return attachments;
     }
     public override async delete(id: number): Promise<void> {

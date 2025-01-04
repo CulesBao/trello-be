@@ -2,7 +2,7 @@ import { baseRepository } from '../../common/base.repository'
 import { Permission } from '../permissions/Permission.entity';
 import { Role } from './Role.entity';
 import { NotFound } from '../../handler/failed.handler';
-import { MessageConstant } from '../../common/constants/message.constants';
+import { MessageConstant } from '../../common/message.constants';
 
 class roleRepository extends baseRepository<Role> {
     public override async findById(id: number): Promise<Role> {

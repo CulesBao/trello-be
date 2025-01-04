@@ -1,6 +1,6 @@
-import { StatusCodes } from "http-status-codes";
 import { baseRepository } from "../../common/base.repository";
-import CustomError from "../../middleware/CustomError";
+import { MessageConstant } from "../../common/message.constants";
+import { NotFound } from "../../handler/failed.handler";
 import { CheckList } from "./CheckList.entity";
 
 class checkListRepository extends baseRepository<CheckList> {
@@ -17,7 +17,7 @@ class checkListRepository extends baseRepository<CheckList> {
             relations: ['user']
         })
         if (!checkList)
-            throw new CustomError(StatusCodes.NOT_FOUND, `CheckList with id ${id} not found`)
+            throw new NotFound(MessageConstant.CheckList.NOT_FOUND)
         return checkList
     }
     public override async update(id: number, checkList: CheckList): Promise<CheckList> {
@@ -26,6 +26,7 @@ class checkListRepository extends baseRepository<CheckList> {
         return updatedCheckList
     }
     public override async delete(id: number): Promise<void> {
+        await this.findById(id)
         await this.repository.delete(id)
     }
 }

@@ -1,8 +1,9 @@
-import { Repository } from "typeorm";
+import { Not, Repository } from "typeorm";
 import { AppDataSource } from "../config/data-source";
-import CustomError from "../middleware/CustomError";
 import { StatusCodes } from "http-status-codes";
 import { baseEntity } from "./base.entity";
+import { NotFound } from "../handler/failed.handler";
+import { MessageConstant } from "./message.constants";
 export abstract class baseRepository<T extends baseEntity> {
     protected repository: Repository<T>;
 
@@ -22,13 +23,13 @@ export abstract class baseRepository<T extends baseEntity> {
             } as any
         })
         if (!entity)
-            throw new CustomError(StatusCodes.NOT_FOUND, `Entity with ${field} ${value} not found`)
+            throw new NotFound(MessageConstant.Entity.NOT_FOUND)
         return entity
     }
     public async findById(id: number): Promise<T> {
         const entity = await this.repository.findOne(id as any)
         if (!entity)
-            throw new CustomError(StatusCodes.NOT_FOUND, `Entity with id ${id} not found`)
+            throw new NotFound(MessageConstant.Entity.NOT_FOUND)
         return entity
     }
     public async update(id: number, entity: T): Promise<T> {

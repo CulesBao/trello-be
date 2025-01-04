@@ -4,7 +4,7 @@ import { Role } from "./Role.entity";
 import { Permission } from "../permissions/Permission.entity";
 import { assign } from "./role.schema";
 import { BadRequest, Forbidden } from "../../handler/failed.handler";
-import { MessageConstant } from "../../common/constants/message.constants";
+import { MessageConstant } from "../../common/message.constants";
 import { RoleDto } from "./role.dto";
 
 class roleService {

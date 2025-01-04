@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes"
-import { DetailsError } from "../common/constants/message.constants";
+import { DetailsError } from "../common/message.constants";
 enum ErrorType {
     ExpectedError = "Expected Error",
     UnexpectedError = "Unexpected Error"

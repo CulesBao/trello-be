@@ -1,7 +1,7 @@
 import { User } from './User.entity';
 import { baseRepository } from '../../common/base.repository';
 import { NotFound } from '../../handler/failed.handler';
-import { MessageConstant } from '../../common/constants/message.constants';
+import { MessageConstant } from '../../common/message.constants';
 
 class userRepository extends baseRepository<User> {
     public override async findById(id: number): Promise<User> {

@@ -1,7 +1,7 @@
 import perissionRepository from "./permission.repository";
 import { Permission } from "./Permission.entity";
 import { BadRequest } from "../../handler/failed.handler";
-import { MessageConstant } from "../../common/constants/message.constants";
+import { MessageConstant } from "../../common/message.constants";
 class permission {
     async createPermission(permissionInput: Permission): Promise<void> {
         const { name, description } = permissionInput;
@@ -11,7 +11,7 @@ class permission {
         await perissionRepository.create(permissionInput)
     }
     async getPermissions(id: string): Promise<Permission | Permission[]> {
-        if (id == 'all'){
+        if (id == 'all') {
             const permissions = await perissionRepository.findAll();
             return permissions;
         }

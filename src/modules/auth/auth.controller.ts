@@ -1,12 +1,12 @@
-import { CustomSuccessfulResponse } from '../../middleware/successResponse.middleware';
+import { Created, OK } from '../../handler/success.handler';
 import authService from './auth.service'
 import { NextFunction, Request, Response } from "express";
 
 class authController {
     async register(req: Request, res: Response, next: NextFunction) {
         try {
-            const response: CustomSuccessfulResponse = await authService.register(req.body)
-            res.status(response.status).json({ message: response.message })
+            await authService.register(req.body)
+            new Created(res, "User created successfully")
         }
         catch (err: any) {
             next(err)
@@ -14,11 +14,8 @@ class authController {
     }
     async login(req: Request, res: Response, next: NextFunction) {
         try {
-            const response: CustomSuccessfulResponse = await authService.login(req.body)
-            res.status(response.status).json({
-                message: response.message,
-                data: response.data
-            })
+            const token : String = await authService.login(req.body)
+            new OK(res, "User logged in successfully", {token})
         }
         catch (err: any) {
             next(err);

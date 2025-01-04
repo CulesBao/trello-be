@@ -1,28 +1,25 @@
 import { Request, Response, NextFunction } from 'express'
-import { CustomSuccessfulResponse } from '../../middleware/successResponse.middleware'
-import { Card } from '../card/Card.entity'
 import { User } from '../user/User.entity'
 import { CheckList } from './CheckList.entity'
 import checkListService from './checkList.service'
+import { Created, OK } from '../../handler/success.handler'
+import { CheckListDTO } from './checkList.dto'
 
 
 class checkListController {
-    public async addCheckList(req: Request, res: Response, next: NextFunction) {
+    public async addCheckList(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const checkListBody = req.body
             const user: User = req.user
-
             const checkList: CheckList = new CheckList()
+
             checkList.content = checkListBody.content
             checkList.user = user
             checkList.card = req.card
             checkList.isDone = false
 
-            const response: CustomSuccessfulResponse = await checkListService.addCheckList(checkList)
-            res.status(response.status).json({
-                message: response.message,
-                data: response.data
-            })
+            const newCheckList: CheckList = await checkListService.addCheckList(checkList)
+            new Created(res, "CheckList added successfully", newCheckList)
         }
         catch (error: unknown) {
             next(error)
@@ -31,11 +28,8 @@ class checkListController {
     public async deleteCheckList(req: Request, res: Response, next: NextFunction) {
         try {
             const checkListId: number = Number(req.params.checkListId)
-            const user: User = req.user
-            const response: CustomSuccessfulResponse = await checkListService.deleteCheckList(checkListId, user.id)
-            res.status(response.status).json({
-                message: response.message,
-            })
+            await checkListService.deleteCheckList(checkListId)
+            new OK(res, "CheckList deleted successfully")
         }
         catch (error: unknown) {
             next(error)
@@ -45,19 +39,14 @@ class checkListController {
         try {
             const checkListId: number = Number(req.params.checkListId)
             const checkListBody = req.body
-            const user: User = req.user
 
             const checkList: CheckList = new CheckList()
             checkList.id = checkListId
             checkList.content = checkListBody.content
-            checkList.user = user
             checkList.isDone = checkListBody.isDone
 
-            const response: CustomSuccessfulResponse = await checkListService.updateCheckList(checkList)
-            res.status(response.status).json({
-                message: response.message,
-                data: response.data
-            })
+            const updatedCheckList: CheckList = await checkListService.updateCheckList(checkList)
+            new OK(res, "CheckList updated successfully", new CheckListDTO(updatedCheckList))
         }
         catch (error: unknown) {
             next(error)
@@ -66,12 +55,8 @@ class checkListController {
     public async getCheckList(req: Request, res: Response, next: NextFunction) {
         try {
             const checkListId: number = Number(req.params.checkListId)
-            const user: User = req.user
-            const response: CustomSuccessfulResponse = await checkListService.getCheckList(checkListId, user.id)
-            res.status(response.status).json({
-                message: response.message,
-                data: response.data
-            })
+            const checkList: CheckList = await checkListService.getCheckList(checkListId)
+            new OK(res, "CheckList retrieved successfully", new CheckListDTO(checkList))
         }
         catch (error: unknown) {
             next(error)

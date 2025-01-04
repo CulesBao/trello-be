@@ -1,8 +1,8 @@
-import { StatusCodes } from "http-status-codes";
 import { baseRepository } from "../../common/base.repository";
-import CustomError from "../../middleware/CustomError";
 import { ActivityLog } from "./ActivityLog.entity";
 import { Actions } from "../../common/enums/actitvitiesLog.enum";
+import { NotFound } from "../../handler/failed.handler";
+import { MessageConstant } from "../../common/message.constants";
 
 class activityLog extends baseRepository<ActivityLog> {
     public override async create(entity: ActivityLog): Promise<ActivityLog> {
@@ -13,7 +13,7 @@ class activityLog extends baseRepository<ActivityLog> {
             where: { id },
         });
         if (!activityLog)
-            throw new CustomError(StatusCodes.NOT_FOUND, "ActivityLog not found");
+            throw new NotFound(MessageConstant.ActivityLog.NOT_FOUND)
         return activityLog;
     }
     public async findByBoardId(id: number): Promise<String[]> {
@@ -56,9 +56,9 @@ class activityLog extends baseRepository<ActivityLog> {
                 case Actions.DELETE_LIST:
                     return `${activityLog.user.name} deleted list at ${activityLog.createAt}`
                 case Actions.DELETE_BOARD:
-                    return `${activityLog.user.name} deleted board ${activityLog.board.name} at ${activityLog.createAt}`
+                    return `${activityLog.user.name} deleted board ${activityLog.board?.name} at ${activityLog.createAt}`
                 case Actions.UPDATE_BOARD:
-                    return `${activityLog.user.name} updated board ${activityLog.board.name} at ${activityLog.createAt}`
+                    return `${activityLog.user.name} updated board ${activityLog.board?.name} at ${activityLog.createAt}`
                 case Actions.UPDATE_CARD:
                     return `${activityLog.user.name} updated card ${activityLog.card?.title} at ${activityLog.createAt}`
                 case Actions.UPDATE_COMMENT:

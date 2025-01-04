@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import { CustomSuccessfulResponse } from '../../middleware/successResponse.middleware';
 import activityLogService from './activityLog.servce';
 import { User } from '../user/User.entity';
 import { Board } from '../board/Board.entity';
@@ -9,18 +8,16 @@ import { Card } from '../card/Card.entity';
 import { Comment } from '../comment/Comment.entity';
 import { CheckList } from '../checkList/CheckList.entity';
 import boardRepository from '../board/board.repository';
+import { OK } from '../../handler/success.handler';
 
 
 class activityLogController {
     public async getActivityLog(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const boardId: number = Number(req.params.id)
-            const response: CustomSuccessfulResponse = await activityLogService.getActivityLog(boardId)
+            const activityLogs: String[] = await activityLogService.getActivityLog(boardId)
 
-            res.status(response.status).json({
-                message: response.message,
-                data: response.data
-            })
+            new OK(res, "Activity logs had been found", activityLogs)
         } catch (error: unknown) {
             next(error)
         }

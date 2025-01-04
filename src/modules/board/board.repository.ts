@@ -1,7 +1,7 @@
 import { baseRepository } from '../../common/base.repository'
 import { Board } from "./Board.entity";
 import { NotFound } from '../../handler/failed.handler';
-import { MessageConstant } from '../../common/constants/message.constants';
+import { MessageConstant } from '../../common/message.constants';
 
 export class BoardRepository extends baseRepository<Board> {
     public async createBoard(board: Board): Promise<Board> {
@@ -9,7 +9,15 @@ export class BoardRepository extends baseRepository<Board> {
 
         return board
     }
-
+    public async findByListId(listId: number): Promise<Board> {
+        const board: Board | null = await this.repository.createQueryBuilder('board')
+            .innerJoin('board.lists', 'list')
+            .where('list.id = :listId', { listId })
+            .getOne()
+        if (board == null)
+            throw new NotFound(MessageConstant.Board.NOT_FOUND)
+        return board
+    }
     public override async findById(id: number): Promise<Board> {
         const board: Board | null = await this.repository.findOne({
             where: { id },

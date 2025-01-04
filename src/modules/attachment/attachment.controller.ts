@@ -1,19 +1,19 @@
 import { NextFunction } from "express";
 import { Request, Response } from "express";
-import { StatusCodes } from "http-status-codes";
-import { CustomSuccessfulResponse } from "../../middleware/successResponse.middleware";
 import { User } from "../user/User.entity";
 import { Card } from "../card/Card.entity";
 import { Attachment } from "./Attachment.entity";
-import CustomError from "../../middleware/CustomError";
 import attachmentService from "./attachment.service";
+import { NotFound } from "../../handler/failed.handler";
+import { MessageConstant } from "../../common/message.constants";
+import { Created, OK } from "../../handler/success.handler";
 
 class attachmentController {
     static async upload(req: Request, res: Response, next: NextFunction) {
         try {
             if (!req.file)
-                throw new CustomError(StatusCodes.BAD_REQUEST, 'File not found');
-            const attachment = new Attachment()
+                throw new NotFound(MessageConstant.Attachment.NOT_FOUND)
+            const attachment: Attachment = new Attachment()
             const user: User = req.user
             const card: Card = req.card
 
@@ -21,11 +21,8 @@ class attachmentController {
             attachment.card = card
             attachment.url = req.file.path
 
-            const response: CustomSuccessfulResponse = await attachmentService.upload(attachment, req.userNotInBoard)
-            res.status(response.status).json({
-                message: response.message,
-                data: response.data
-            })
+            const uploadAttachment: Attachment = await attachmentService.upload(attachment)
+            new Created(res, "Attachment uploaded successfully", uploadAttachment)
         } catch (error) {
             next(error);
         }
@@ -33,11 +30,8 @@ class attachmentController {
     static async findById(req: Request, res: Response, next: NextFunction) {
         try {
             const id = parseInt(req.params.id)
-            const response: CustomSuccessfulResponse = await attachmentService.findById(id)
-            res.status(response.status).json({
-                message: response.message,
-                data: response.data
-            })
+            const attachment: Attachment = await attachmentService.findById(id)
+            new OK(res, "Attachment found", attachment)
         } catch (error) {
             next(error)
         }
@@ -46,10 +40,8 @@ class attachmentController {
         try {
             const id = parseInt(req.params.id)
             const user: User = req.user
-            const response: CustomSuccessfulResponse = await attachmentService.delete(id, user)
-            res.status(response.status).json({
-                message: response.message
-            })
+            await attachmentService.delete(id, user)
+            new OK(res, "Attachment deleted successfully")
         } catch (error) {
             next(error)
         }

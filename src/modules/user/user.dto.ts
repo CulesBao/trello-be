@@ -8,6 +8,14 @@ export class UserDTOForWorkspace {
         this.email = user.email
     }
 }
+export class UserDTOForAll{
+    id: number
+    name: string
+    constructor(user: User) {
+        this.id = user.id
+        this.name = user.name
+    }
+}
 export interface AssignRoleDTO {
     userId: number,
     roleId: number

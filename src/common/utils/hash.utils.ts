@@ -1,4 +1,4 @@
-import bcrypt, {genSalt} from 'bcrypt'
+import bcrypt from 'bcrypt'
 
 const hashPassword = async(password: string): Promise<string> => {
     const saltRound = 10

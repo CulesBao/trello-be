@@ -1,5 +1,5 @@
 import { baseRepository } from "../../common/base.repository";
-import { MessageConstant } from "../../common/constants/message.constants";
+import { MessageConstant } from "../../common/message.constants";
 import { NotFound } from "../../handler/failed.handler";
 import { AssignRole } from "./AssignRole.entity";
 

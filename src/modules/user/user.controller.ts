@@ -1,5 +1,4 @@
 import { NoContent, OK } from "../../handler/success.handler";
-import { CustomSuccessfulResponse } from "../../middleware/successResponse.middleware";
 import { AssignRoleDTO, UpdateUserDTO, UserDTO } from "./user.dto";
 import { User } from "./User.entity";
 import userService from './user.service'

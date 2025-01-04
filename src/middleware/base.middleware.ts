@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 import Joi from "joi";
-import CustomError from "./CustomError";
-import { StatusCodes } from "http-status-codes";
+import { BadRequest } from "../handler/failed.handler";
 export class baseMiddleware {
     public validateSchema(schema: Joi.ObjectSchema) {
         return async (req: Request, _: Response, next: NextFunction) => {
@@ -11,7 +10,10 @@ export class baseMiddleware {
 
                 if (error) {
                     const errArr: string[] = error.details.map((err) => err.message)
-                    throw new CustomError(StatusCodes.BAD_REQUEST, errArr.join(', '))
+                    throw new BadRequest({
+                        errorCode: "VAL_001",
+                        message: errArr.join(", ")
+                    })
                 }
                 next()
             }

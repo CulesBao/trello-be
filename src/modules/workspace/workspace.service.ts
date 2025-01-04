@@ -4,7 +4,7 @@ import workSpaceRepository from "./workspace.repository";
 import userRepository from "../user/user.repository";
 import { WorkSpaceDTO, WorkSpaceRequest } from "./workspace.dto";
 import { BadRequest, Forbidden } from "../../handler/failed.handler";
-import { MessageConstant } from "../../common/constants/message.constants";
+import { MessageConstant } from "../../common/message.constants";
 import assignRoleService from "../assignRole/assignRole.service";
 import { Roles } from "../../common/enums/roles.enum";
 
