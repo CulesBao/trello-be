@@ -12,13 +12,14 @@ class assignRoleRepository extends baseRepository<AssignRole> {
         await this.repository.delete(id);
     }
     public async findWithoutWorkSpaceAndBoard(userId: number, roleId: number): Promise<AssignRole | null> {
-        return await this.repository.findOne({
+        const assignRole: AssignRole | null = await this.repository.findOne({
             where: {
                 user: { id: userId },
                 role: { id: roleId }
             },
             relations: ['role', 'workspace', 'board', 'user']
         });
+        return assignRole
     }
     public async findByUserId(userId: number): Promise<AssignRole[]> {
         return await this.repository.find({

@@ -58,7 +58,6 @@ class boardService {
         const user: User = await userRepository.findById(userId)
         if (board.users.find((value: User) => value.id == userId) == undefined)
             throw new NotFound(MessageConstant.Role.NOT_FOUND_MEMBER)
-        console.log(board.admin.id, userId)
         if (board.admin.id == userId)
             throw new Forbidden(MessageConstant.Role.REQUIRED_ADMIN)
         board.users = board.users.filter((value: User) => value.id != userId)

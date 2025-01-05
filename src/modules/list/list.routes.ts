@@ -13,10 +13,10 @@ router.route('/')
         listController.createList)
 router.route('/:id')
     .get(authenticationMiddleware.authenticateToken(), 
-        authenticationMiddleware.authorizePermissionBoard(Permissions.GET_LIST),
+        authenticationMiddleware.authorizePermissionList(Permissions.GET_LIST),
         listController.findById)
     .put(authenticationMiddleware.authenticateToken(),
-        authenticationMiddleware.authorizePermissionBoard(Permissions.UPDATE_LIST),
+        authenticationMiddleware.authorizePermissionList(Permissions.UPDATE_LIST),
         listMiddleware.updateList, 
         listController.updateById)
 

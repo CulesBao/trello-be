@@ -1,6 +1,5 @@
-import { Not, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { AppDataSource } from "../config/data-source";
-import { StatusCodes } from "http-status-codes";
 import { baseEntity } from "./base.entity";
 import { NotFound } from "../handler/failed.handler";
 import { MessageConstant } from "./message.constants";

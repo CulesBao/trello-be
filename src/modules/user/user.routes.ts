@@ -10,12 +10,12 @@ router.route('/')
     .put(authenticationMiddleware.authenticateToken(),
         userMiddleware.update, userController.updateUser)
 
-router.get('/get/all',
+router.get('/all',
     authenticationMiddleware.authenticateToken(),
     authenticationMiddleware.authorizePermission(Permissions.GET_USER),
     userController.getAll
 );
-router.get('/get/:id',
+router.get('/:id',
     authenticationMiddleware.authenticateToken(),
     authenticationMiddleware.authorizePermission(Permissions.GET_USER),
     userController.get

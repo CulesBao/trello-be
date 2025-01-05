@@ -16,16 +16,16 @@ router.route('/:boardId')
         boardController.getBoard)
     .put(authenticationMiddleware.authenticateToken(), 
         authenticationMiddleware.authorizePermissionBoard(Permissions.UPDATE_BOARD),
-        boardMiddleware.addBoard, 
+        boardMiddleware.updateBoard, 
         boardController.updateBoard)
     .delete(authenticationMiddleware.authenticateToken(), 
         authenticationMiddleware.authorizePermissionBoard(Permissions.DELETE_BOARD),
         boardController.deleteBoard)
 router.route('/:boardId/members')
     .post(authenticationMiddleware.authenticateToken(), 
-    authenticationMiddleware.authorizePermissionBoard(Permissions.ADD_MEMBER_TO_BOARD),
-    boardMiddleware.addMember, 
-    boardController.addMemberToBoard)
+        authenticationMiddleware.authorizePermissionBoard(Permissions.ADD_MEMBER_TO_BOARD),
+        boardMiddleware.addMember, 
+        boardController.addMemberToBoard)
 router.route('/:boardId/members/:userId')
     .delete(authenticationMiddleware.authenticateToken(), 
     authenticationMiddleware.authorizePermissionBoard(Permissions.REMOVE_MEMBER_FROM_BOARD),

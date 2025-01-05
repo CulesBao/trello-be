@@ -9,9 +9,12 @@ import { Role } from '../modules/roles/Role.entity';
 import rolesRepository from '../modules/roles/roles.repository';
 import { Card } from '../modules/card/Card.entity';
 import cardRepository from '../modules/card/card.repository';
-
+import workspaceRepository from '../modules/workspace/workspace.repository';
+import boardRepository from '../modules/board/board.repository';
+import listRepository from '../modules/list/list.repository';
+import { List } from '../modules/list/List.entity';
 class authentication {
-    authenticateToken() {
+    public authenticateToken() {
         return async (req: Request, _: Response, next: NextFunction) => {
             try {
                 const authHeader: string | undefined = req.headers['authorization']
@@ -32,7 +35,25 @@ class authentication {
             }
         }
     }
-    authorizePermission = (requiredPermission: string) => {
+    private async authorizePermissionByBoardId(requiredPermission: string, boardId: number, userId: number): Promise<void> {
+        const userRoles: AssignRole[] = await assignRoleService.findRoleByUserIdAndBoardId(userId, boardId);
+        let isMatchPermission = false;
+        for (const data of userRoles) {
+            const fullRole: Role = await rolesRepository.findById(data.role.id);
+            const permissions: string[] = fullRole.permissions.map((permission) => permission.name);
+            console.log(permissions)
+            if (permissions.includes(requiredPermission)) {
+                isMatchPermission = true;
+                break;
+            }
+        }
+        if (isMatchPermission) {
+            return
+        } else {
+            throw new Unauthorized(MessageConstant.Auth.INVALID_PERMISSION);
+        }
+    }
+    public authorizePermission = (requiredPermission: string) => {
         return async (req: Request, _: Response, next: NextFunction) => {
             try {
                 let isMatchPermission = false;
@@ -61,6 +82,7 @@ class authentication {
         return async (req: Request, _: Response, next: NextFunction) => {
             try {
                 const workSpaceId: number = Number(req.params.workSpaceId) || Number(req.body.workSpaceId);
+                await workspaceRepository.findById(workSpaceId);
                 const userId: number = Number(req.id);
 
                 const userRoles: AssignRole[] = await assignRoleService.findRoleByUserIdAndWorkSpaceId(userId, workSpaceId);
@@ -83,28 +105,30 @@ class authentication {
             }
         }
     }
+    public authorizePermissionList(requiredPermission: string) {
+        return async (req: Request, _: Response, next: NextFunction) => {
+            try {
+                const listId: number = Number(req.params.id) || Number(req.body.listId);
+                const list = await listRepository.findById(listId);
+                const boardId: number = list.board.id;
+                const userId: number = Number(req.id);
+                await this.authorizePermissionByBoardId(requiredPermission, boardId, userId);
+                next();
+            } catch (err) {
+                next(err);
+            }
+        }
+    }
     public authorizePermissionCard(requiredPermission: string) {
         return async (req: Request, _: Response, next: NextFunction) => {
             try {
                 const cardId: number = Number(req.params.cardId) || Number(req.body.cardId);
                 const card: Card = await cardRepository.findById(cardId);
+                const list: List = await listRepository.findById(card.list.id);
+                const boardId: number = list.board.id;
                 const userId: number = Number(req.id);
-                const boardId: number = card.list.board.id;
-                let isMatchPermission = false;
-                const userRoles: AssignRole[] = await assignRoleService.findRoleByUserIdAndBoardId(userId, boardId);
-                for (const data of userRoles) {
-                    const fullRole: Role = await rolesRepository.findById(data.role.id);
-                    const permissions: string[] = fullRole.permissions?.map((permission) => permission.name);
-                    if (permissions.includes(requiredPermission)) {
-                        isMatchPermission = true;
-                        break;
-                    }
-                }
-                if (isMatchPermission) {
-                    next();
-                } else {
-                    throw new Unauthorized(MessageConstant.Auth.INVALID_PERMISSION);
-                }
+                await this.authorizePermissionByBoardId(requiredPermission, boardId, userId);
+                next();
             } catch (err) {
                 next(err);
             }
@@ -114,22 +138,10 @@ class authentication {
         return async (req: Request, _: Response, next: NextFunction) => {
             try {
                 const boardId: number = Number(req.params.boardId) || Number(req.body.boardId);
+                await boardRepository.findById(boardId);
                 const userId: number = Number(req.id);
-                const userRoles: AssignRole[] = await assignRoleService.findRoleByUserIdAndBoardId(userId, boardId);
-                let isMatchPermission = false;
-                for (const data of userRoles) {
-                    const fullRole: Role = await rolesRepository.findById(data.role.id);
-                    const permissions: string[] = fullRole.permissions?.map((permission) => permission.name);
-                    if (permissions.includes(requiredPermission)) {
-                        isMatchPermission = true;
-                        break;
-                    }
-                }
-                if (isMatchPermission) {
-                    next();
-                } else {
-                    throw new Unauthorized(MessageConstant.Auth.INVALID_PERMISSION);
-                }
+                await this.authorizePermissionByBoardId(requiredPermission, boardId, userId);
+                next();
             } catch (err) {
                 next(err);
             }

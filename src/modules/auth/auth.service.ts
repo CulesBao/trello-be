@@ -1,6 +1,5 @@
 import hashUtils from '../../common/utils/hash.utils'
 import tokenUtils from '../../common/utils/token.uitls'
-import { StatusCodes } from 'http-status-codes'
 import { User } from '../user/User.entity'
 import userService from '../user/user.repository'
 import client from '../../config/redis.config'

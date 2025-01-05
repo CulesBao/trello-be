@@ -1,10 +1,8 @@
-import { Entity, Column, ManyToMany, JoinTable, OneToMany } from "typeorm"
-import { Role } from "../roles/Role.entity"
+import { Entity, Column, ManyToMany, OneToMany } from "typeorm"
 import { baseEntity } from "../../common/base.entity"
 import { Workspace } from "../workspace/Workspace.entity"
 import { Board } from "../board/Board.entity"
 import { Comment } from "../comment/Comment.entity"
-import { CheckList } from "../checkList/CheckList.entity"
 
 @Entity()
 export class User extends baseEntity {

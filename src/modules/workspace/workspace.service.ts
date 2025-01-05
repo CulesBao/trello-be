@@ -50,7 +50,6 @@ class workspaceService {
     }
 
     public async addMemberToWorkSpace(workSpaceId: number, email: string): Promise<WorkSpaceDTO> {
-        console.log(workSpaceId, email)
         const workSpace: Workspace = await workSpaceRepository.findById(workSpaceId)
         const isExistUser: User | undefined = workSpace.users.find((value: User) => value.email == email)
         if (isExistUser)
