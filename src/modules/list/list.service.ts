@@ -18,7 +18,7 @@ class listService {
 
         const newList: List = await listRepository.create(list)
         const realList: List = await listRepository.findById(newList.id)
-        await activityLogController.ListActivity(user, data.boardId, Actions.CREATE_LIST, realList)
+        await activityLogController.ListActivity(user, data.boardId, Actions.CREATE_LIST, realList.id)
         return new ListDTO(realList)
     }
     public async findById(listId: number): Promise<ListDTO> {
@@ -28,7 +28,7 @@ class listService {
     public async updateById(listId: number, updatedList: List, user: User): Promise<ListDTO> {
         await listRepository.findById(listId)
         const updateList: List = await listRepository.update(listId, updatedList)
-        await activityLogController.ListActivity(user, updatedList.board.id, Actions.UPDATE_LIST, updateList)
+        await activityLogController.ListActivity(user, updatedList.board.id, Actions.UPDATE_LIST, updateList.id)
         return new ListDTO(updateList)
     }
 }

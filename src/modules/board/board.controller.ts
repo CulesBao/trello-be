@@ -9,7 +9,7 @@ import workspaceRepository from '../workspace/workspace.repository'
 class boardController {
     public async addNewBoard(req: Request, res: Response, next: NextFunction) {
         try {
-            const workspace: Workspace = await workspaceRepository.findById(Number(req.body.workSpaceId))
+            const workspace: Workspace = await workspaceRepository.findById(Number(req.body.workspaceId))
             const board: Board = new Board()
             const user: User = req.user
 
@@ -20,8 +20,8 @@ class boardController {
             board.users = [user]
             board.lists = []
 
-            const newBoard: BoardDTO = await boardService.addNewBoard(board, user)
-            new Created(res, "Board had been created", newBoard)
+            const newBoard: Board = await boardService.addNewBoard(board, user)
+            new Created(res, "Board had been created", new BoardDTO(newBoard))
         }
         catch (err) {
             next(err)

@@ -9,17 +9,9 @@ import { User } from "../user/User.entity";
 class cardController {
     public async createCard(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const cardData = req.body
-            const list: List = req.list
-            const card: Card = new Card()
             const user: User = req.user
 
-            card.title = cardData.title
-            card.description = cardData.description
-            card.order = cardData.order
-            card.list = list
-
-            const newCard: Card = await cardService.addCard(user, card)
+            const newCard: Card = await cardService.addCard(user, req.body)
             new Created(res, 'Card created successfully', new CardDTO(newCard))
         } catch (error: unknown) {
             next(error)

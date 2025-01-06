@@ -1,5 +1,6 @@
 import { CheckListDTOForCard } from "../checkList/checkList.dto"
 import { CommentDTOForCard } from "../comment/comment.dto"
+import { ListDTOForBoard } from "../list/list.dto"
 import { Card } from "./Card.entity"
 
 export class CardDTOForList{
@@ -20,7 +21,7 @@ export class CardDTO{
     title: string
     description: string | undefined
     order: number
-    listId: number
+    list: ListDTOForBoard
     comments: CommentDTOForCard[]
     checkLists: CheckListDTOForCard[]
     constructor(card: Card){
@@ -28,8 +29,8 @@ export class CardDTO{
         this.title = card.title
         this.description = card.description
         this.order = card.order
-        this.listId = card.list.id
-        this.comments = card.comments.map(comment => new CommentDTOForCard(comment))
-        this.checkLists = card.checkLists.map(checkList => new CheckListDTOForCard(checkList))
+        this.list = new ListDTOForBoard(card.list)
+        this.comments = card.comments?.map(comment => new CommentDTOForCard(comment))
+        this.checkLists = card.checkLists?.map(checkList => new CheckListDTOForCard(checkList))
     }
 }

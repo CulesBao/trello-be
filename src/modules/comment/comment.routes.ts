@@ -7,7 +7,7 @@ import { Permissions } from '../../common/enums/permissions.enum'
 const router: express.Router = express.Router()
 
 router.post('/', authenticationMiddleware.authenticateToken(), 
-    authenticationMiddleware.authorizePermissionBoard(Permissions.ADD_COMMENT_TO_CARD),
+    authenticationMiddleware.authorizePermissionCard(Permissions.ADD_COMMENT_TO_CARD),
     commentMiddleware.addComment, 
     commentController.addComment)
 

@@ -1,5 +1,6 @@
 import express, { urlencoded } from 'express';
 import routes from '../routes/index.routes'
+import cors from 'cors'
 import 'reflect-metadata'
 import { errorMiddleware } from '../middleware/error.middleware';
 import { AppDataSource } from './data-source';
@@ -29,6 +30,7 @@ export default class App {
         this.app.use(urlencoded({ extended: true }))
         this.app.use(express.json())
         this.app.use(loggerHttp)
+        this.app.use(cors())
     }
 
     private initializeRoutes() {

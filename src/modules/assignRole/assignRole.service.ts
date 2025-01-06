@@ -7,6 +7,7 @@ import { Workspace } from "../workspace/Workspace.entity";
 import { AssignRole } from "./AssignRole.entity";
 import assignRoleRepository from "./assignRole.repository";
 import client from '../../config/redis.config'
+import boardRepository from "../board/board.repository";
 
 class assignRoleService {
     //General
@@ -75,19 +76,18 @@ class assignRoleService {
     }
 
     //Board
-    public async assignRoleBoard(userId: number, roleName: string, board: Board): Promise<void> {
+    public async assignRoleBoard(userId: number, roleName: string, boardId: number): Promise<void> {
         const user: User = await userRepository.findById(userId)
         const role: Role = await rolesRepository.findByName(roleName)
 
-
-        const newData = new AssignRole()
+        const newData: AssignRole = new AssignRole()
         newData.user = user
         newData.role = role
-        newData.board = board
+        newData.board = await boardRepository.findById(boardId)
 
         await assignRoleRepository.create(newData)
-        client.del('user' + userId + '|board' + board.id)
-        await this.findRoleByUserIdAndBoardId(userId, board.id)
+        client.del('user' + userId + '|board' + boardId)
+        await this.findRoleByUserIdAndBoardId(userId, boardId)
     }
     public async findRoleByUserIdAndBoardId(userId: number, boardId: number): Promise<AssignRole[]> {
         const cacheValue: string | null = await client.get('user' + userId + '|board' + boardId)

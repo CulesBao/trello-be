@@ -7,11 +7,11 @@ import { Permissions } from '../../common/enums/permissions.enum'
 const router: express.Router = express.Router()
 
 router.post('/', authenticationMiddleware.authenticateToken(),
-    authenticationMiddleware.authorizePermissionBoard(Permissions.ADD_CHECKLIST_TO_CARD),
+    authenticationMiddleware.authorizePermissionCard(Permissions.ADD_CHECKLIST_TO_CARD),
     checkListMiddleware.AddCheckList,
     checkListController.addCheckList)
 router.route('/:checkListId')
-    .put(authenticationMiddleware.authenticateToken(), authenticationMiddleware.authorizePermissionBoard(Permissions.ADD_CHECKLIST_TO_CARD), checkListMiddleware.UpdateCheckList, checkListController.updateCheckList)
+    .put(authenticationMiddleware.authenticateToken(), checkListMiddleware.UpdateCheckList, checkListController.updateCheckList)
     .delete(authenticationMiddleware.authenticateToken(), checkListController.deleteCheckList)
     .get(authenticationMiddleware.authenticateToken(), checkListController.getCheckList)
 

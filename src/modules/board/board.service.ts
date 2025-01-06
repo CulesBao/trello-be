@@ -14,13 +14,13 @@ import workspaceRepository from "../workspace/workspace.repository"
 
 class boardService {
     private boardReposiory = new BoardRepository(Board)
-    public async addNewBoard(board: Board, user: User): Promise<BoardDTO> {
+    public async addNewBoard(board: Board, user: User): Promise<Board> {
         const newBoard: Board = await this.boardReposiory.createBoard(board)
+        await activityLogController.BoardActivity(user, newBoard.id, `${Actions.CREATE_BOARD}`)
+        await assignRoleService.assignRoleBoard(user.id, Roles.ADMIN_BOARD, newBoard.id)
+        await assignRoleService.assignRoleBoard(user.id, Roles.MEMBER_BOARD, newBoard.id)
 
-        await activityLogController.BoardActivity(user, newBoard, `${Actions.CREATE_BOARD}`)
-        await assignRoleService.assignRoleBoard(user.id, Roles.ADMIN_BOARD, newBoard)
-
-        return new BoardDTO(newBoard)
+        return newBoard
     }
     public async getBoard(boardId: number): Promise<BoardDTO> {
         const board: Board = await this.boardReposiory.findById(boardId)
@@ -34,7 +34,7 @@ class boardService {
     public async updateBoard(boardToUpdate: Board, boardId: number, user: User): Promise<BoardDTO> {
         const updatedBoard: Board = await this.boardReposiory.update(boardId, boardToUpdate)
         const board: Board = await this.boardReposiory.findById(boardId)
-        await activityLogController.BoardActivity(user, updatedBoard, `${Actions.UPDATE_BOARD}`)
+        await activityLogController.BoardActivity(user, updatedBoard.id, `${Actions.UPDATE_BOARD}`)
         return new BoardDTO(board)
     }
 
@@ -49,8 +49,8 @@ class boardService {
         board.users.push(affectedUser)
 
         const updatedBoard: Board = await this.boardReposiory.update(board.id, board)
-        await activityLogController.BoardActivity(user, board, `${Actions.ADD_MEMBER}`, affectedUser)
-        await assignRoleService.assignRoleBoard(affectedUser.id, Roles.MEMBER_BOARD, board)
+        await activityLogController.BoardActivity(user, board.id, `${Actions.ADD_MEMBER}`, affectedUser)
+        await assignRoleService.assignRoleBoard(affectedUser.id, Roles.MEMBER_BOARD, board.id)
         return new BoardDTO(updatedBoard)
     }
     public async removeMemberFromBoard(boardId: number, userId: number): Promise<BoardDTO> {
@@ -63,7 +63,7 @@ class boardService {
         board.users = board.users.filter((value: User) => value.id != userId)
 
         const updatedBoard: Board = await this.boardReposiory.update(board.id, board);
-        await activityLogController.BoardActivity(board.admin, board, `${Actions.REMOVE_MEMBER}`, user)
+        await activityLogController.BoardActivity(board.admin, board.id, `${Actions.REMOVE_MEMBER}`, user)
         await assignRoleService.deleteRoleBoard(userId, Roles.MEMBER_BOARD, board)
         return new BoardDTO(updatedBoard)
     }

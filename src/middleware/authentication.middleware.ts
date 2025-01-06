@@ -17,6 +17,15 @@ class authentication {
     public authenticateToken() {
         return async (req: Request, _: Response, next: NextFunction) => {
             try {
+                if (req.query.token) {
+                    const token = req.query.token as string
+                    const id: number = tokenUtils.verifyToken(token)
+                    if (!id)
+                        throw new Unauthorized(MessageConstant.Auth.INVALID_TOKEN)
+                    req.id = id
+                    req.user = await userRepository.findById(id)
+                    return next()
+                }
                 const authHeader: string | undefined = req.headers['authorization']
                 if (!authHeader)
                     throw new Unauthorized(MessageConstant.Auth.REQUIRED_TOKEN)
@@ -41,7 +50,6 @@ class authentication {
         for (const data of userRoles) {
             const fullRole: Role = await rolesRepository.findById(data.role.id);
             const permissions: string[] = fullRole.permissions.map((permission) => permission.name);
-            console.log(permissions)
             if (permissions.includes(requiredPermission)) {
                 isMatchPermission = true;
                 break;
@@ -81,7 +89,7 @@ class authentication {
     public authorizePermissionWorkSpace(requiredPermission: string) {
         return async (req: Request, _: Response, next: NextFunction) => {
             try {
-                const workSpaceId: number = Number(req.params.workSpaceId) || Number(req.body.workSpaceId);
+                const workSpaceId: number = Number(req.params.workSpaceId) || Number(req.body.workspaceId);
                 await workspaceRepository.findById(workSpaceId);
                 const userId: number = Number(req.id);
 
@@ -122,8 +130,9 @@ class authentication {
     public authorizePermissionCard(requiredPermission: string) {
         return async (req: Request, _: Response, next: NextFunction) => {
             try {
-                const cardId: number = Number(req.params.cardId) || Number(req.body.cardId);
+                const cardId: number = Number(req.params.id) || Number(req.body.cardId);
                 const card: Card = await cardRepository.findById(cardId);
+                req.card = card;
                 const list: List = await listRepository.findById(card.list.id);
                 const boardId: number = list.board.id;
                 const userId: number = Number(req.id);
@@ -141,6 +150,17 @@ class authentication {
                 await boardRepository.findById(boardId);
                 const userId: number = Number(req.id);
                 await this.authorizePermissionByBoardId(requiredPermission, boardId, userId);
+                next();
+            } catch (err) {
+                next(err);
+            }
+        }
+    }
+    public authorizePermissionChildCard(requiredPermission: string, target: string) {
+        return async (req: Request, _: Response, next: NextFunction) => {
+            try {
+                const targetId: number = Number(req.params.commentId) || Number(req.params.checkListId) || Number(req.params.attachmentId);
+
                 next();
             } catch (err) {
                 next(err);

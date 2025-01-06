@@ -1,14 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import activityLogService from './activityLog.servce';
 import { User } from '../user/User.entity';
-import { Board } from '../board/Board.entity';
 import { ActivityLog } from './ActivityLog.entity';
-import { List } from '../list/List.entity';
-import { Card } from '../card/Card.entity';
-import { Comment } from '../comment/Comment.entity';
-import { CheckList } from '../checkList/CheckList.entity';
 import boardRepository from '../board/board.repository';
 import { OK } from '../../handler/success.handler';
+import cardRepository from '../card/card.repository';
+import listRepository from '../list/list.repository';
+import commentRepository from '../comment/comment.repository';
+import checkListRepository from '../checkList/checkList.repository';
+import notificationController from '../notification/notification.controller';
 
 
 class activityLogController {
@@ -22,51 +22,59 @@ class activityLogController {
             next(error)
         }
     }
-    public async BoardActivity(user: User, board: Board, action: string, affectedUser?: User): Promise<void> {
+    public async BoardActivity(user: User, boardId: number, action: string, affectedUser?: User): Promise<void> {
         const activityLog = new ActivityLog()
         activityLog.setUser(user)
-        activityLog.setBoard(board)
+        activityLog.setBoard(await boardRepository.findById(boardId))
         activityLog.setAction(action)
-        affectedUser && activityLog.setAffectedUser(affectedUser)
+        if (affectedUser)
+            activityLog.setAffectedUser(affectedUser)
 
-        await activityLogService.saveActivityLog(activityLog)
+        const newActivityLog: ActivityLog = await activityLogService.saveActivityLog(activityLog)
+        await notificationController.sendNotification(newActivityLog)
     }
-    public async ListActivity(user: User, boardId: number, action: string, list: List): Promise<void> {
+    public async ListActivity(user: User, boardId: number, action: string, listId: number): Promise<void> {
         const activityLog = new ActivityLog()
-        const board: Board = await boardRepository.findById(boardId)
-        activityLog.setUser(user)
-        activityLog.setBoard(board)
-        activityLog.setAction(action)
-        activityLog.setList(list)
 
-        await activityLogService.saveActivityLog(activityLog)
+        activityLog.setUser(user)
+        activityLog.setBoard(await boardRepository.findById(boardId))
+        activityLog.setAction(action)
+        activityLog.setList(await listRepository.findById(listId))
+
+        const newActivityLog: ActivityLog = await activityLogService.saveActivityLog(activityLog)
+        await notificationController.sendNotification(newActivityLog)
     }
-    public async CardActivity(user: User, board: Board, action: string, card: Card): Promise<void> {
+    public async CardActivity(user: User, boardId: number, action: string, cardId: number): Promise<void> {
         const activityLog = new ActivityLog()
-        activityLog.setUser(user)
-        activityLog.setBoard(board)
-        activityLog.setAction(action)
-        activityLog.setCard(card)
 
-        await activityLogService.saveActivityLog(activityLog)
+        activityLog.setUser(user)
+        activityLog.setBoard(await boardRepository.findById(boardId))
+        activityLog.setAction(action)
+        activityLog.setCard(await cardRepository.findById(cardId))
+
+        const newActivityLog: ActivityLog = await activityLogService.saveActivityLog(activityLog)
+        await notificationController.sendNotification(newActivityLog)
     }
-    public async CommentActivity(user: User, board: Board, action: string, comment: Comment): Promise<void> {
+    public async CommentActivity(user: User, boardId: number, action: string, commentId: number): Promise<void> {
         const activityLog = new ActivityLog()
-        activityLog.setUser(user)
-        activityLog.setBoard(board)
-        activityLog.setAction(action)
-        activityLog.setComment(comment)
 
-        await activityLogService.saveActivityLog(activityLog)
+        activityLog.setUser(user)
+        activityLog.setBoard(await boardRepository.findById(boardId))
+        activityLog.setAction(action)
+        activityLog.setComment(await commentRepository.findById(commentId))
+
+        const newActivityLog: ActivityLog = await activityLogService.saveActivityLog(activityLog)
+        await notificationController.sendNotification(newActivityLog)
     }
-    public async saveCheckListActivity(user: User, board: Board, action: string, checkList: CheckList): Promise<void> {
+    public async saveCheckListActivity(user: User, boardId: number, action: string, checkListId: number): Promise<void> {
         const activityLog = new ActivityLog()
         activityLog.setUser(user)
-        activityLog.setBoard(board)
+        activityLog.setBoard(await boardRepository.findById(boardId))
         activityLog.setAction(action)
-        activityLog.setCheckList(checkList)
+        activityLog.setCheckList(await checkListRepository.findById(checkListId))
 
-        await activityLogService.saveActivityLog(activityLog)
+        const newActivityLog: ActivityLog = await activityLogService.saveActivityLog(activityLog)
+        await notificationController.sendNotification(newActivityLog)
     }
 }
 

@@ -6,7 +6,6 @@ import { MessageConstant } from '../../common/message.constants';
 export class BoardRepository extends baseRepository<Board> {
     public async createBoard(board: Board): Promise<Board> {
         await this.repository.save(board)
-
         return board
     }
     public async findByListId(listId: number): Promise<Board> {

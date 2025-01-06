@@ -9,7 +9,7 @@ export const AddBoardDTO = Joi.object({
         'string.trim': customMessage.trim('Name')
     }),
     description: Joi.string().allow('').max(100),
-    workSpaceId: Joi.number().required().messages({
+    workspaceId: Joi.number().required().messages({
         'any.required': customMessage.required('WorkSpaceId'),
         'number.base': customMessage.number('WorkSpaceId')
     })

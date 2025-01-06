@@ -11,6 +11,7 @@ import apiComments from '../modules/comment/comment.routes'
 import apiCheckLists from '../modules/checkList/checkList.routes'
 import apiAttachments from '../modules/attachment/attachment.routes'
 import apiActivityLog from '../modules/activityLog/activityLog.routes'
+import apiNotification from '../modules/notification/notification.routes'
 
 const router: express.Router = express.Router()
 
@@ -26,5 +27,6 @@ router.use('/api/comments', apiComments)
 router.use('/api/checklists', apiCheckLists)
 router.use('/api/attachments', apiAttachments)
 router.use('/api/activitylogs', apiActivityLog)
+router.use('/api/notifications', apiNotification)
 
 export default router

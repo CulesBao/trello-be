@@ -15,7 +15,7 @@ class commentService {
         const newComment = await commentRepository.create(comment)
         const card: Card = await cardRepository.findById(newComment.card.id)
         const board: Board = await boardRepository.findByListId(card.list.id)
-        activityLogController.CommentActivity(user, board, Actions.CREATE_COMMENT, newComment)
+        activityLogController.CommentActivity(user, board.id, Actions.CREATE_COMMENT, newComment.id)
         return newComment
     }
     public async deleteComment(commentId: number, userId: number): Promise<void> {

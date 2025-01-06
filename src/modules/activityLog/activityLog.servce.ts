@@ -6,8 +6,8 @@ class activityLogService{
         const activityLogs: String[] = await activityLogRepository.findByBoardId(boardId)
         return activityLogs
     }
-    public async saveActivityLog(activityLog: ActivityLog): Promise<void> {
-        await activityLogRepository.create(activityLog)
+    public async saveActivityLog(activityLog: ActivityLog): Promise<ActivityLog> {
+        return await activityLogRepository.create(activityLog)
     }
 }
 
