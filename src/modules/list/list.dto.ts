@@ -23,6 +23,6 @@ export class ListDTO{
         this.id = list.id
         this.name = list.name
         this.order = list.order
-        this.cards = list.cards.map(card => new CardDTOForList(card))
+        this.cards = list.cards?.map(card => new CardDTOForList(card))
     }
 }

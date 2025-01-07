@@ -8,10 +8,6 @@ import { MessageConstant } from "../../common/message.constants";
 class attachmentService {
     public async upload(attachment: Attachment): Promise<Attachment> {
         await attachmentRepository.create(attachment)
-        const publicId = attachment.url
-            .split('/').slice(-2).join('/').split('.')[0];
-        cloudinary.uploader.destroy(publicId)
-        await attachmentRepository.delete(attachment.id)
         return attachment
     }
     public async findByCardId(cardId: number): Promise<Attachment[]> {

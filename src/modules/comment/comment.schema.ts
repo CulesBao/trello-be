@@ -15,4 +15,11 @@ export const AddComment = Joi.object({
         "any.required": CustomMessage.required("Card Id")
     })
 })
-export const UpdateComment = AddComment
+export const UpdateComment = Joi.object({
+    content: Joi.string().max(500).required().messages({
+        "string.base": CustomMessage.string("Content"),
+        "string.empty": CustomMessage.empty("Content"),
+        "string.max": CustomMessage.max(500),
+        "any.required": CustomMessage.required("Content")
+    })
+})

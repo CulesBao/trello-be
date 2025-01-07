@@ -35,7 +35,6 @@ class activityLogController {
     }
     public async ListActivity(user: User, boardId: number, action: string, listId: number): Promise<void> {
         const activityLog = new ActivityLog()
-
         activityLog.setUser(user)
         activityLog.setBoard(await boardRepository.findById(boardId))
         activityLog.setAction(action)

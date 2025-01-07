@@ -25,10 +25,10 @@ class listService {
         const list: List = await listRepository.findById(listId)
         return new ListDTO(list)
     }
-    public async updateById(listId: number, updatedList: List, user: User): Promise<ListDTO> {
+    public async updateById(listId: number, listToUpdate: List, user: User): Promise<ListDTO> {
         await listRepository.findById(listId)
-        const updateList: List = await listRepository.update(listId, updatedList)
-        await activityLogController.ListActivity(user, updatedList.board.id, Actions.UPDATE_LIST, updateList.id)
+        const updateList: List = await listRepository.update(listId, listToUpdate)
+        await activityLogController.ListActivity(user, updateList?.board?.id, Actions.UPDATE_LIST, updateList?.id)
         return new ListDTO(updateList)
     }
 }

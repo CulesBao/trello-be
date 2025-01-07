@@ -14,7 +14,7 @@ class commentRepository extends baseRepository<Comment> {
             where: {
                 id
             },
-            relations: ['user']
+            relations: ['user', 'card']
         })
         if (!comment)
             throw new NotFound(MessageConstant.Comment.NOT_FOUND)

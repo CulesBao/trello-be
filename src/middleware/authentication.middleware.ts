@@ -13,6 +13,7 @@ import workspaceRepository from '../modules/workspace/workspace.repository';
 import boardRepository from '../modules/board/board.repository';
 import listRepository from '../modules/list/list.repository';
 import { List } from '../modules/list/List.entity';
+import cloudinary from '../config/cloudinary.config';
 class authentication {
     public authenticateToken() {
         return async (req: Request, _: Response, next: NextFunction) => {
@@ -130,7 +131,7 @@ class authentication {
     public authorizePermissionCard(requiredPermission: string) {
         return async (req: Request, _: Response, next: NextFunction) => {
             try {
-                const cardId: number = Number(req.params.id) || Number(req.body.cardId);
+                const cardId: number = Number(req.params.id) || Number(req.body.cardId)
                 const card: Card = await cardRepository.findById(cardId);
                 req.card = card;
                 const list: List = await listRepository.findById(card.list.id);
@@ -139,6 +140,27 @@ class authentication {
                 await this.authorizePermissionByBoardId(requiredPermission, boardId, userId);
                 next();
             } catch (err) {
+                next(err);
+            }
+        }
+    }
+    public authorizePermissionCardAndFile(requiredPermission: string) {
+        return async (req: Request, _: Response, next: NextFunction) => {
+            try {
+                const cardId: number = Number(req.params.id) || Number(req.body.cardId)
+                const card: Card = await cardRepository.findById(cardId);
+                req.card = card;
+                const list: List = await listRepository.findById(card.list.id);
+                const boardId: number = list.board.id;
+                const userId: number = Number(req.id);
+                await this.authorizePermissionByBoardId(requiredPermission, boardId, userId);
+                next();
+            } catch (err) {
+                const publicId = req.file?.path
+                    .split('/').slice(-2).join('/').split('.')[0];
+                if (publicId) {
+                    await cloudinary.uploader.destroy(publicId);
+                }
                 next(err);
             }
         }

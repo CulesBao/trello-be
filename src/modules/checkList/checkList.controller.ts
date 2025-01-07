@@ -19,7 +19,7 @@ class checkListController {
             checkList.isDone = false
 
             const newCheckList: CheckList = await checkListService.addCheckList(checkList)
-            new Created(res, "CheckList added successfully", newCheckList)
+            new Created(res, "CheckList added successfully", new CheckListDTO(newCheckList))
         }
         catch (error: unknown) {
             next(error)

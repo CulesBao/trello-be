@@ -14,7 +14,7 @@ class checkListRepository extends baseRepository<CheckList> {
             where: {
                 id
             },
-            relations: ['user']
+            relations: ['card']
         })
         if (!checkList)
             throw new NotFound(MessageConstant.CheckList.NOT_FOUND)

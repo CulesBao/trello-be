@@ -19,7 +19,7 @@ class commentController {
             comment.user = req.user
 
             const newComment: Comment = await commentService.addComment(user, comment)
-            new OK(res, 'Comment added successfully', newComment)
+            new OK(res, 'Comment added successfully', new CommentDTO(newComment))
         }
         catch (error: unknown) {
             next(error)

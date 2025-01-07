@@ -36,7 +36,7 @@ class commentService {
         return updatedComment
     }
     public async getComment(commentId: number): Promise<Comment> {
-        const comment = await commentRepository.findById(commentId)
+        const comment: Comment = await commentRepository.findById(commentId)
         return comment
     }
 }
