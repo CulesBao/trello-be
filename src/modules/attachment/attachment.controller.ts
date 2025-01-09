@@ -14,7 +14,7 @@ class attachmentController {
             if (!req.file)
                 throw new NotFound(MessageConstant.Attachment.NOT_FOUND)
             const attachment: Attachment = new Attachment()
-            const user: User = req.user
+            const user: User = req.user as User
             const card: Card = req.card
 
             attachment.user = user
@@ -39,7 +39,7 @@ class attachmentController {
     static async delete(req: Request, res: Response, next: NextFunction) {
         try {
             const id = parseInt(req.params.id)
-            const user: User = req.user
+            const user: User = req.user as User
             await attachmentService.delete(id, user)
             new OK(res, "Attachment deleted successfully")
         } catch (error) {

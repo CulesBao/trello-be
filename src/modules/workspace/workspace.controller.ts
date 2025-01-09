@@ -9,7 +9,7 @@ class workSpaceController {
     public async createWorkSpace(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const workSpace: WorkSpaceRequest = req.body
-            const admin: User = req.user
+            const admin: User = req.user as User
             const newWorkSpace: WorkSpaceDTO = await workSpaceService.createWorkSpace(workSpace, admin)
 
             new Created(res, "Create workspace successful", newWorkSpace)
@@ -20,7 +20,7 @@ class workSpaceController {
     }
     public async getMyWorkSpace(req: Request, res: Response, next: NextFunction) {
         try {
-            const user: User = req.user
+            const user: User = req.user as User
             const workSpaces: WorkSpaceDTO[] = await workSpaceService.getMyWorkSpace(user)
 
             new OK(res, "Get my workspace successful", workSpaces)
@@ -32,7 +32,7 @@ class workSpaceController {
     public async getWorkSpaceById(req: Request, res: Response, next: NextFunction) {
         try {
             const workSpaceId: number = Number(req.params.workSpaceId)
-            const workSpaceResponse : WorkSpaceDTO = await workSpaceService.getWorkSpace(workSpaceId)
+            const workSpaceResponse: WorkSpaceDTO = await workSpaceService.getWorkSpace(workSpaceId)
 
             new OK(res, "Get workspace successful", workSpaceResponse)
         }

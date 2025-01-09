@@ -12,11 +12,11 @@ class commentController {
             const commentRequest = req.body
             const card: Card = req.card
             const comment: Comment = new Comment()
-            const user: User = req.user
+            const user: User = req.user as User
 
             comment.content = commentRequest.content
             comment.card = card
-            comment.user = req.user
+            comment.user = req.user as User
 
             const newComment: Comment = await commentService.addComment(user, comment)
             new OK(res, 'Comment added successfully', new CommentDTO(newComment))
@@ -28,7 +28,7 @@ class commentController {
     public async deleteComment(req: Request, res: Response, next: NextFunction) {
         try {
             const commentId: number = Number(req.params.commentId)
-            const user: User = req.user
+            const user: User = req.user as User
             await commentService.deleteComment(commentId, user.id)
 
             new OK(res, 'Comment deleted successfully')
@@ -41,7 +41,7 @@ class commentController {
         try {
             const commentId: number = Number(req.params.commentId)
             const commentBody = req.body
-            const user: User = req.user
+            const user: User = req.user as User
 
             const comment: Comment = new Comment()
             comment.id = commentId

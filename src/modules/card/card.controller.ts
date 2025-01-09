@@ -9,7 +9,7 @@ import { User } from "../user/User.entity";
 class cardController {
     public async createCard(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const user: User = req.user
+            const user: User = req.user as User
 
             const newCard: Card = await cardService.addCard(user, req.body)
             new Created(res, 'Card created successfully', new CardDTO(newCard))
@@ -30,7 +30,7 @@ class cardController {
     public async updateById(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const card = new Card()
-            const user: User = req.user
+            const user: User = req.user as User
             const cardId: number = Number(req.params.id)
             const cardRequest = req.body
 

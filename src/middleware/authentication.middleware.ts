@@ -18,8 +18,8 @@ class authentication {
     public authenticateToken() {
         return async (req: Request, _: Response, next: NextFunction) => {
             try {
-                if (req.query.token) {
-                    const token = req.query.token as string
+                if (req.params.token) {
+                    const token = req.params.token as string
                     const id: number = tokenUtils.verifyToken(token)
                     if (!id)
                         throw new Unauthorized(MessageConstant.Auth.INVALID_TOKEN)

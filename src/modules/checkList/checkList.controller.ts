@@ -10,7 +10,7 @@ class checkListController {
     public async addCheckList(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const checkListBody = req.body
-            const user: User = req.user
+            const user: User = req.user as User
             const checkList: CheckList = new CheckList()
 
             checkList.content = checkListBody.content

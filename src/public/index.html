@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,12 +15,14 @@
       margin: 0;
       background-color: #f4f4f9;
     }
+
     .login-container {
       background: #fff;
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
+
     .login-container input {
       display: block;
       width: 100%;
@@ -28,6 +31,7 @@
       border: 1px solid #ccc;
       border-radius: 4px;
     }
+
     .login-container button {
       width: 100%;
       padding: 10px;
@@ -37,11 +41,27 @@
       border-radius: 4px;
       cursor: pointer;
     }
+
     .login-container button:hover {
       background-color: #0056b3;
     }
+
+    .login-container .google-button {
+      background-color: #db4437;
+      margin-top: 10px;
+    }
+
+    .login-container .google-button:hover {
+      background-color: #c23321;
+    }
+
+    #errorMessage {
+      color: red;
+      display: none;
+    }
   </style>
 </head>
+
 <body>
   <div class="login-container">
     <h2>Login</h2>
@@ -49,8 +69,9 @@
       <input type="text" id="username" placeholder="Username" required />
       <input type="password" id="password" placeholder="Password" required />
       <button type="submit">Login</button>
+      <button type="button" class="google-button" onclick="window.location.href='http://localhost:3000/api/auth/google'">Sign in with Google</button>
     </form>
-    <p id="errorMessage" style="color: red; display: none;">Invalid username or password</p>
+    <p id="errorMessage">Invalid username or password</p>
   </div>
 
   <script>
@@ -72,14 +93,9 @@
 
         if (response.status == 200) {
           const responseData = await response.json();
-          const token = responseData.token || responseData.data?.token;
-          const eventSource = new EventSource(`http://localhost:3000/api/notifications?token=${token}`);
-          eventSource.onopen = () => {
-            console.log("Connection opened");
-          };
-          eventSource.onmessage = (event) => {
-            alert(event.data);
-          };
+          const token = responseData.data.token;
+          localStorage.setItem("token", token);
+          window.location.href = "notification.html";
         } else {
           errorMessage.style.display = "block";
         }
@@ -89,4 +105,5 @@
     });
   </script>
 </body>
+
 </html>

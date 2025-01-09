@@ -42,5 +42,14 @@ class userRepository extends baseRepository<User> {
             throw new NotFound(MessageConstant.User.NOT_FOUND)
         return user
     }
+    public async findByGoogleAccount(email: string) : Promise<User | null> {
+        const user: User | null = await this.repository.findOne({
+            where: {
+                email,
+                isGoogleUser: true
+            }  
+        })
+        return user
+    }
 }
 export default new userRepository(User)

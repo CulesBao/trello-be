@@ -5,6 +5,9 @@ import 'reflect-metadata'
 import { errorMiddleware } from '../middleware/error.middleware';
 import { AppDataSource } from './data-source';
 import { logger, loggerHttp } from './pino.config';
+import passport from 'passport';
+import expressSession from 'express-session'
+import '../modules/auth/oauth2'
 
 export default class App {
     public app: express.Application
@@ -30,7 +33,20 @@ export default class App {
         this.app.use(urlencoded({ extended: true }))
         this.app.use(express.json())
         this.app.use(loggerHttp)
-        this.app.use(cors())
+        this.app.use(cors({
+            origin: 'http://127.0.0.1:5500',
+            credentials: true
+        }))
+        this.app.use(expressSession({
+            secret: "sercret",
+            saveUninitialized: true,
+            resave: true,
+            cookie: {
+                maxAge: 1000 * 60 * 60 // 1 hour
+            }
+        }))
+        this.app.use(passport.initialize());
+        this.app.use(passport.session());
     }
 
     private initializeRoutes() {

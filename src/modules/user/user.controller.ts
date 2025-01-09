@@ -18,7 +18,7 @@ class userController {
     }
     async getMe(req: Request, res: Response, next: NextFunction) {
         try {
-            const user: User = req.user
+            const user: User = req.user as User
 
             new OK(res, "User found", new UserDTO(user))
         }
@@ -49,7 +49,7 @@ class userController {
     }
     async updateUser(req: Request, res: Response, next: NextFunction) {
         try {
-            const user: User = req.user
+            const user: User = req.user as User
             const updatedInfo: UpdateUserDTO = req.body
             const updatedUser: UserDTO = await userService.updateUser(user, updatedInfo)
 

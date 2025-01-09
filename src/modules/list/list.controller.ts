@@ -7,7 +7,7 @@ import { User } from "../user/User.entity";
 class listController {
     public async createList(req: Request, res: Response, next: NextFunction) {
         try {
-            const list: ListDTO = await listService.createList(req.user, req.body)
+            const list: ListDTO = await listService.createList(req.user as User, req.body)
             new Created(res, "List created successfully", list)
         } catch (error) {
             next(error)
@@ -26,7 +26,7 @@ class listController {
     public async updateById(req: Request, res: Response, next: NextFunction) {
         try {
             const listId: number = Number(req.params.id)
-            const user: User = req.user
+            const user: User = req.user as User
             const updatedList: List = new List();
             updatedList.name = req.body.name;
             updatedList.order = req.body.order;

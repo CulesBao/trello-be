@@ -11,7 +11,7 @@ class boardController {
         try {
             const workspace: Workspace = await workspaceRepository.findById(Number(req.body.workspaceId))
             const board: Board = new Board()
-            const user: User = req.user
+            const user: User = req.user as User
 
             board.name = req.body.name
             board.description = req.body.description
@@ -53,7 +53,7 @@ class boardController {
         try {
             const boardToUpdate = new Board()
             const boardId: number = Number(req.params.boardId)
-            const user: User = req.user
+            const user: User = req.user as User
             boardToUpdate.name = req.body.name
             boardToUpdate.description = req.body.description
 
@@ -69,7 +69,7 @@ class boardController {
         try {
             const boardId: number = Number(req.params.boardId)
             const email: string = req.body.email
-            const user: User = req.user
+            const user: User = req.user as User
 
             const updatedBoard: BoardDTO = await boardService.addMemberToBoard(user, boardId, email)
             new OK(res, `User with email ${email} had been added to board`, updatedBoard)
@@ -82,7 +82,7 @@ class boardController {
         try {
             const boardId: number = Number(req.params.boardId)
             const userId: number = Number(req.params.userId)
-            
+
             const updatedBoard: BoardDTO = await boardService.removeMemberFromBoard(boardId, userId)
             new OK(res, `User with ID ${userId} had been removed from board`, updatedBoard)
         }

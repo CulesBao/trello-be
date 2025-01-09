@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notification</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    h1 {
+      color: #333;
+    }
+    p {
+      color: #666;
+    }
+    #errorMessage {
+      display: none;
+      color: red;
+      margin-top: 20px;
+    }
+    body {
+  position: relative;
+  font-family: Arial, sans-serif;
+}
+
+/* Kiểu dáng của thông báo */
+.notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #3b5998; /* Màu nền giống Facebook */
+  color: white;
+  padding: 15px 30px;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  font-weight: bold;
+  opacity: 0;
+  animation: slideIn 0.5s forwards, fadeOut 0.5s forwards 4.5s; /* Hiệu ứng animation */
+  z-index: 9999;
+}
+
+/* Animation slide-in từ dưới lên */
+@keyframes slideIn {
+  0% {
+    transform: translateX(-50%) translateY(50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Animation fade-out sau 5 giây */
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(50px);
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Notification</h1>
+    <p>Thank you for registering. Please check your email to verify your account.</p>
+    <p id="errorMessage">An error occurred. Please try again later.</p>
+  </div>
+  <script>
+    try {
+      alert("Login successful");
+      const urlParams = new URLSearchParams(window.location.search);
+      const token1 = urlParams.get('token');
+      const token2 = localStorage.getItem('token');
+      const token = token1 || token2;
+
+      if (!token) {
+        throw new Error("Token not found");
+      }
+
+      const eventSource = new EventSource(`http://localhost:3000/api/notifications/${token}`);
+      eventSource.onopen = () => {
+        console.log("Connection opened");
+      };
+      eventSource.onmessage = (event) => {
+        const newObject = JSON.parse(event.data);
+          let newNotification;
+        console.log(newObject);
+        switch (newObject.action) {
+          case 'create workspace':
+          newNotification = `${newObject.user.name} created workspace ${newObject.workspace?.name} at ${newObject.createAt}`;
+          break;
+            case 'delete workspace':
+          newNotification = `${newObject.user.name} deleted workspace ${newObject.workspace?.name} at ${newObject.createAt}`;
+          break;
+            case 'update workspace':
+          newNotification = `${newObject.user.name} updated workspace ${newObject.workspace?.name} at ${newObject.createAt}`;
+          break;
+            case 'create board':
+          newNotification = `${newObject.user.name} created board ${newObject.board.name} at ${newObject.createAt}`;
+          break;
+            case 'delete board':
+          newNotification = `${newObject.user.name} deleted board ${newObject.board?.name} at ${newObject.createAt}`;
+          break;
+            case 'update board':
+          newNotification = `${newObject.user.name} updated board ${newObject.board?.name} at ${newObject.createAt}`;
+          break;
+            case 'create list':
+          newNotification = `${newObject.user.name} created list ${newObject.list?.name} at ${newObject.createAt}`;
+          break;
+            case 'delete list':
+          newNotification = `${newObject.user.name} deleted list at ${newObject.createAt}`;
+          break;
+            case 'update list':
+          newNotification = `${newObject.user.name} updated list ${newObject.list?.name} at ${newObject.createAt}`;
+          break;
+            case 'create card':
+              console.log("123123123")
+          newNotification = `${newObject.user.name} created card ${newObject.card?.title} in list ${newObject.list?.name} at ${newObject.createAt}`;
+          break;
+            case 'delete card':
+          newNotification = `${newObject.user.name} deleted card from list ${newObject.list?.name} at ${newObject.createAt}`;
+          break;
+            case 'update card':
+          newNotification = `${newObject.user.name} updated card ${newObject.card?.title} at ${newObject.createAt}`;
+          break;
+            case 'create comment':
+          newNotification = `${newObject.user.name} commented ${newObject.comment?.content} on card ${newObject.card?.title} at ${newObject.createAt}`;
+          break;
+            case 'delete comment':
+          newNotification = `${newObject.user.name} deleted comment on card ${newObject.card?.title} at ${newObject.createAt}`;
+          break;
+            case 'update comment':
+          newNotification = `${newObject.user.name} updated comment on card ${newObject.card?.title} at ${newObject.createAt}`;
+          break;
+            case 'create checklist':
+          newNotification = `${newObject.user.name} created checklist ${newObject.checkList?.content} on card ${newObject.card?.title} at ${newObject.createAt}`;
+          break;
+            case 'delete checklist':
+          newNotification = `${newObject.user.name} deleted checklist from card ${newObject.card?.title} at ${newObject.createAt}`;
+          break;
+            case 'update checklist':
+          newNotification = `${newObject.user.name} updated checklist on card ${newObject.card?.title} at ${newObject.createAt}`;
+          break;
+            case 'create attachment':
+          newNotification = `${newObject.user.name} added attachment to card ${newObject.card?.title} at ${newObject.createAt}`;
+          break;
+            case 'delete attachment':
+          newNotification = `${newObject.user.name} deleted attachment from card ${newObject.card?.title} at ${newObject.createAt}`;
+          break;
+            case 'add new member':
+          newNotification = `${newObject.user.name} added ${newObject.affectedUser?.name} to board at ${newObject.createAt}`;
+          break;
+            case 'remove member':
+          newNotification = `${newObject.user.name} removed ${newObject.affectedUser?.name} from board at ${newObject.createAt}`;
+          break;
+            case 'add admin':
+          newNotification = `${newObject.user.name} added ${newObject.affectedUser?.name} as admin at ${newObject.createAt}`;
+          break;
+            case 'remove admin':
+          newNotification = `${newObject.user.name} removed ${newObject.affectedUser?.name} as admin at ${newObject.createAt}`;
+          break;
+            default:
+            newNotification = "connected";
+            break;
+        }
+        const notificationElement = document.createElement('div');
+        notificationElement.className = 'notification';
+        notificationElement.textContent = newNotification;
+        document.body.appendChild(notificationElement);
+
+        setTimeout(() => {
+          notificationElement.remove();
+        }, 5000);
+      };
+      eventSource.onerror = () => {
+        document.getElementById('errorMessage').style.display = "block";
+      };
+    } catch (err) {
+      console.error(err);
+      document.getElementById('errorMessage').style.display = "block";
+    }
+  </script>
+</body>
+</html>

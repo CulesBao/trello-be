@@ -3,6 +3,7 @@ import { baseEntity } from "../../common/base.entity"
 import { Workspace } from "../workspace/Workspace.entity"
 import { Board } from "../board/Board.entity"
 import { Comment } from "../comment/Comment.entity"
+import { boolean } from "joi"
 
 @Entity()
 export class User extends baseEntity {
@@ -23,6 +24,9 @@ export class User extends baseEntity {
 
     @Column({ type: "date", nullable: true, default: null })
     birthDate?: Date
+
+    @Column({type: "boolean", default: false})
+    isGoogleUser!: boolean
 
     @ManyToMany(() => Workspace, workspace => workspace.admins)
     adminWorkspaces!: Workspace[]

@@ -5,6 +5,7 @@ import userService from '../user/user.repository'
 import client from '../../config/redis.config'
 import { BadRequest } from '../../handler/failed.handler'
 import { MessageConstant } from '../../common/message.constants'
+import userRepository from '../user/user.repository'
 
 class authService {
     async register(userData: User): Promise<void> {
@@ -19,9 +20,30 @@ class authService {
         const user = await userService.findForRegister('username', loginData.username)
         if (user == null || !await hashUtils.comparePassword(loginData.password, user.password))
             throw new BadRequest(MessageConstant.User.INVALID)
-        client.set('logger', JSON.stringify(user))
         const token = tokenUtils.generateToken(user.id)
         return token
+    }
+    public async googleService(profile: any): Promise<string> {
+        const user: User | null = await userRepository.findByGoogleAccount(profile.emails[0].value)
+        if (user) {
+            return tokenUtils.generateToken(user.id)
+        }
+
+        const newUser: User = new User();
+        newUser.email = profile.emails[0].value
+        newUser.name = profile.displayName
+        newUser.username = profile.emails[0].value
+        newUser.password = process.env.DEFAULT_PASSWORD || ""
+        newUser.isGoogleUser = true
+
+        await this.register(newUser)
+
+        const user1: User | null = await userRepository.findByGoogleAccount(profile.emails[0].value)
+        if (user1) {
+            return tokenUtils.generateToken(user1.id)
+        }
+
+        return ""
     }
 }
 export default new authService()
