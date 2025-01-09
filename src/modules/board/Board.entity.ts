@@ -12,14 +12,14 @@ export class Board extends baseEntity {
     @Column({ type: "varchar", length: 100, nullable: true })
     description?: string
 
-    @OneToMany(() => List, list => list.board, { onDelete: "CASCADE" })
+    @OneToMany(() => List, list => list.board)
     lists!: List[]
 
-    @ManyToOne(() => Workspace, workspace => workspace.boards, { onDelete: "CASCADE", cascade: true })
+    @ManyToOne(() => Workspace, workspace => workspace.boards, { onDelete: "CASCADE" })
     @JoinColumn({ name: "workspaceId" })
     workspace!: Workspace
 
-    @ManyToMany(() => User, user => user.boards)
+    @ManyToMany(() => User, user => user.boards, { onDelete: "CASCADE" })
     @JoinTable({
         name: "users_boards",
         joinColumn: { name: "boardId", referencedColumnName: "id" },
@@ -27,6 +27,6 @@ export class Board extends baseEntity {
     })
     users!: User[]
 
-    @ManyToOne(() => User, user => user.boardsAdmin)
+    @ManyToOne(() => User, user => user.boardsAdmin, { onDelete: "CASCADE" })
     admin!: User
 }

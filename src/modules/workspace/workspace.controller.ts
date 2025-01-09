@@ -57,7 +57,7 @@ class workSpaceController {
             const workSpaceId: number = Number(req.params.workSpaceId)
             await workSpaceService.deleteWorkSpaceById(workSpaceId)
 
-            new NoContent(res, "Delete workspace successful")
+            new NoContent(res)
         }
         catch (err) {
             next(err)

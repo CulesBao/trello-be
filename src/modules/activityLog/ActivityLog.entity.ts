@@ -37,31 +37,31 @@ export class ActivityLog extends baseEntity {
     @Column({ type: "varchar", length: 200, nullable: false })
     action!: string
 
-    @ManyToOne(() => User, user => user.activityLogs, {onDelete: "CASCADE", cascade: true})
+    @ManyToOne(() => User, user => user.activityLogs, { onDelete: "CASCADE" })
     @JoinColumn({ name: "userId" })
     user!: User
 
-    @ManyToOne(() => Board, board => board.activityLogs, {onDelete: "CASCADE", cascade: true})
+    @ManyToOne(() => Board, board => board.activityLogs, { onDelete: "CASCADE" })
     @JoinColumn({ name: "boardId" })
     board!: Board
 
-    @ManyToOne(() => List, list => list.activityLogs, {onDelete: "CASCADE", cascade: true})
+    @ManyToOne(() => List, list => list.activityLogs, { onDelete: "CASCADE" })
     @JoinColumn({ name: "listId" })
     list: List | null = null
 
-    @ManyToOne(() => Card, card => card.activityLogs, {onDelete: "CASCADE", cascade: true})
+    @ManyToOne(() => Card, card => card.activityLogs, { onDelete: "CASCADE" })
     @JoinColumn({ name: "cardId" })
     card: Card | null = null
 
-    @ManyToOne(() => Comment, comment => comment.activityLogs, {onDelete: "CASCADE", cascade: true})
+    @ManyToOne(() => Comment, comment => comment.activityLogs, { onDelete: "CASCADE" })
     @JoinColumn({ name: "commentId" })
     comment: Comment | null = null
 
-    @ManyToOne(() => CheckList, checkList => checkList.activityLogs, {onDelete: "CASCADE", cascade: true})
+    @ManyToOne(() => CheckList, checkList => checkList.activityLogs, { onDelete: "CASCADE" })
     @JoinColumn({ name: "checkListId" })
     checkList: CheckList | null = null
 
-    @ManyToOne(() => User, user => user.activityLogs, { nullable: true })
+    @ManyToOne(() => User, user => user.activityLogs, { nullable: true, onDelete: "CASCADE" })
     @JoinColumn({ name: "affectedUserId" })
     affectedUser: User | null = null
 }

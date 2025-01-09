@@ -3,7 +3,7 @@ import commentService from './comment.serivce'
 import { Card } from '../card/Card.entity'
 import { Comment } from './Comment.entity'
 import { User } from '../user/User.entity'
-import { OK } from '../../handler/success.handler'
+import { NoContent, OK } from '../../handler/success.handler'
 import { CommentDTO } from './comment.dto'
 
 class commentController {
@@ -31,7 +31,7 @@ class commentController {
             const user: User = req.user as User
             await commentService.deleteComment(commentId, user.id)
 
-            new OK(res, 'Comment deleted successfully')
+            new NoContent(res)
         }
         catch (error: unknown) {
             next(error)

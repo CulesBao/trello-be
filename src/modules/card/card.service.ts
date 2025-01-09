@@ -17,6 +17,10 @@ class cardService {
         card.description = cardBody.description
         card.order = cardBody.order
         card.list = list
+        card.comments = []
+        card.checkLists = []
+        card.attachments = []
+        
         const newCard: Card = await this.CardRepository.create(card)
         activityLogController.CardActivity(user, list.board.id, Actions.CREATE_CARD, newCard.id)
         return newCard

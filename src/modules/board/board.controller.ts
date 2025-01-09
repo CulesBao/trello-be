@@ -43,7 +43,7 @@ class boardController {
             const boardId: number = Number(req.params.boardId)
             await boardService.deleteBoard(boardId)
 
-            new NoContent(res, `Board with ID ${boardId} had been deleted`)
+            new NoContent(res)
         }
         catch (err) {
             next(err)

@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { Card } from "./Card.entity";
-import { List } from "../list/List.entity";
 import cardService from "./card.service";
-import { Created, OK } from "../../handler/success.handler";
+import { Created, NoContent, OK } from "../../handler/success.handler";
 import { CardDTO } from "./card.dto";
 import { User } from "../user/User.entity";
 
@@ -49,7 +48,7 @@ class cardController {
             const cardId: number = Number(req.params.id)
 
             await cardService.deleteCard(cardId)
-            new OK(res, 'Card deleted successfully')
+            new NoContent(res)
         } catch (error: unknown) {
             next(error)
         }

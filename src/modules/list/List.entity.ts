@@ -11,14 +11,10 @@ export class List extends baseEntity {
     @Column({ type: "int", nullable: false })
     order!: number
 
-    @OneToMany(() => Card, card => card.list, { onDelete: "CASCADE" })
+    @OneToMany(() => Card, card => card.list)
     cards!: Card[]
 
-    @ManyToOne(() => Board, board => board.lists, {
-        cascade: true,
-        onDelete: 'CASCADE',
-        onUpdate:'CASCADE'
-      })
+    @ManyToOne(() => Board, board => board.lists, { onDelete: "CASCADE" })
     @JoinColumn({ name: "boardId" })
     board!: Board
 }

@@ -3,6 +3,7 @@ import { baseEntity } from "../../common/base.entity";
 import { List } from "../list/List.entity";
 import { Comment } from "../comment/Comment.entity";
 import { CheckList } from "../checkList/CheckList.entity";
+import { Attachment } from "../attachment/Attachment.entity";
 
 @Entity()
 export class Card extends baseEntity {
@@ -15,7 +16,7 @@ export class Card extends baseEntity {
     @Column({ type: "int", nullable: false })
     order!: number
 
-    @ManyToOne(() => List, list => list.cards, {onDelete: 'CASCADE', cascade: true})
+    @ManyToOne(() => List, list => list.cards, { onDelete: "CASCADE" })
     @JoinColumn({ name: "listId" })
     list!: List
 
@@ -24,4 +25,7 @@ export class Card extends baseEntity {
 
     @OneToMany(() => CheckList, checkList => checkList.card)
     checkLists!: CheckList[]
+
+    @OneToMany(() => Attachment, attachment => attachment.card)
+    attachments!: Attachment[]
 }

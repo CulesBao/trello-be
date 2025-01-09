@@ -9,10 +9,10 @@ export class Workspace extends baseEntity {
     @Column({ type: "varchar", length: 100, nullable: true })
     description?: string
 
-    @OneToMany(() => Board, board => board.workspace, { onDelete: "CASCADE" })
+    @OneToMany(() => Board, board => board.workspace)
     boards!: Board[]
 
-    @ManyToMany(() => User, user => user.workspacess, { onDelete: "CASCADE" })
+    @ManyToMany(() => User, user => user.workspacess)
     @JoinTable({
         name: "admins_workspaces",
         joinColumn: { name: "workspaceId", referencedColumnName: "id" },
@@ -20,7 +20,7 @@ export class Workspace extends baseEntity {
     })
     admin!: User[]
 
-    @ManyToMany(() => User, user => user.workspaces, { onDelete: "CASCADE" })
+    @ManyToMany(() => User, user => user.workspaces)
     @JoinTable({
         name: "users_workspaces",
         joinColumn: { name: "workspaceId", referencedColumnName: "id" },

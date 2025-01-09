@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import { User } from '../user/User.entity'
 import { CheckList } from './CheckList.entity'
 import checkListService from './checkList.service'
-import { Created, OK } from '../../handler/success.handler'
+import { Created, NoContent, OK } from '../../handler/success.handler'
 import { CheckListDTO } from './checkList.dto'
 
 
@@ -29,7 +29,7 @@ class checkListController {
         try {
             const checkListId: number = Number(req.params.checkListId)
             await checkListService.deleteCheckList(checkListId)
-            new OK(res, "CheckList deleted successfully")
+            new NoContent(res)
         }
         catch (error: unknown) {
             next(error)

@@ -10,7 +10,7 @@ export class CheckList extends baseEntity {
     @Column({ type: "varchar", length: 200, nullable: false })
     content!: string
 
-    @ManyToOne(() => Card, card => card.checkLists, {cascade: true})
+    @ManyToOne(() => Card, card => card.checkLists, {onDelete: "CASCADE"})
     @JoinColumn({name: "cardId"})
     card!: Card
 }

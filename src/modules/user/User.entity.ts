@@ -3,7 +3,6 @@ import { baseEntity } from "../../common/base.entity"
 import { Workspace } from "../workspace/Workspace.entity"
 import { Board } from "../board/Board.entity"
 import { Comment } from "../comment/Comment.entity"
-import { boolean } from "joi"
 
 @Entity()
 export class User extends baseEntity {
@@ -25,29 +24,21 @@ export class User extends baseEntity {
     @Column({ type: "date", nullable: true, default: null })
     birthDate?: Date
 
-    @Column({type: "boolean", default: false})
+    @Column({ type: "boolean", default: false })
     isGoogleUser!: boolean
 
-    @ManyToMany(() => Workspace, workspace => workspace.admins)
+    @ManyToMany(() => Workspace, workspace => workspace.admins, { onDelete: "CASCADE" })
     adminWorkspaces!: Workspace[]
 
-    @ManyToMany(() => Workspace, workspace => workspace.users)
+    @ManyToMany(() => Workspace, workspace => workspace.users, { onDelete: "CASCADE" })
     workspaces!: Workspace[]
 
-    // @ManyToMany(() => Role, role => role.users, { onDelete: "CASCADE" })
-    // @JoinTable({
-    //     name: "user_roles",
-    //     joinColumn: { name: "userId", referencedColumnName: "id" },
-    //     inverseJoinColumn: { name: "roleId", referencedColumnName: "id" }
-    // })
-    // roles!: Role[]
-
-    @ManyToMany(() => Board, board => board.users)
+    @ManyToMany(() => Board, board => board.users, { onDelete: "CASCADE" })
     boards!: Board[]
 
     @OneToMany(() => Board, board => board.admin)
     boardsAdmin!: Board[]
 
-    @OneToMany(() => Comment, comment => comment.user)
+    @OneToMany(() => Comment, comment => comment.user, { onDelete: "CASCADE" })
     comments!: Comment[]
 }

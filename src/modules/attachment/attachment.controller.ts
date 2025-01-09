@@ -6,7 +6,7 @@ import { Attachment } from "./Attachment.entity";
 import attachmentService from "./attachment.service";
 import { NotFound } from "../../handler/failed.handler";
 import { MessageConstant } from "../../common/message.constants";
-import { Created, OK } from "../../handler/success.handler";
+import { Created, NoContent, OK } from "../../handler/success.handler";
 
 class attachmentController {
     static async upload(req: Request, res: Response, next: NextFunction) {
@@ -41,7 +41,7 @@ class attachmentController {
             const id = parseInt(req.params.id)
             const user: User = req.user as User
             await attachmentService.delete(id, user)
-            new OK(res, "Attachment deleted successfully")
+            new NoContent(res)
         } catch (error) {
             next(error)
         }
