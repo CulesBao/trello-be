@@ -1,5 +1,4 @@
 import { Created, OK } from '../../handler/success.handler';
-import { User } from '../user/User.entity';
 import authService from './auth.service'
 import { NextFunction, Request, Response } from "express";
 

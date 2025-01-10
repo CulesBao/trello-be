@@ -36,7 +36,7 @@ class roles {
     async deleteRole(req: Request, res: Response, next: NextFunction) {
         try {
             await rolesService.deleteRole(req.params.id);
-            new NoContent(res, 'Role deleted successfully');
+            new NoContent(res);
         }
         catch (err) {
             next(err)
@@ -44,8 +44,8 @@ class roles {
     }
     async removePermission(req: Request, res: Response, next: NextFunction) {
         try {
-            const role: Role = await rolesService.removePermission(req.body);
-            new OK(res, 'Permission removed from role successfully', role);
+            await rolesService.removePermission(req.body);
+            new OK(res, 'Permission removed from role successfully');
         }
         catch (err) {
             next(err)

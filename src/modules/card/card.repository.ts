@@ -10,7 +10,7 @@ class cardRepositoy extends baseRepository<Card> {
     public override async findById(id: number): Promise<Card> {
         const card: Card | null = await this.repository.findOne({
             where: { id: id },
-            relations: ["list.board.users", "comments"]
+            relations: ["list.board.users", "comments", "checkLists", "attachments"]
         })
         if (!card)
             throw new NotFound(MessageConstant.Card.NOT_FOUND)

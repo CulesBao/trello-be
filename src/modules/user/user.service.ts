@@ -7,6 +7,7 @@ import { AssignRoleDTO } from "./user.dto";
 import { UpdateUserDTO, UserDTO } from "./user.dto";
 import { BadRequest, Forbidden } from "../../handler/failed.handler";
 import { MessageConstant } from "../../common/message.constants";
+import hashUtils from '../../common/utils/hash.utils';
 
 class userService {
     async get(info: string, id: number): Promise<UserDTO | UserDTO[]> {
@@ -36,6 +37,7 @@ class userService {
         updatedUser.name = updatedInfo.name
         updatedUser.phoneNumber = updatedInfo.phoneNumber
         updatedUser.birthDate = updatedInfo.birthDate
+        updatedUser.password = await hashUtils.hashPassword(updatedInfo.password)
 
         const updatedUserDTO: UserDTO = new UserDTO(await userRepository.update(user.id, updatedUser))
         return updatedUserDTO

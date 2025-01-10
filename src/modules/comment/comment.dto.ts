@@ -7,11 +7,13 @@ export class CommentDTOForCard {
     content: string
     user: UserDTOForAll
     createdAt: Date
+    updateAt: Date
     constructor(comment: Comment) {
         this.user = comment.user
         this.id = comment.id
         this.content = comment.content
         this.createdAt = comment.createAt
+        this.updateAt = comment.updateAt
     }
 }
 export class CommentDTO{

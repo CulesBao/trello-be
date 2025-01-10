@@ -53,7 +53,7 @@ class userController {
             const updatedInfo: UpdateUserDTO = req.body
             const updatedUser: UserDTO = await userService.updateUser(user, updatedInfo)
 
-            new OK(res, "User updated", updatedUser)
+            new OK(res, "User updated")
         }
         catch (err: unknown) {
             next(err)
@@ -75,7 +75,7 @@ class userController {
             const removeRole: AssignRoleDTO = req.body
             await userService.removeRole(removeRole)
 
-            new NoContent(res, "Role removed")
+            new NoContent(res)
         }
         catch (err: unknown) {
             next(err)

@@ -1,3 +1,4 @@
+import { AttachmentDTOForCard } from "../attachment/attachment.dto"
 import { CheckListDTOForCard } from "../checkList/checkList.dto"
 import { CommentDTOForCard } from "../comment/comment.dto"
 import { ListDTOForBoard } from "../list/list.dto"
@@ -24,6 +25,9 @@ export class CardDTO{
     list: ListDTOForBoard
     comments: CommentDTOForCard[]
     checkLists: CheckListDTOForCard[]
+    attachments: AttachmentDTOForCard[] 
+    createAt: Date
+    updateAt: Date
     constructor(card: Card){
         this.id = card.id
         this.title = card.title
@@ -32,5 +36,8 @@ export class CardDTO{
         this.list = new ListDTOForBoard(card.list)
         this.comments = card.comments?.map(comment => new CommentDTOForCard(comment))
         this.checkLists = card.checkLists?.map(checkList => new CheckListDTOForCard(checkList))
+        this.attachments = card.attachments?.map(attachment => new AttachmentDTOForCard(attachment))
+        this.createAt = card.createAt
+        this.updateAt = card.updateAt
     }
 }

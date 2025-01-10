@@ -36,10 +36,12 @@ export class UserDTO{
 }
 export class UpdateUserDTO {
     name: string
+    password: string
     phoneNumber: string
     birthDate: Date
-    constructor(name: string, phoneNumber: string, birthDate: Date) {
+    constructor(name: string, password: string, phoneNumber: string, birthDate: Date) {
         this.name = name
+        this.password = password
         this.phoneNumber = phoneNumber
         this.birthDate = birthDate
     }
