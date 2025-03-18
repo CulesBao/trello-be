@@ -1,4 +1,4 @@
-import { CloudinaryStorage, } from "multer-storage-cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 import cloudinary from "../../config/cloudinary.config";
 import multer from 'multer'
 import { baseMiddleware } from "../../middleware/base.middleware";

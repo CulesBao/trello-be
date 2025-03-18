@@ -7,6 +7,7 @@ import attachmentService from "./attachment.service";
 import { NotFound } from "../../handler/failed.handler";
 import { MessageConstant } from "../../common/message.constants";
 import { Created, NoContent, OK } from "../../handler/success.handler";
+import { AttachmentDTO } from "./attachment.dto";
 
 class attachmentController {
     static async upload(req: Request, res: Response, next: NextFunction) {
@@ -22,7 +23,7 @@ class attachmentController {
             attachment.url = req.file.path
 
             const uploadAttachment: Attachment = await attachmentService.upload(attachment)
-            new Created(res, "Attachment uploaded successfully", uploadAttachment)
+            new Created(res, "Attachment uploaded successfully", new AttachmentDTO(uploadAttachment))
         } catch (error) {
             next(error);
         }
@@ -31,7 +32,7 @@ class attachmentController {
         try {
             const id = parseInt(req.params.id)
             const attachment: Attachment = await attachmentService.findById(id)
-            new OK(res, "Attachment found", attachment)
+            new OK(res, "Attachment found", new AttachmentDTO(attachment))
         } catch (error) {
             next(error)
         }

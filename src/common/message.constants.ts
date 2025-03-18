@@ -63,7 +63,7 @@ export const MessageConstant = {
         INVALID_FULLNAME: new DetailsError("USE_006", "Invalid fullname"),
         INVALID_PHONE: new DetailsError("USE_007", "Invalid phone"),
         INVALID_BIRTHDAY: new DetailsError("USE_008", "Invalid birthday"),
-        INVALID: new DetailsError("USE_009", "Wrong username or password"),
+        INVALID: new DetailsError("USE_009", "Wrong email or password"),
     },
     Token: {
         INVALID: new DetailsError("TOK_001", "Invalid token"),

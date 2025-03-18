@@ -10,15 +10,15 @@ router.route('/')
     .put(authenticationMiddleware.authenticateToken(),
         userMiddleware.update, userController.updateUser)
 
-router.get('/all',
-    authenticationMiddleware.authenticateToken(),
-    authenticationMiddleware.authorizePermission(Permissions.GET_USER),
-    userController.getAll
-);
 router.get('/:id',
     authenticationMiddleware.authenticateToken(),
     authenticationMiddleware.authorizePermission(Permissions.GET_USER),
     userController.get
+);
+router.get('/all',
+    authenticationMiddleware.authenticateToken(),
+    authenticationMiddleware.authorizePermission(Permissions.GET_USER),
+    userController.getAll
 );
 router.delete('/:id',
     authenticationMiddleware.authenticateToken(),

@@ -17,7 +17,7 @@ class authService {
         await userService.create(userData)
     }
     async login(loginData: User): Promise<string> {
-        const user = await userService.findForRegister('username', loginData.username)
+        const user = await userService.findForRegister('email', loginData.email)
         if (user == null || !await hashUtils.comparePassword(loginData.password, user.password))
             throw new BadRequest(MessageConstant.User.INVALID)
         const token = tokenUtils.generateToken(user.id)

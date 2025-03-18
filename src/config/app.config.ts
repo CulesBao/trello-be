@@ -34,7 +34,7 @@ export default class App {
         this.app.use(express.json())
         this.app.use(loggerHttp)
         this.app.use(cors({
-            origin: 'http://127.0.0.1:5500',
+            origin: '*',
             credentials: true
         }))
         this.app.use(expressSession({
