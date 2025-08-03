@@ -11,7 +11,8 @@
       "typeorm:run": "npm run typeorm migration:run -- -d ./src/config/data-source.ts",
       "typeorm:generate": "npm run typeorm -- -d ./src/config/data-source.ts migration:generate ./src/migration/$npm_config_name",
       "typeorm:create-migration": "npm run typeorm -- migration:create ./src/migration/$npm_config_name",
-      "typeorm:revert-migration": "npm run typeorm -- -d ./src/config/data-source.ts migration:revert"
+      "typeorm:revert-migration": "npm run typeorm -- -d ./src/config/data-source.ts migration:revert",
+      "seed": "npx ts-node src/seeds/seed.ts"
    },
    "author": "",
    "license": "ISC",

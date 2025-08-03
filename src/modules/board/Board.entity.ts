@@ -3,6 +3,7 @@ import { Workspace } from "../workspace/Workspace.entity";
 import { baseEntity } from "../../common/base.entity";
 import { List } from "../list/List.entity";
 import { User } from "../user/User.entity";
+import { AssignRole } from "../assignRole/AssignRole.entity";
 
 @Entity()
 export class Board extends baseEntity {
@@ -29,4 +30,7 @@ export class Board extends baseEntity {
 
     @ManyToOne(() => User, user => user.boardsAdmin, { onDelete: "CASCADE" })
     admin!: User
+
+    @OneToMany(() => AssignRole, assignRole => assignRole.board)
+    assignRoles!: AssignRole[]
 }

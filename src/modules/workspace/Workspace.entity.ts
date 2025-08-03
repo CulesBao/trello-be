@@ -2,6 +2,7 @@ import { JoinTable, Column, ManyToMany, ManyToOne, Entity, OneToMany } from "typ
 import { baseEntity } from "../../common/base.entity";
 import { User } from "../user/User.entity";
 import { Board } from "../board/Board.entity";
+import { AssignRole } from "../assignRole/AssignRole.entity";
 @Entity()
 export class Workspace extends baseEntity {
     @Column({ type: "varchar", length: 100, nullable: false })
@@ -27,4 +28,7 @@ export class Workspace extends baseEntity {
         inverseJoinColumn: { name: "userId", referencedColumnName: "id" }
     })
     users!: User[]
+
+    @OneToMany(() => AssignRole, assignRole => assignRole.workspace)
+    assignRoles!: AssignRole[]
 }

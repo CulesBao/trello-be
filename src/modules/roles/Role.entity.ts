@@ -1,6 +1,7 @@
-import { Entity, Column, ManyToMany, JoinTable } from "typeorm";
+import { Entity, Column, ManyToMany, JoinTable, OneToMany } from "typeorm";
 import { Permission } from "../permissions/Permission.entity";
 import { baseEntity } from "../../common/base.entity";
+import { AssignRole } from "../assignRole/AssignRole.entity";
 
 @Entity()
 export class Role extends baseEntity {
@@ -17,4 +18,7 @@ export class Role extends baseEntity {
         inverseJoinColumn: { name: "permissionId", referencedColumnName: "id" }
     })
     permissions!: Permission[];
+
+    @OneToMany(() => AssignRole, assignRole => assignRole.role, { onDelete: "CASCADE" })
+    assignRoles!: AssignRole[];
 }
