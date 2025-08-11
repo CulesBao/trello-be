@@ -108,7 +108,98 @@ async function seed() {
 
         // Define permission mappings for each role
         const rolePermissionMappings = {
-            [Roles.ADMIN]: allPermissions, // Admin gets all permissions
+            [Roles.ADMIN]: [
+                // Admin gets ALL permissions - explicitly listing to ensure nothing is missed
+
+                // User Management
+                Permissions.CREATE_USER,
+                Permissions.GET_USER,
+                Permissions.UPDATE_USER,
+                Permissions.DELETE_USER,
+                Permissions.ASSIGN_ROLE,
+                Permissions.REMOVE_ROLE,
+
+                // Role Management
+                Permissions.CREATE_ROLE,
+                Permissions.GET_ROLE,
+                Permissions.UPDATE_ROLE,
+                Permissions.DELETE_ROLE,
+                Permissions.ASSIGN_PERMISSION,
+                Permissions.REMOVE_PERMISSION,
+
+                // Permission Management
+                Permissions.CREATE_PERMISSION,
+                Permissions.GET_PERMISSION,
+                Permissions.UPDATE_PERMISSION,
+                Permissions.DELETE_PERMISSION,
+
+                // Workspace Management
+                Permissions.CREATE_WORKSPACE,
+                Permissions.GET_WORKSPACE,
+                Permissions.UPDATE_WORKSPACE,
+                Permissions.DELETE_WORKSPACE,
+                Permissions.ADD_USER_TO_WORKSPACE,
+                Permissions.REMOVE_USER_FROM_WORKSPACE,
+                Permissions.ADD_MEMBER_AS_ADMIN,
+                Permissions.REMOVE_ADMIN_FROM_WORKSPACE,
+
+                // Board Management
+                Permissions.CREATE_BOARD,
+                Permissions.GET_BOARD,
+                Permissions.UPDATE_BOARD,
+                Permissions.DELETE_BOARD,
+                Permissions.ADD_MEMBER_TO_BOARD,
+                Permissions.REMOVE_MEMBER_FROM_BOARD,
+
+                // List Management
+                Permissions.CREATE_LIST,
+                Permissions.GET_LIST,
+                Permissions.UPDATE_LIST,
+                Permissions.DELETE_LIST,
+
+                // Card Management
+                Permissions.CREATE_CARD,
+                Permissions.GET_CARD,
+                Permissions.UPDATE_CARD,
+                Permissions.DELETE_CARD,
+                Permissions.MOVE_CARD,
+                Permissions.ADD_MEMBER_TO_CARD,
+                Permissions.REMOVE_MEMBER_FROM_CARD,
+                Permissions.ADD_LABEL_TO_CARD,
+                Permissions.GET_LABEL,
+                Permissions.REMOVE_LABEL_FROM_CARD,
+                Permissions.ADD_CHECKLIST_TO_CARD,
+                Permissions.GET_CHECKLIST,
+                Permissions.UPDATE_CHECKLIST,
+                Permissions.REMOVE_CHECKLIST_FROM_CARD,
+                Permissions.ADD_COMMENT_TO_CARD,
+                Permissions.GET_COMMENT,
+                Permissions.UPDATE_COMMENT,
+                Permissions.REMOVE_COMMENT_FROM_CARD,
+                Permissions.ADD_ATTACHMENT_TO_CARD,
+                Permissions.GET_ATTACHMENT,
+                Permissions.REMOVE_ATTACHMENT_FROM_CARD,
+                Permissions.ADD_DUE_DATE_TO_CARD,
+                Permissions.REMOVE_DUE_DATE_FROM_CARD,
+                Permissions.ADD_DESCRIPTION_TO_CARD,
+                Permissions.REMOVE_DESCRIPTION_FROM_CARD,
+                Permissions.ADD_VOTE_TO_CARD,
+                Permissions.REMOVE_VOTE_FROM_CARD,
+                Permissions.ADD_SUBSCRIBER_TO_CARD,
+                Permissions.REMOVE_SUBSCRIBER_FROM_CARD,
+
+                // Notification Management
+                Permissions.CREATE_NOTIFICATION,
+                Permissions.GET_NOTIFICATION,
+                Permissions.UPDATE_NOTIFICATION,
+                Permissions.DELETE_NOTIFICATION,
+
+                // Activity Management
+                Permissions.CREATE_ACTIVITY,
+                Permissions.GET_ACTIVITY,
+                Permissions.UPDATE_ACTIVITY,
+                Permissions.DELETE_ACTIVITY,
+            ],
 
             [Roles.USER]: [
                 // Basic user permissions - can read most things and create basic entities
@@ -314,7 +405,22 @@ async function seed() {
                 );
 
                 await roleRepository.save(role);
-                console.log(`Assigned ${role.permissions.length} permissions to ${roleName} role`);
+                console.log(`✅ Assigned ${role.permissions.length} permissions to ${roleName} role`);
+
+                // Special logging for admin role to ensure all permissions are assigned
+                if (roleName === Roles.ADMIN) {
+                    console.log(`🔑 Admin role now has ${role.permissions.length} out of ${allPermissions.length} total permissions`);
+                    const missingPerms = allPermissions.filter(dbPerm =>
+                        !role.permissions.find(rp => rp.name === dbPerm.name)
+                    );
+                    if (missingPerms.length > 0) {
+                        console.log(`⚠️  Admin missing permissions: ${missingPerms.map(p => p.name).join(', ')}`);
+                    } else {
+                        console.log(`✅ Admin has ALL permissions assigned correctly!`);
+                    }
+                }
+            } else if (role && role.permissions.length > 0) {
+                console.log(`ℹ️  ${roleName} role already has ${role.permissions.length} permissions assigned`);
             }
         }        // 4. Create admin user
         console.log("Creating admin user...");

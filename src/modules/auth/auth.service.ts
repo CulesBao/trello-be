@@ -2,10 +2,10 @@ import hashUtils from '../../common/utils/hash.utils'
 import tokenUtils from '../../common/utils/token.uitls'
 import { User } from '../user/User.entity'
 import userService from '../user/user.repository'
-import client from '../../config/redis.config'
 import { BadRequest } from '../../handler/failed.handler'
 import { MessageConstant } from '../../common/message.constants'
 import userRepository from '../user/user.repository'
+import assignRoleService from '../assignRole/assignRole.service'
 
 class authService {
     async register(userData: User): Promise<void> {
@@ -14,7 +14,8 @@ class authService {
         if (findByUsername || findByEmail)
             throw new BadRequest(MessageConstant.User.EXISTED)
         userData.password = await hashUtils.hashPassword(userData.password)
-        await userService.create(userData)
+        const newUser = await userService.create(userData)
+        await assignRoleService.assignRole(newUser.id, 2)
     }
     async login(loginData: User): Promise<string> {
         const user = await userService.findForRegister('email', loginData.email)

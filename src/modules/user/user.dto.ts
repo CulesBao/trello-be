@@ -2,13 +2,15 @@ import { User } from "./User.entity"
 
 export class UserDTOForWorkspace {
     id: number
+    name: string
     email: string
     constructor(user: User) {
         this.id = user.id
+        this.name = user.name
         this.email = user.email
     }
 }
-export class UserDTOForAll{
+export class UserDTOForAll {
     id: number
     name: string
     constructor(user: User) {
@@ -20,7 +22,7 @@ export interface AssignRoleDTO {
     userId: number,
     roleId: number
 }
-export class UserDTO{
+export class UserDTO {
     id: number
     email: string
     name: string

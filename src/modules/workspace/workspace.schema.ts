@@ -15,10 +15,6 @@ export const AddMemberSchema = Joi.object({
         'string.email': customMessage.email('Email'),
         'any.required': customMessage.required('Email')
     }),
-    name: Joi.string().required().max(100).trim().allow('').messages({
-        'any.required': customMessage.required('Name'),
-        'string.trim': customMessage.trim('Name')
-    }),
 })
 export const UpdateMemberSchema = Joi.object({
     userId: Joi.number().required().messages({
